@@ -2,7 +2,7 @@
 % Please edit documentation in R/BC_sd.R
 \name{BC_sd}
 \alias{BC_sd}
-\title{Bias correction for IUPM estimator from single-dilution assay data}
+\title{Bias correction for MLE from single-dilution assay data}
 \usage{
 BC_sd(lambda, M, q)
 }
@@ -17,5 +17,5 @@ BC_sd(lambda, M, q)
 A vector of the same length as \code{lambda}
 }
 \description{
-Bias correction for IUPM estimator from single-dilution assay data
+Bias correction for MLE from single-dilution assay data
 }

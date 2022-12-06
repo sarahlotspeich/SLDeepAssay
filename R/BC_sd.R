@@ -1,4 +1,4 @@
-#' Bias correction for IUPM estimator from single-dilution assay data
+#' Bias correction for MLE from single-dilution assay data
 #' @name BC_sd
 #' @param lambda Vector of DVL-specific parameters.
 #' @param M Total number of wells originally sequenced with the QVOA.

@@ -4,18 +4,18 @@
 \alias{simulate_assay_md}
 \title{Simulate multiple-dilution assay data}
 \usage{
-simulate_assay_md(M, tau, q, dilutions, remove_undetected = T)
+simulate_assay_md(M, tau, q, dilutions, remove_undetected = T, seed = NULL)
 }
 \arguments{
 \item{M}{Total number of wells (a scalar).}
 
+\item{tau}{Parameters}
+
 \item{q}{Proportion of p24-positive wells that underwent UDSA (a scalar between 0 and 1).}
 
+\item{dilutions}{Vector of dilution levels (in millions of cells per well).}
+
 \item{remove_undetected}{Logical, if \code{remove_undetected = TRUE} (the default), then DVL which were not detected in any of the deep sequenced wells are deleted.}
-
-\item{n}{Total number of existing distinct viral lineages (DVL) (a scalar).}
-
-\item{lambda}{DVL-specific rates of infection (a vector of length \code{n}). (Note: All elements in \code{lambda} must be > 0.)}
 
 \item{seed}{(Optional) An integer setting the random seed used to simulate the assay data. Default is \code{seed = NULL}.}
 }

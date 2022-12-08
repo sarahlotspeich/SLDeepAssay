@@ -1,9 +1,9 @@
 #' Simulate multiple-dilution assay data
 #' @name simulate_assay_md
 #' @param M Total number of wells (a scalar).
-#' @param n Total number of existing distinct viral lineages (DVL) (a scalar).
-#' @param lambda DVL-specific rates of infection (a vector of length \code{n}). (Note: All elements in \code{lambda} must be > 0.)
+#' @param tau Parameters
 #' @param q Proportion of p24-positive wells that underwent UDSA (a scalar between 0 and 1).
+#' @param dilutions Vector of dilution levels (in millions of cells per well).
 #' @param remove_undetected Logical, if \code{remove_undetected = TRUE} (the default), then DVL which were not detected in any of the deep sequenced wells are deleted.
 #' @param seed (Optional) An integer setting the random seed used to simulate the assay data. Default is \code{seed = NULL}.
 #' @return Named list with the following slots:
@@ -11,7 +11,7 @@
 #' \item{DVL_specific}{Standard error for the MLE}
 #' @export
 #'
-simulate_assay_md = function(M, tau, q, dilutions, remove_undetected = T) {
+simulate_assay_md = function(M, tau, q, dilutions, remove_undetected = T, seed = NULL) {
 
   D = length(dilutions)
   n = length(tau)

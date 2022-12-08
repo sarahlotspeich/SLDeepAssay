@@ -7,10 +7,10 @@
 #' @param MP (Optional) Instead of supplying \code{assay}, supply the total number of p24-positive wells (a scalar). Default is \code{MP = NULL}.
 #' @param m (Optional) Instead of supplying \code{assay}, supply the total number of p24-positive wells that underwent deep sequencing (a scalar). Default is \code{m = NULL}.
 #' @param Y (Optional) Instead of supplying \code{assay}, supply the numbers of wells (without missing data) that were infected with each DVL (a vector of length \code{n}). Default is \code{Y = NULL}.
-#' @param corrected Logical, if \code{corrected = TRUE} the bias-corrected MLE will be returned. If there are <= 40 DVL in \code{assay}, default is \code{corrected = TRUE}; otherwise default is \code{corrected = FALSE}. 
+#' @param corrected Logical, if \code{corrected = TRUE} the bias-corrected MLE will be returned. If there are <= 40 DVL in \code{assay}, default is \code{corrected = TRUE}; otherwise default is \code{corrected = FALSE}.
 #' @param maxit The maximum number of iterations (passed to \code{optim}). Default is \code{maxit = 1E4}.
-#' @param lb Lower-bound on the IUPM (passed to \code{optim}). Default is \code{lb = 1E-6}.
-#' @param ub Upper-bound on the IUPM (passed to \code{optim}). Default is \code{ub = Inf}.
+#' @param lb Parameter lower bound (passed to \code{optim}). Default is \code{lb = 1E-6}.
+#' @param ub Parameter upper bound (passed to \code{optim}). Default is \code{ub = Inf}.
 #' @return A named list with the following slots:
 #' \item{mle}{MLE}
 #' \item{se}{Standard error for the MLE}
@@ -33,11 +33,11 @@ fit_SLDeepAssay_sd = function(assay, dilution = 1, M = NULL, n = NULL, MP = NULL
   }
   q = m / MP # proportion of p24-positive wells deep sequenced
   n = length(Y) # number of observed DVLs
-  
+
   # Indicator for whether bias correction should be computed:
   # User-specified value if provided, else yes if n <= 40
   corrected = ifelse(!corrected, n <= 40, corrected)
-  
+
   # Fit MLE
   optimization = optim(par = - log(1 - Y / M),
                        fn = loglik_sd,
@@ -52,22 +52,22 @@ fit_SLDeepAssay_sd = function(assay, dilution = 1, M = NULL, n = NULL, MP = NULL
                        lower = rep(lb, n),
                        upper = rep(ub, n),
                        hessian = F)
-  
+
   lambda.hat = optimization$par
   Lambda.hat = sum(lambda.hat) # MLE of the IUPM
-  
+
   # Fisher information matrix
   I = fisher_sd(lambda = lambda.hat, M = M, q = q)
-  
+
   # inverse of fisher information
   cov = solve(I)
-  
+
   # variance estimate
   se = sqrt(sum(cov))
-  
+
   # confidence interval
   ci = exp(c(log(Lambda.hat) + c(-1, 1) * (qnorm(0.975) * se / Lambda.hat)))
-  
+
   # For large n, do not compute bias correction unless user overrides
   if (!corrected) {
     Lambda.hat.bc = NA
@@ -78,19 +78,19 @@ fit_SLDeepAssay_sd = function(assay, dilution = 1, M = NULL, n = NULL, MP = NULL
     lambda.hat.bc = BC_sd(lambda = lambda.hat,
                           M = M,
                           q = q)
-    
+
     Lambda.hat.bc = sum(lambda.hat.bc)
-    
+
     # confidence interval
     ci.bc <- exp(c(log(Lambda.hat.bc) +
                      c(-1, 1) * (qnorm(0.975) * se / Lambda.hat.bc)))
   }
-  
+
   results = list("mle" = Lambda.hat / dilution,
                  "se" = se / dilution,
                  "ci" = ci / dilution,
                  "mle.bc" = Lambda.hat.bc / dilution,
                  "ci.bc" = ci.bc / dilution)
-  
+
   return(results)
 }

@@ -5,35 +5,23 @@
 \title{Maximum likelihood estimator (MLE) for multiple-dilution assay data}
 \usage{
 fit_SLDeepAssay_md(
-  assay,
-  dilution = 1,
-  M = NULL,
-  n = NULL,
-  MP = NULL,
-  m = NULL,
-  Y = NULL,
-  corrected = FALSE,
-  maxit = 10000,
+  assay = NULL,
+  dilutions = NULL,
+  assay.summary,
+  bc = NULL,
+  maxit = 1e+06,
   lb = 1e-06,
   ub = Inf
 )
 }
 \arguments{
-\item{assay}{Assay data, with rows representing the distinct viral lineages (DVL) and columns representing the wells. Any columns with \code{NA} values will be treated as positive but missing deep sequencing information.}
+\item{assay}{List of data frames with assay data from each dilution level. Default is \code{NULL}.}
 
-\item{dilution}{Scalar, representing the dilution for number of cells per well (in millions). Default is \code{dilution = 1}.}
+\item{dilutions}{Vector of dilutions. Default is \code{NULL}.}
 
-\item{M}{(Optional) Instead of supplying \code{assay}, supply the total number of wells (a scalar). Default is \code{M = NULL}.}
+\item{assay.summary}{(Optional) Instead of supplying \code{assay}, supply a summary of assay results. This summary should contain one row per dilution level and the following columns: M (total number of wells), n (number of distinct viral lineages \[DVL\]), MN (number of p24-negative wells), m (number of deep sequenced wells), Y1,..., Yn (counts of wells positive for DVL i, (i = 1,...,n), and dilutions (dilution levels, in millions of cells per well).}
 
-\item{n}{(Optional) Instead of supplying \code{assay}, supply the total number of DVL detected (a scalar). Default is \code{n = NULL}.}
-
-\item{MP}{(Optional) Instead of supplying \code{assay}, supply the total number of p24-positive wells (a scalar). Default is \code{MP = NULL}.}
-
-\item{m}{(Optional) Instead of supplying \code{assay}, supply the total number of p24-positive wells that underwent deep sequencing (a scalar). Default is \code{m = NULL}.}
-
-\item{Y}{(Optional) Instead of supplying \code{assay}, supply the numbers of wells (without missing data) that were infected with each DVL (a vector of length \code{n}). Default is \code{Y = NULL}.}
-
-\item{corrected}{Logical, if \code{corrected = TRUE} the bias-corrected MLE will be returned. If there are <= 40 DVL in \code{assay}, default is \code{corrected = TRUE}; otherwise default is \code{corrected = FALSE}.}
+\item{bc}{Logical indicator for returning bias corrected MLE and CI. By default, the bias correction is not computed if n>40.}
 
 \item{maxit}{The maximum number of iterations (passed to \code{optim}). Default is \code{maxit = 1E4}.}
 
@@ -42,7 +30,7 @@ fit_SLDeepAssay_md(
 \item{ub}{Upper-bound on the IUPM (passed to \code{optim}). Default is \code{ub = Inf}.}
 }
 \value{
-A named list with the following slots:
+Named list with the following slots:
 \item{mle}{MLE}
 \item{se}{Standard error for the MLE}
 \item{ci}{95\% confidence interval for the MLE}

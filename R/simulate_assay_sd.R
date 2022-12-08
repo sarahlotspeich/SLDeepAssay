@@ -10,7 +10,7 @@
 #' \item{DVL_specific}{Standard error for the MLE}
 #' @export
 #'
-simulate_assay_sd <- function(M, n, lambda, q, remove_undetected = TRUE) {
+simulate_assay_sd = function(M, n, lambda, q, remove_undetected = TRUE) {
   # Generate Z = I(Xij >= 1) for all i, j
   Z <- rbinom(n = M * n,
               size = 1,

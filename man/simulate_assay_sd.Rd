@@ -7,18 +7,18 @@
 simulate_assay_sd(M, n, lambda, q, remove_undetected = TRUE)
 }
 \arguments{
-\item{M}{The total number of wells (a scalar).}
+\item{M}{Total number of wells (a scalar).}
 
-\item{n}{The total number of existing distinct viral lineages (DVL) (a scalar).}
+\item{n}{Total number of existing distinct viral lineages (DVL) (a scalar).}
 
-\item{lambda}{The DVL-specific rates of infection (a vector of length \code{n}). (Note: All elements in \code{lambda} must be > 0.)}
+\item{lambda}{DVL-specific rates of infection (a vector of length \code{n}). (Note: All elements in \code{lambda} must be > 0.)}
 
-\item{q}{The fixed proportion of p24-positive wells to be deep sequenced (a scalar between 0 and 1).}
+\item{q}{Proportion of p24-positive wells that underwent UDSA (a scalar between 0 and 1).}
 
 \item{remove_undetected}{Logical, if \code{remove_undetected = TRUE} (the default), then DVL which were not detected in any of the deep sequenced wells are deleted.}
 }
 \value{
-A named list with the following slots:
+Named list with the following slots:
 \item{any_DVL}{A \code{Mx1} vector containing indicators of overall (any DVL) infection across the wells.}
 \item{DVL_specific}{Standard error for the MLE}
 }

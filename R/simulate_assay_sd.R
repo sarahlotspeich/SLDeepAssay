@@ -1,11 +1,11 @@
 #' Simulate single-dilution assay data
 #' @name simulate_assay_sd
-#' @param M The total number of wells (a scalar).
-#' @param n The total number of existing distinct viral lineages (DVL) (a scalar).
-#' @param lambda The DVL-specific rates of infection (a vector of length \code{n}). (Note: All elements in \code{lambda} must be > 0.)
-#' @param q The fixed proportion of p24-positive wells to be deep sequenced (a scalar between 0 and 1).
+#' @param M Total number of wells (a scalar).
+#' @param n Total number of existing distinct viral lineages (DVL) (a scalar).
+#' @param lambda DVL-specific rates of infection (a vector of length \code{n}). (Note: All elements in \code{lambda} must be > 0.)
+#' @param q Proportion of p24-positive wells that underwent UDSA (a scalar between 0 and 1).
 #' @param remove_undetected Logical, if \code{remove_undetected = TRUE} (the default), then DVL which were not detected in any of the deep sequenced wells are deleted.
-#' @return A named list with the following slots:
+#' @return Named list with the following slots:
 #' \item{any_DVL}{A \code{Mx1} vector containing indicators of overall (any DVL) infection across the wells.}
 #' \item{DVL_specific}{Standard error for the MLE}
 #' @export

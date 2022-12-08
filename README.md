@@ -189,3 +189,69 @@ levels, we would use the `simulate_assay_md()` function. There are still
 
 The 2 optional arguments are the same as with the `simulate_assay_sd()`
 function.
+
+## Built-In Functions for Estimation
+
+Now that we have our assay data, we turn to primary purpose of the
+`SLDeepAssay` package: to efficiently estimate the rate of infection
+from dilution assays with deep sequencing data using maximum likelihood
+estimation (MLE). We can obtain point estimates, standard errors, and
+confidence intervals all with a single call to the
+`fit_SLDeepAssay_sd()` function. There are actually two ways to supply
+the assay data for estimation.
+
+### Supplying full assay data
+
+The first argument `assay` expects a matrix like the one
+`simulate_assay_sd()` returned in `assay$DVL_specific` above. If this is
+supplied, then the only other *required* argument is `dilution`, which
+is the number of cells per well (in millions). Then, you can skip
+parameters `M`, `n`, `MP`, `m`, and `Y` (they will be discussed in the
+next section), and all that is left are optional arguments:
+
+- `corrected`: a logical indicator for whether the bias-corrected MLE
+  should be returned (`TRUE`) or not (`FALSE`),
+- `maxit`: the maximum number of iterations allowed to find the MLE,
+- `lb`: the lower bound for the parameters, and
+- `ub`: the upper bound for the parameters.
+
+The last three optional parameters are all passed to the `optim()`
+function, which is used to find the MLE inside of `simulate_assay_sd()`.
+Recall that data were simulated for wells with 1 million cells per well,
+so `dilution = 1` and the MLE can be interpreted as the infectious units
+per million (IUPM).
+
+We now estimate the IUPM based on the last `assay` generated above,
+leaving all optional arguments at their defaults.
+
+``` r
+res = fit_SLDeepAssay_sd(assay = assay$DVL_specific, 
+                         dilution = 1)
+res
+```
+
+    ## $mle
+    ## [1] 0.5074829
+    ## 
+    ## $se
+    ## [1] 0.2279808
+    ## 
+    ## $ci
+    ## [1] 0.2103919 1.2240913
+    ## 
+    ## $mle.bc
+    ## [1] 0.422995
+    ## 
+    ## $ci.bc
+    ## [1] 0.1470838 1.2164820
+
+Finally, we interpret the output as follows.
+
+- `res$mle` is the uncorrected MLE.
+- `res$se` is the estimated standard error (assumed to be the same for
+  both the bias corrected and uncorrected MLE).
+- `res$ci` is the 95% confidence interval (CI) for the uncorrected MLE.
+- `res$mle.bc` is the bias-corrected MLE.
+- `res$ci.bc` is the 95% CI for the bias-corrected MLE.
+
+### Supplying summarized assay data

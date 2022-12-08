@@ -3,13 +3,14 @@
 #' @param lambda Vector of DVL-specific parameters.
 #' @param M Total number of wells originally sequenced with the QVOA.
 #' @param q Proportion of p24-positive wells that underwent UDSA.
+#' @importFrom numDeriv jacobian
 #' @return A matrix
 #'
 deriv_fisher_sd = function(lambda, M, q) {
   n = length(lambda)
   dI = vapply(X = 1:n, FUN.VALUE = matrix(0, n, n),
               FUN = function(i) {
-                numDeriv::jacobian(func = function(l) {
+                jacobian(func = function(l) {
                   lam = lambda
                   lam[i] = l
                   fisher_sd(lambda = lam, M = M, q = q)

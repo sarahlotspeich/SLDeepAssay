@@ -13,7 +13,7 @@ fisher_md(tau, M, q, dilutions)
 
 \item{q}{Proportion of p24-positive wells that underwent UDSA.}
 
-\item{dilutions}{Vector of all dilution levels.}
+\item{dilutions}{Vector of all dilution levels (in millions of cells per well).}
 }
 \value{
 A matrix

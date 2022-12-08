@@ -3,7 +3,7 @@
 #' @param tau Parameter
 #' @param M Total number of wells originally sequenced with the QVOA.
 #' @param q Proportion of p24-positive wells that underwent UDSA.
-#' @param dilutions Vector of all dilution levels.
+#' @param dilutions Vector of all dilution levels (in millions of cells per well).
 #' @return A matrix
 #'
 fisher_md = function(tau, M, q, dilutions) {

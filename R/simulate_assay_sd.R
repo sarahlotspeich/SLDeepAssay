@@ -5,12 +5,18 @@
 #' @param lambda DVL-specific rates of infection (a vector of length \code{n}). (Note: All elements in \code{lambda} must be > 0.)
 #' @param q Proportion of p24-positive wells that underwent UDSA (a scalar between 0 and 1).
 #' @param remove_undetected Logical, if \code{remove_undetected = TRUE} (the default), then DVL which were not detected in any of the deep sequenced wells are deleted.
+#' @param seed (Optional) An integer setting the random seed used to simulate the assay data. Default is \code{seed = NULL}.
 #' @return Named list with the following slots:
 #' \item{any_DVL}{A \code{Mx1} vector containing indicators of overall (any DVL) infection across the wells.}
 #' \item{DVL_specific}{Standard error for the MLE}
 #' @export
 #'
-simulate_assay_sd = function(M, n, lambda, q, remove_undetected = TRUE) {
+simulate_assay_sd = function(M, n, lambda, q, remove_undetected = TRUE, seed = NULL) {
+  # If supplied, set the random seed
+  if (!is.null(seed)) {
+    set.seed(seed)
+  }
+
   # Generate Z = I(Xij >= 1) for all i, j
   Z <- rbinom(n = M * n,
               size = 1,

@@ -37,6 +37,7 @@ Named list with the following slots:
 \item{MLE_wUDSA}{Point estimate, standard error estimate, and 95\% confidence interval for the MLE (with deep sequencing information).}
 \item{BCMLE_wUDSA}{Point estimate, standard error estimate, and 95\% confidence interval for the bias-corrected MLE (with deep sequencing information).}
 \item{Message}{(Optional) Message describing whether the \code{Assay} needed to be re-simulated due to either none of the DVL being detected (\code{Message = 1}) or at least one DVL being detected in all deep-sequenced wells (\code{Message = 2}). Otherwise, \code{Message = 0}.}
+\item{Message_Detailed}{(Optional) Count of times the \code{Assay} needed to be re-simulated due to none of the DVL being detected and/or at least one DVL being detected in all deep-sequenced wells. Otherwise, \code{Message_Detailed = NULL}.}
 }
 \description{
 Simulate single-dilution assay data and fit new and existing methods to it.

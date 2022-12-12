@@ -14,6 +14,7 @@
 #' \item{MLE_wUDSA}{Point estimate, standard error estimate, and 95\% confidence interval for the MLE (with deep sequencing information).}
 #' \item{BCMLE_wUDSA}{Point estimate, standard error estimate, and 95\% confidence interval for the bias-corrected MLE (with deep sequencing information).}
 #' \item{Message}{(Optional) Message describing whether the \code{Assay} needed to be re-simulated due to either none of the DVL being detected (\code{Message = 1}) or at least one DVL being detected in all deep-sequenced wells (\code{Message = 2}). Otherwise, \code{Message = 0}.}
+#' \item{Message_Detailed}{(Optional) Count of times the \code{Assay} needed to be re-simulated due to none of the DVL being detected and/or at least one DVL being detected in all deep-sequenced wells. Otherwise, \code{Message_Detailed = NULL}.}
 #' @importFrom SLDAssay get.mle
 #' @export
 #'
@@ -88,11 +89,26 @@ simulate_SLDeepAssay_sd <- function(M, n, lambda, q, dilution = 1, remove_undete
                                yes = 1,
                                no = 0))
 
+  # Construct Message_Detailed
+  if (Message > 0) {
+    Message_Detailed = paste0("Assay was resimulated ",
+                              num_redo_none + num_redo_all,
+                              "times (",
+                              num_redo_none,
+                              "due to no DVL being detected and ",
+                              num_redo_all,
+                              "times due to a DVL being detected in all wells).")
+  } else {
+    Message_Detailed = NULL
+  }
+
+  # Construct list to return
   return(list(Assay = assay$DVL_specific,
               MLE_woUDSA = MLE_woUDSA,
               BCMLE_woUDSA = BCMLE_woUDSA,
               MLE_wUDSA = MLE_wUDSA,
               BCMLE_wUDSA = BCMLE_wUDSA,
-              Message = Message
+              Message = Message,
+              Message_Detailed = Message_Detailed
               ))
 }

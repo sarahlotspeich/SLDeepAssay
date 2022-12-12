@@ -6,7 +6,6 @@
 \usage{
 simulate_SLDeepAssay_sd(
   M,
-  n,
   lambda,
   q,
   dilution = 1,
@@ -16,8 +15,6 @@ simulate_SLDeepAssay_sd(
 }
 \arguments{
 \item{M}{Total number of wells (a scalar).}
-
-\item{n}{Total number of existing distinct viral lineages (DVL) (a scalar).}
 
 \item{lambda}{DVL-specific rates of infection (a vector of length \code{n}). (Note: All elements in \code{lambda} must be > 0.)}
 

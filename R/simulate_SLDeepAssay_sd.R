@@ -1,7 +1,6 @@
 #' Simulate single-dilution assay data and fit new and existing methods to it.
 #' @name simulate_SLDeepAssay_sd
 #' @param M Total number of wells (a scalar).
-#' @param n Total number of existing distinct viral lineages (DVL) (a scalar).
 #' @param lambda DVL-specific rates of infection (a vector of length \code{n}). (Note: All elements in \code{lambda} must be > 0.)
 #' @param q Fixed proportion of p24-positive wells to be deep sequenced (a scalar between 0 and 1).
 #' @param dilution Number of cells per well (a scalar, in millions). Default is \code{dilution = 1}.
@@ -18,7 +17,7 @@
 #' @importFrom SLDAssay get.mle
 #' @export
 #'
-simulate_SLDeepAssay_sd <- function(M, n, lambda, q, dilution = 1, remove_undetected = TRUE, seed = NULL) {
+simulate_SLDeepAssay_sd <- function(M, lambda, q, dilution = 1, remove_undetected = TRUE, seed = NULL) {
   # If supplied, set the random seed
   if (!is.null(seed)) {
     set.seed(seed)
@@ -30,7 +29,6 @@ simulate_SLDeepAssay_sd <- function(M, n, lambda, q, dilution = 1, remove_undete
 
   # Simulate single-dilution assay data
   assay = simulate_assay_sd(M = M,
-                            n = n,
                             lambda = lambda,
                             q = q,
                             remove_undetected = remove_undetected)
@@ -46,7 +44,6 @@ simulate_SLDeepAssay_sd <- function(M, n, lambda, q, dilution = 1, remove_undete
     }
     # Re-simulate single-dilution assay data
     assay = simulate_assay_sd(M = M,
-                              n = n,
                               lambda = lambda,
                               q = q,
                               remove_undetected = remove_undetected)

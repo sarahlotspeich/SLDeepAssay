@@ -90,11 +90,11 @@ simulate_SLDeepAssay_sd <- function(M, lambda, q, dilution = 1, remove_undetecte
   if (Message > 0) {
     Message_Detailed = paste0("Assay was resimulated ",
                               num_redo_none + num_redo_all,
-                              "times (",
+                              ifelse((num_redo_none + num_redo_all) == 1, "time (", "times ("),
                               num_redo_none,
-                              "due to no DVL being detected and ",
+                              " due to no DVL being detected and ",
                               num_redo_all,
-                              "times due to a DVL being detected in all wells).")
+                              " due to a DVL being detected in all wells).")
   } else {
     Message_Detailed = NULL
   }

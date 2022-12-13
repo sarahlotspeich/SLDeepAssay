@@ -15,7 +15,7 @@
 #' @importFrom SLDAssay get.mle 
 #' @export
 #'
-simulate_SLDeepAssay_md <- function(M, tau, q, u, remove_undetected = TRUE, seed = NULL) {
+simulate_SLDeepAssay_md = function(M, tau, q, u, remove_undetected = TRUE, seed = NULL) {
   # If supplied, set the random seed
   if (!is.null(seed)) {
     set.seed(seed)  

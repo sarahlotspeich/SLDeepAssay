@@ -1,30 +1,27 @@
 #' Simulate multiple-dilution assay data
 #' @name simulate_assay_md
-#' @param M Total number of wells (a scalar).
-#' @param tau Parameters
-#' @param q Proportion of p24-positive wells that underwent UDSA (a scalar between 0 and 1).
-#' @param dilutions Vector of dilution levels (in millions of cells per well).
-#' @param remove_undetected Logical, if \code{remove_undetected = TRUE} (the default), then DVL which were not detected in any of the deep sequenced wells are deleted.
-#' @param seed (Optional) An integer setting the random seed used to simulate the assay data. Default is \code{seed = NULL}.
+#' @param M Total number of wells at each dilution level (a vector of length D).
+#' @param tau DVL-specific IUPMs (a vector of length \code{n}). (Note: All elements in \code{tau} must be > 0.)
+#' @param q Proportions of p24-positive wells that underwent UDSA at each dilution level (a vector of length D).
+#' @param u Vector of dilution levels (in millions of cells per well).
+#' @param remove_undetected Logical, if \code{remove_undetected = TRUE} (the default), then DVL which were not detected in any of the deep sequenced wells across all dilution levels are deleted.
 #' @return Named list with the following slots:
-#' \item{any_DVL}{A \code{Mx1} vector containing indicators of overall (any DVL) infection across the wells.}
-#' \item{DVL_specific}{Standard error for the MLE}
+#' \item{assay_summary} {A This summary should contain one row per dilution level and the following columns: M (total number of wells), n (number of distinct viral lineages \[DVL\]), MN (number of p24-negative wells), m (number of deep sequenced wells), Y1,..., Yn (counts of wells positive for DVL i, (i = 1,...,n), and dilutions (dilution levels, in millions of cells per well).}
 #' @export
 #'
-simulate_assay_md = function(M, tau, q, dilutions, remove_undetected = T, seed = NULL) {
+simulate_assay_md = function(M, tau, q, u, remove_undetected = T, seed = NULL) {
 
-  D = length(dilutions)
+  D = length(u)
   n = length(tau)
 
   # Observed matrix for each dilution level
-  assay = lapply(1:D,
-                 X = function(d) simulate_assay_sd(M = M[d],
-                                                   n = n,
-                                                   lambda = tau * dilutions[d],
-                                                   q = q[d],
-                                                   remove_undetected = remove_undetected,
-                                                   seed = seed))
-  assay.summary = vapply(X = 1:D,
+  assay = lapply(X = 1:D,
+                 FUN = function(d) simulate_assay_sd(M = M[d],
+                                                     n = n,
+                                                     lambda = tau * u[d],
+                                                     q = q[d],
+                                                     remove_undetected = F)
+  assay_summary = vapply(X = 1:D,
                          FUN.VALUE = numeric(7 + n),
                          FUN = function(d) {
                            M = ncol(assay[[d]]) # number of wells
@@ -34,17 +31,17 @@ simulate_assay_md = function(M, tau, q, dilutions, remove_undetected = T, seed =
                            m = MP - sum(is.na(colSums(assay[[d]]))) # number of deep-sequenced wells = m
                            q = ifelse(MP == 0, 0, m / MP) # proportion of p24-positive wells deep sequenced
                            Y = rowSums(assay[[d]], na.rm = TRUE) # number of infected wells per DVL = Y
-                           return((c("dilution" = dilutions[d], "M"=M, "n"=n,
+                           return((c("dilution" = u[d], "M"=M, "n"=n,
                                      "MN"=MN, "MP"=MP, "m"=m, "q"=q, "Y"=Y)))
                          })
 
-  assay.summary = as.data.frame(t(assay.summary))
+  assay_summary = as.data.frame(t(assay_summary))
 
   ### remove undetected DVL and adjust n
   if (remove_undetected) {
-    assay.summary = assay.summary[, !grepl("Y", colnames(assay.summary)) | colSums(assay.summary) > 0]
-    assay.summary$n = sum(grepl("Y", colnames(assay.summary)))
+    assay_summary = assay_summary[, !grepl("Y", colnames(assay_summary)) | colSums(assay_summary) > 0]
+    assay_summary$n = sum(grepl("Y", colnames(assay_summary)))
   }
 
-  return(assay.summary)
+  return(assay_summary)
 }

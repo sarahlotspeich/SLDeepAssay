@@ -4,7 +4,7 @@
 \alias{BC_md}
 \title{Bias correction for MLE from multiple-dilution assay data}
 \usage{
-BC_md(tau, M, q, dilutions)
+BC_md(tau, M, q, u)
 }
 \arguments{
 \item{tau}{Parameter}
@@ -13,7 +13,7 @@ BC_md(tau, M, q, dilutions)
 
 \item{q}{Proportion of p24-positive wells that underwent UDSA.}
 
-\item{dilutions}{Vector of all dilution levels (in millions of cells per well).}
+\item{u}{Vector of all dilution levels (in millions of cells per well).}
 }
 \value{
 A vector of the same length as \code{lambda}

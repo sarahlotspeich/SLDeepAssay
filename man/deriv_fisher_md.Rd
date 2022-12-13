@@ -4,7 +4,7 @@
 \alias{deriv_fisher_md}
 \title{Derivative of the Fisher information of the log-likelihood for IUPM from multiple-dilution assay data}
 \usage{
-deriv_fisher_md(tau, M, q, dilutions)
+deriv_fisher_md(tau, M, q, u)
 }
 \arguments{
 \item{tau}{Parameter}
@@ -13,7 +13,7 @@ deriv_fisher_md(tau, M, q, dilutions)
 
 \item{q}{Proportion of p24-positive wells that underwent UDSA.}
 
-\item{dilutions}{Vector of all dilution levels (in millions of cells per well).}
+\item{u}{Vector of all dilution levels (in millions of cells per well).}
 }
 \value{
 A matrix

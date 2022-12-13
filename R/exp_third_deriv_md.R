@@ -3,19 +3,21 @@
 #' @param tau Parameter
 #' @param M Total number of wells originally sequenced with the QVOA.
 #' @param q Proportion of p24-positive wells that underwent UDSA.
-#' @param dilutions Vector of all dilution levels (in millions of cells per well).
+#' @param u Vector of all dilution levels (in millions of cells per well).
 #' @return A matrix
 #'
 #'
-exp_third_deriv_md = function(tau, M, q, dilutions) {
-  D = length(dilutions)
+exp_third_deriv_md = function(tau, M, q, u) {
+  D = length(u)
   n = length(tau)
-  ed3.d = vapply(X = 1:D, FUN.VALUE = matrix(0, n, n^2),
-                 FUN = function(d) exp_third_deriv_sd(lambda = dilutions[d] * tau,
+  ed3.d = vapply(X = 1:D,
+                 FUN.VALUE = matrix(0, n, n^2),
+                 FUN = function(d) exp_third_deriv_sd(lambda = u[d] * tau,
                                                       M = M[d],
-                                                      q = q[d]) *
-                   dilutions[d] ^ 3)
+                                                      q = q[d]) * u[d] ^ 3)
 
-  ed3 = apply(ed3.d, c(1,2), sum)
+  ed3 = apply(X = ed3.d,
+              MARGIN = c(1,2),
+              FUN = sum)
   return(ed3)
 }

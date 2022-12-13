@@ -26,27 +26,27 @@ The `SLDeepAssay` package contains parallel functions designed to analyze (or ge
 
 ## Built-In Functions to Simulate Assay Data
 
-We begin by demonstrating how to simulate assay data from a single dilution level using the `simulate_assay_sd()` function. There are 4 required arguments, 
+We begin by demonstrating how to simulate assay data from a single dilution level using the `simulate_assay_sd()` function. 
+
+There are 3 required arguments, 
   
   -   `M`: the total number of wells (a scalar),
-  -   `n`: the number of existing distinct viral lineages (DVL) (a scalar),  
-  -   `lambda`: the DVL-specific rate parameters (a vector of length `n` with all elements $>0$)
+  -   `tau`: the mean counts of infected cells per well with each DVL (a vector of with all elements $>0$)
   -   `q`: the proportion of p24-positive wells to be deep sequenced (a scalar between $0$ and $1$), 
   
-and 2 optional arguments, 
+and 1 optional argument, 
 
-  -   `remove_undetected`: a logical indicator for whether DVL that are not detected in any wells should be deleted (`TRUE`) or not (`FALSE`), and
-  -   `seed = NULL`: the desired random seed (a scalar).
+  -   `remove_undetected`: a logical indicator for whether DVL that are not detected in any wells should be deleted (`TRUE`) or not (`FALSE`).
 
 The function returns a list containing two versions of the simulated data, corresponding to the quantitative viral outgrowth assay (QVOA) (`$any_DVL`) and Ultra Deep Sequencing Assay of the Outgrowth Virus (UDSA) (`$DVL_specific`) measures discussed in the manuscript.  
   
-For demonstration, we simulate a single-dilution assay of `M = 12` total wells (each with `dilution = 1` million cells in it), with `n = 6` underlying DVL, and assume that `q = 0.5` (i.e., 50\%) of p24-positive wells will undergo deep sequencing. To specify `lambda`, recall the connection for a single dilution level between the DVL-specific rates and the overall IUPM = `sum(lambda)/dilution`. Therefore, if we want to simulate data where the overall IUPM = 0.5, we set `lambda = rep(0.5 / 6, 6)` (or any other way to distribute a total mass of 0.5 across the 6 DVL). 
+For demonstration, we simulate a single-dilution assay of `M = 12` total wells (each with `u = 1` million cells in it), with `n = 6` underlying DVL, and assume that `q = 0.5` (i.e., 50\%) of p24-positive wells will undergo deep sequencing. Lastly, if we want to simulate data where the overall IUPM = 0.5, we set `tau = rep(0.5 / 6, 6)` (or any other way to distribute a total mass of 0.5 across the 6 DVL). 
 
 We now demonstrate a few ways to simulate, depending on our choices for the optional arguments. 
 
 ```{r}
 assay = simulate_assay_sd(M = 12, 
-                          lambda = rep(0.5 / 6, 6), 
+                          tau = rep(0.5 / 6, 6), 
                           q = 0.5, 
                           remove_undetected = TRUE)
 assay
@@ -64,33 +64,13 @@ Now what if I leave the `seed` the same, but instead set `remove_undetected = FA
 
 ```{r}
 assay = simulate_assay_sd(M = 12,
-                          lambda = rep(0.5 / 6, 6), 
+                          tau = rep(0.5 / 6, 6), 
                           q = 0.5, 
                           remove_undetected = FALSE)
 assay
 ```
 
 Notice that `assay$any_DVL` is the same as before, which makes sense since it's the same random seed. However, `assay$DVL_specific` now has all `n = 6` rows, even though rows 1--2 and 4--5 contain all 0s. 
-
-### The `seed` option
-
-When should I bother to specify the `seed` myself? Well, for reproducibility it's a great idea! That way, every time you run your code, you know that you'll be getting the same simulated assay. Suppose I run my code once, change my mind about something, and run it again. If I don't set the seed, I'll be dealing with completely different datasets!
-
-```{r}
-assay = simulate_assay_sd(M = 12,
-                          lambda = rep(0.5 / 6, 6), 
-                          q = 0.5, 
-                          remove_undetected = TRUE)
-assay
-assay = simulate_assay_sd(M = 12,
-                          lambda = rep(0.5 / 6, 6), 
-                          q = 0.5, 
-                          remove_undetected = TRUE)
-assay
-```
-
-It tends to be safer to set the `seed`, but if you're using this function inside of a loop or something as part of a large-scale simulation study it might make more sense to do so outside of the function. 
-
 
 ### Multiple dilution levels
 
@@ -109,20 +89,20 @@ Now that we have our assay data, we turn to primary purpose of the `SLDeepAssay`
 
 ### Supplying full assay data 
 
-The first argument `assay` expects a matrix like the one `simulate_assay_sd()` returned in `assay$DVL_specific` above. If this is supplied, then the only other *required* argument is `dilution`, which is the number of cells per well (in millions). Then, you can skip parameters `M`, `n`, `MP`, `m`, and `Y` (they will be discussed in the next section), and all that is left are optional arguments: 
+The first argument `assay` expects a matrix like the one `simulate_assay_sd()` returned in `assay$DVL_specific` above. If this is supplied, then the only other *required* argument is `u`, which is the dilution level in millions of cells per well. Then, you can skip parameters `M`, `MP`, `m`, and `Y` (they will be discussed in the next section), and all that is left are optional arguments: 
 
   -   `corrected`: a logical indicator for whether the bias-corrected MLE should be returned (`TRUE`) or not (`FALSE`),
   -   `maxit`: the maximum number of iterations allowed to find the MLE,
   -   `lb`: the lower bound for the parameters, and
   -   `ub`: the upper bound for the parameters. 
   
-The last three optional parameters are all passed to the `optim()` function, which is used to find the MLE inside of `simulate_assay_sd()`. Recall that data were simulated for wells with 1 million cells per well, so `dilution = 1` and the MLE can be interpreted as the infectious units per million (IUPM).
+The last three optional parameters are all passed to the `optim()` function, which is used to find the MLE inside of `simulate_assay_sd()`. Recall that data were simulated for wells with 1 million cells per well, so `u = 1` and the MLE can be interpreted as the infectious units per million (IUPM).
 
 We now estimate the IUPM based on the last `assay` generated above, leaving all optional arguments at their defaults.
 
 ```{r}
 res = fit_SLDeepAssay_sd(assay = assay$DVL_specific, 
-                         dilution = 1)
+                         u = 1)
 res
 ```
 
@@ -131,7 +111,7 @@ Finally, we interpret the output as follows.
   -   `res$mle` is the uncorrected MLE. 
   -   `res$se` is the estimated standard error (assumed to be the same for both the bias corrected and uncorrected MLE). 
   -   `res$ci` is the 95\% confidence interval (CI) for the uncorrected MLE. 
-  -   `res$mle.bc` is the bias-corrected MLE. 
-  -   `res$ci.bc` is the 95\% CI for the bias-corrected MLE. 
+  -   `res$mle_bc` is the bias-corrected MLE. 
+  -   `res$ci_bc` is the 95\% CI for the bias-corrected MLE. 
 
 ### Supplying summarized assay data

@@ -4,23 +4,23 @@
 \alias{simulate_assay_sd}
 \title{Simulate single-dilution assay data}
 \usage{
-simulate_assay_sd(M, lambda, q, remove_undetected = TRUE, seed = NULL)
+simulate_assay_sd(M, tau, q, u = 1, remove_undetected = TRUE)
 }
 \arguments{
 \item{M}{Total number of wells (a scalar).}
 
-\item{lambda}{DVL-specific rates of infection (a vector of length \code{n}). (Note: All elements in \code{lambda} must be > 0.)}
+\item{tau}{Mean counts of cells per million infected with each DVL (a vector). (Note: All elements in \code{tau} must be > 0.)}
 
 \item{q}{Proportion of p24-positive wells that underwent UDSA (a scalar between 0 and 1).}
 
-\item{remove_undetected}{Logical, if \code{remove_undetected = TRUE} (the default), then DVL which were not detected in any of the deep sequenced wells are deleted.}
+\item{u}{Dilution level in millions of cells per well (a positive scalar). Default is \code{dilution = 1}.}
 
-\item{seed}{(Optional) An integer setting the random seed used to simulate the assay data. Default is \code{seed = NULL}.}
+\item{remove_undetected}{Logical, if \code{remove_undetected = TRUE} (the default), then DVL which were not detected in any of the deep sequenced wells are deleted.}
 }
 \value{
 Named list with the following slots:
-\item{any_DVL}{A \code{Mx1} vector containing indicators of overall (any DVL) infection across the wells.}
-\item{DVL_specific}{Standard error for the MLE}
+\item{any_DVL}{A vector containing overall (any DVL) infection indicators of across the wells.}
+\item{DVL_specific}{A matrix of infection indicators with rows and columns representing the DVLs and wells, respectively.}
 }
 \description{
 Simulate single-dilution assay data

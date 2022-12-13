@@ -6,7 +6,7 @@
 \usage{
 fit_SLDeepAssay_sd(
   assay,
-  dilution = 1,
+  u = 1,
   M = NULL,
   n = NULL,
   MP = NULL,
@@ -21,7 +21,7 @@ fit_SLDeepAssay_sd(
 \arguments{
 \item{assay}{Assay data, with rows representing the distinct viral lineages (DVL) and columns representing the wells. Any columns with \code{NA} values will be treated as positive but missing deep sequencing information.}
 
-\item{dilution}{Scalar, representing the dilution for number of cells per well (in millions). Default is \code{dilution = 1}.}
+\item{u}{Dilution level in millions of cells per well (a positive scalar). Default is \code{dilution = 1}.}
 
 \item{M}{(Optional) Instead of supplying \code{assay}, supply the total number of wells (a scalar). Default is \code{M = NULL}.}
 
@@ -46,8 +46,8 @@ A named list with the following slots:
 \item{mle}{MLE}
 \item{se}{Standard error for the MLE}
 \item{ci}{95\% confidence interval for the MLE}
-\item{mle.bc}{Bias-corrected MLE}
-\item{ci.bc}{95\% confidence interval for the bias-corrected MLE}
+\item{mle_bc}{Bias-corrected MLE}
+\item{ci_bc}{95\% confidence interval for the bias-corrected MLE}
 }
 \description{
 Maximum likelihood estimator (MLE) for single-dilution assay data

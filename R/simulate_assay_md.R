@@ -18,7 +18,7 @@ simulate_assay_md = function(M, tau, q, u, remove_undetected = T, seed = NULL) {
   assay = lapply(X = 1:D,
                  FUN = function(d) simulate_assay_sd(M = M[d],
                                                      tau = tau,
-                                                     u = u,
+                                                     u = u[d],
                                                      q = q[d],
                                                      remove_undetected = F))
   assay_summary = vapply(X = 1:D,
@@ -45,3 +45,4 @@ simulate_assay_md = function(M, tau, q, u, remove_undetected = T, seed = NULL) {
 
   return(assay_summary)
 }
+

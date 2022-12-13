@@ -1,9 +1,8 @@
 #' Maximum likelihood estimator (MLE) for single-dilution assay data
 #' @name fit_SLDeepAssay_sd
 #' @param assay Assay data, with rows representing the distinct viral lineages (DVL) and columns representing the wells. Any columns with \code{NA} values will be treated as positive but missing deep sequencing information.
-#' @param dilution Scalar, representing the dilution for number of cells per well (in millions). Default is \code{dilution = 1}.
+#' @param u Dilution level in millions of cells per well (a positive scalar). Default is \code{dilution = 1}.
 #' @param M (Optional) Instead of supplying \code{assay}, supply the total number of wells (a scalar). Default is \code{M = NULL}.
-#' @param n (Optional) Instead of supplying \code{assay}, supply the total number of DVL detected (a scalar). Default is \code{n = NULL}.
 #' @param MP (Optional) Instead of supplying \code{assay}, supply the total number of p24-positive wells (a scalar). Default is \code{MP = NULL}.
 #' @param m (Optional) Instead of supplying \code{assay}, supply the total number of p24-positive wells that underwent deep sequencing (a scalar). Default is \code{m = NULL}.
 #' @param Y (Optional) Instead of supplying \code{assay}, supply the numbers of wells (without missing data) that were infected with each DVL (a vector of length \code{n}). Default is \code{Y = NULL}.
@@ -15,12 +14,12 @@
 #' \item{mle}{MLE}
 #' \item{se}{Standard error for the MLE}
 #' \item{ci}{95\% confidence interval for the MLE}
-#' \item{mle.bc}{Bias-corrected MLE}
-#' \item{ci.bc}{95\% confidence interval for the bias-corrected MLE}
+#' \item{mle_bc}{Bias-corrected MLE}
+#' \item{ci_bc}{95\% confidence interval for the bias-corrected MLE}
 #' @export
 #'
 #'
-fit_SLDeepAssay_sd = function(assay, dilution = 1, M = NULL, n = NULL, MP = NULL, m = NULL, Y = NULL, corrected = FALSE, maxit = 1E4, lb = 1E-6, ub = Inf) {
+fit_SLDeepAssay_sd = function(assay, u = 1, M = NULL, n = NULL, MP = NULL, m = NULL, Y = NULL, corrected = FALSE, maxit = 1E4, lb = 1E-6, ub = Inf) {
   # If the raw assay data are provided then compute the following values
   if (!is.null(assay)) {
     M = ncol(assay) # number of wells (total)
@@ -36,13 +35,14 @@ fit_SLDeepAssay_sd = function(assay, dilution = 1, M = NULL, n = NULL, MP = NULL
 
   # Indicator for whether bias correction should be computed:
   # User-specified value if provided, else yes if n <= 40
-  corrected = ifelse(!corrected, n <= 40, corrected)
+  corrected = ifelse(!corrected,
+                     n <= 40,
+                     corrected)
 
   # Fit MLE
   optimization = optim(par = - log(1 - Y / M),
                        fn = loglik_sd,
                        gr = gloglik_sd,
-                       n = n,
                        M = M,
                        MP = MP,
                        m = m,
@@ -53,11 +53,13 @@ fit_SLDeepAssay_sd = function(assay, dilution = 1, M = NULL, n = NULL, MP = NULL
                        upper = rep(ub, n),
                        hessian = F)
 
-  lambda.hat = optimization$par
-  Lambda.hat = sum(lambda.hat) # MLE of the IUPM
+  lambda_hat = optimization$par
+  Lambda_hat = sum(lambda_hat) # MLE of the IUPM
 
   # Fisher information matrix
-  I = fisher_sd(lambda = lambda.hat, M = M, q = q)
+  I = fisher_sd(lambda = lambda_hat,
+                M = M,
+                q = q)
 
   # inverse of fisher information
   cov = solve(I)
@@ -66,31 +68,30 @@ fit_SLDeepAssay_sd = function(assay, dilution = 1, M = NULL, n = NULL, MP = NULL
   se = sqrt(sum(cov))
 
   # confidence interval
-  ci = exp(c(log(Lambda.hat) + c(-1, 1) * (qnorm(0.975) * se / Lambda.hat)))
+  ci = exp(c(log(Lambda_hat) + c(-1, 1) * (qnorm(0.975) * se / Lambda_hat)))
 
   # For large n, do not compute bias correction unless user overrides
   if (!corrected) {
-    Lambda.hat.bc = NA
-    se.bc = NA
-    ci.bc = NA
+    Lambda_hat_bc = NA
+    ci_bc = NA
   } else {
     # Bias corrected MLE (BC MLE)
-    lambda.hat.bc = BC_sd(lambda = lambda.hat,
+    lambda_hat_bc = BC_sd(lambda = lambda_hat,
                           M = M,
                           q = q)
 
-    Lambda.hat.bc = sum(lambda.hat.bc)
+    Lambda_hat_bc = sum(lambda_hat_bc)
 
     # confidence interval
-    ci.bc <- exp(c(log(Lambda.hat.bc) +
-                     c(-1, 1) * (qnorm(0.975) * se / Lambda.hat.bc)))
+    ci_bc = exp(c(log(Lambda_hat_bc) +
+                    c(-1, 1) * (qnorm(0.975) * se / Lambda_hat_bc)))
   }
 
-  results = list("mle" = Lambda.hat / dilution,
-                 "se" = se / dilution,
-                 "ci" = ci / dilution,
-                 "mle.bc" = Lambda.hat.bc / dilution,
-                 "ci.bc" = ci.bc / dilution)
+  results = list("mle" = Lambda_hat / u,
+                 "se" = se / u,
+                 "ci" = ci / u,
+                 "mle_bc" = Lambda_hat_bc / u,
+                 "ci_bc" = ci_bc / u)
 
   return(results)
 }

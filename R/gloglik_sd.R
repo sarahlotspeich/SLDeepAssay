@@ -1,15 +1,16 @@
 #' Gradient of the log-likelihood for IUPM from single-dilution assay data
 #' @name gloglik_sd
-#' @param l Vector of DVL-specific parameters (of length \code{n}).
-#' @param n Number of distinct viral lineages.
+#' @param l Vector of DVL-specific parameters.
 #' @param M Total number of wells originally sequenced with the QVOA.
 #' @param MP Number of p24-positive wells.
-#' @param m Number of p24-positive wells that underwent the USDA.
-#' @param y A vector of  DVL-specific infection counts (of length \code{n}).
-#' @return A vector (of length \code{n})
+#' @param m Number of p24-positive wells that underwent the UDSA.
+#' @param y A vector of  DVL-specific infection counts.
+#' @return A vector
 #'
-gloglik_sd = function(l, n, M, MP, m, Y)
-{
+gloglik_sd = function(l, M, MP, m, Y) {
+  # Save n = # DVL detected
+  n = length(l)
+
   gradient = NULL
   for(i in 1:n)
   {

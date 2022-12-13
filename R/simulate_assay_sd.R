@@ -1,20 +1,18 @@
 #' Simulate single-dilution assay data
 #' @name simulate_assay_sd
 #' @param M Total number of wells (a scalar).
-#' @param lambda DVL-specific rates of infection (a vector of length \code{n}). (Note: All elements in \code{lambda} must be > 0.)
+#' @param tau Mean counts of cells per million infected with each DVL (a vector). (Note: All elements in \code{tau} must be > 0.)
 #' @param q Proportion of p24-positive wells that underwent UDSA (a scalar between 0 and 1).
+#' @param u Dilution level in millions of cells per well (a positive scalar). Default is \code{dilution = 1}.
 #' @param remove_undetected Logical, if \code{remove_undetected = TRUE} (the default), then DVL which were not detected in any of the deep sequenced wells are deleted.
-#' @param seed (Optional) An integer setting the random seed used to simulate the assay data. Default is \code{seed = NULL}.
 #' @return Named list with the following slots:
-#' \item{any_DVL}{A \code{Mx1} vector containing indicators of overall (any DVL) infection across the wells.}
-#' \item{DVL_specific}{Standard error for the MLE}
+#' \item{any_DVL}{A vector containing overall (any DVL) infection indicators of across the wells.}
+#' \item{DVL_specific}{A matrix of infection indicators with rows and columns representing the DVLs and wells, respectively.}
 #' @export
 #'
-simulate_assay_sd = function(M, lambda, q, remove_undetected = TRUE, seed = NULL) {
-  # If supplied, set the random seed
-  if (!is.null(seed)) {
-    set.seed(seed)
-  }
+simulate_assay_sd = function(M, tau, q, u = 1, remove_undetected = TRUE) {
+  # Calculate lambda: mean number of infected cells per well with each DVL
+  lambda = tau * u
 
   # Create constant for number of existing DVLs
   n = length(lambda)

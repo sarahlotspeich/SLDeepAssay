@@ -5,17 +5,17 @@
 #' @param lambda Vector of DVL-specific parameters.
 #' @return A scalar
 #'
-get_EY <- function(M, q, lambda) {
-  
-  Lambda <- sum(lambda)
-  
-  EY.terms <- sapply(1:M, function(k)
-    
-    dbinom(k, M, 1 - exp(-Lambda)) * round(q * k) / (1 - exp(-Lambda))
-    
-  )
-  
-  EY <- (1 - exp(-lambda)) * sum(EY.terms)
-  
+get_EY = function(M, q, lambda) {
+
+  Lambda = sum(lambda)
+
+  EY_terms = sapply(X = 1:M,
+                    FUN = function(k) {
+                       dbinom(k, M, 1 - exp(-Lambda)) * round(q * k) / (1 - exp(-Lambda))
+                    }
+                    )
+
+  EY = (1 - exp(-lambda)) * sum(EY_terms)
+
   return(EY)
 }

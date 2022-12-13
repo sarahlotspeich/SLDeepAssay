@@ -6,26 +6,30 @@
 #' @return A vector of the same length as \code{lambda}
 #'
 BC_sd = function(lambda, M, q) {
-  
+
   # fisher information (n x n), inverse (n x n), and stacked inverse (n^2 x 1)
   I = fisher_sd(lambda = lambda, M = M, q = q)
-  I.inv = solve(I)
-  vec.I.inv = as.vector(I.inv)
-  
+  I_inv = solve(I)
+  vec_I_inv = as.vector(I_inv)
+
   # derivative of fisher information (n x n^2)
-  dI = deriv_fisher_sd(lambda = lambda, M = M, q = q)
-  
+  dI = deriv_fisher_sd(lambda = lambda,
+                       M = M,
+                       q = q)
+
   # expectation of third derivative of log-likelihood (n x n^2)
-  exp.d3 = exp_third_deriv_sd(lambda = lambda, M = M, q = q)
-  
+  exp_d3 = exp_third_deriv_sd(lambda = lambda,
+                              M = M,
+                              q = q)
+
   # A matric (n x n^2)
-  A = - dI - 0.5 * exp.d3
-  
+  A = - dI - 0.5 * exp_d3
+
   # bias correction
-  bc = I.inv %*% A %*% vec.I.inv
-  
+  bc = I_inv %*% A %*% vec_I_inv
+
   ## Bias corrected MLE
-  lambda.bc = lambda - bc
-  
-  return(lambda.bc)
+  lambda_bc = lambda - bc
+
+  return(lambda_bc)
 }

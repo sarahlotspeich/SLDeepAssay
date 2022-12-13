@@ -17,7 +17,6 @@ simulate_assay_md = function(M, tau, q, u, remove_undetected = T, seed = NULL) {
   # Observed matrix for each dilution level
   assay = lapply(X = 1:D,
                  FUN = function(d) simulate_assay_sd(M = M[d],
-                                                     n = n,
                                                      lambda = tau * u[d],
                                                      q = q[d],
                                                      remove_undetected = F))

@@ -13,7 +13,6 @@ gloglik_md = function(tau, assay_summary) {
   glogliks_byDilution = vapply(X = 1:D, FUN.VALUE = numeric(n),
                                 FUN = function(d) {
                                   as.numeric(gloglik_sd(l = assay_summary$dilution[d] * tau,
-                                                        n = assay_summary$n[d],
                                                         M = assay_summary$M[d],
                                                         MP = assay_summary$MP[d],
                                                         m = assay_summary$m[d],

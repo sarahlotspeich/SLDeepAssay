@@ -51,7 +51,7 @@ one_sim = function(setting_row) {
   } else {
     tau = c(rep(Tau / (2 * n), n / 2), rep(3 * Tau / (2 * n), n / 2))
   }
-  res = simulate_SLDeepAssay_md(M = M,
+  res = simulate_SLDeepAssay_md(M = M.scale * M.ratio,
                                 tau = tau,
                                 q = q,
                                 u = u)

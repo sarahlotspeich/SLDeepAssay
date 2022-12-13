@@ -13,7 +13,6 @@ loglik_md = function(tau, assay_summary) {
                                 FUN.VALUE = numeric(1),
                                 FUN = function(d) {
                                   as.numeric(loglik_sd(l = assay_summary$dilution[d] * tau,
-                                                       n = assay_summary$n[d],
                                                        M = assay_summary$M[d],
                                                        MP = assay_summary$MP[d],
                                                        m = assay_summary$m[d],

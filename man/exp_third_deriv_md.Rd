@@ -4,7 +4,7 @@
 \alias{exp_third_deriv_md}
 \title{Expected value of the third derivative of the Fisher information of the log-likelihood for IUPM from multiple-dilution assay data}
 \usage{
-exp_third_deriv_md(tau, M, q, dilutions)
+exp_third_deriv_md(tau, M, q, u)
 }
 \arguments{
 \item{tau}{Parameter}
@@ -13,7 +13,7 @@ exp_third_deriv_md(tau, M, q, dilutions)
 
 \item{q}{Proportion of p24-positive wells that underwent UDSA.}
 
-\item{dilutions}{Vector of all dilution levels (in millions of cells per well).}
+\item{u}{Vector of all dilution levels (in millions of cells per well).}
 }
 \value{
 A matrix

@@ -4,7 +4,7 @@
 \alias{fisher_md}
 \title{Fisher information of the log-likelihood for IUPM from multiple-dilution assay data}
 \usage{
-fisher_md(tau, M, q, dilutions)
+fisher_md(tau, M, q, u)
 }
 \arguments{
 \item{tau}{Parameter}
@@ -13,7 +13,7 @@ fisher_md(tau, M, q, dilutions)
 
 \item{q}{Proportion of p24-positive wells that underwent UDSA.}
 
-\item{dilutions}{Vector of all dilution levels (in millions of cells per well).}
+\item{u}{Vector of all dilution levels (in millions of cells per well).}
 }
 \value{
 A matrix

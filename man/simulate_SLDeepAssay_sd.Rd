@@ -4,14 +4,7 @@
 \alias{simulate_SLDeepAssay_sd}
 \title{Simulate single-dilution assay data and fit new and existing methods to it.}
 \usage{
-simulate_SLDeepAssay_sd(
-  M,
-  tau,
-  q,
-  u = 1,
-  remove_undetected = TRUE,
-  seed = NULL
-)
+simulate_SLDeepAssay_sd(M, tau, q, u = 1, remove_undetected = TRUE)
 }
 \arguments{
 \item{M}{Total number of wells (a scalar).}
@@ -23,8 +16,6 @@ simulate_SLDeepAssay_sd(
 \item{u}{Dilution level in millions of cells per well (a positive scalar). Default is \code{dilution = 1}.}
 
 \item{remove_undetected}{Logical, if \code{remove_undetected = TRUE} (the default), then DVL which were not detected in any of the deep sequenced wells are deleted.}
-
-\item{seed}{(Optional) An integer setting the random seed used to simulate the assay data. Default is \code{seed = NULL}.}
 }
 \value{
 Named list with the following slots:

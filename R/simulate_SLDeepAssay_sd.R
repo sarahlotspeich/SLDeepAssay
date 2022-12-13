@@ -5,7 +5,6 @@
 #' @param q Fixed proportion of p24-positive wells to be deep sequenced (a scalar between 0 and 1).
 #' @param u Dilution level in millions of cells per well (a positive scalar). Default is \code{dilution = 1}.
 #' @param remove_undetected Logical, if \code{remove_undetected = TRUE} (the default), then DVL which were not detected in any of the deep sequenced wells are deleted.
-#' @param seed (Optional) An integer setting the random seed used to simulate the assay data. Default is \code{seed = NULL}.
 #' @return Named list with the following slots:
 #' \item{Assay}{Simulated single-dilution assay data (deep sequenced).}
 #' \item{MLE_woUDSA}{Point estimate, standard error estimate, and 95\% confidence interval for the MLE (without deep sequencing information).}
@@ -17,12 +16,7 @@
 #' @importFrom SLDAssay get.mle
 #' @export
 #'
-simulate_SLDeepAssay_sd <- function(M, tau, q, u = 1, remove_undetected = TRUE, seed = NULL) {
-  # If supplied, set the random seed
-  if (!is.null(seed)) {
-    set.seed(seed)
-  }
-
+simulate_SLDeepAssay_sd <- function(M, tau, q, u = 1, remove_undetected = TRUE) {
   # Create indicators of whether data need to be re-simulated
   num_redo_all = 0 # Due to any DVL being detected in all wells or
   num_redo_none = 0 # No DVL being detected in any wells

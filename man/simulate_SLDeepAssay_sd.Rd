@@ -6,7 +6,7 @@
 \usage{
 simulate_SLDeepAssay_sd(
   M,
-  lambda,
+  tau,
   q,
   dilution = 1,
   remove_undetected = TRUE,
@@ -16,7 +16,7 @@ simulate_SLDeepAssay_sd(
 \arguments{
 \item{M}{Total number of wells (a scalar).}
 
-\item{lambda}{DVL-specific rates of infection (a vector of length \code{n}). (Note: All elements in \code{lambda} must be > 0.)}
+\item{tau}{DVL-specific rates of infection (a vector of length \code{n}). (Note: All elements in \code{tau} must be > 0.)}
 
 \item{q}{Fixed proportion of p24-positive wells to be deep sequenced (a scalar between 0 and 1).}
 

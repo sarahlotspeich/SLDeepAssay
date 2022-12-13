@@ -1,9 +1,9 @@
 #' Simulate single-dilution assay data and fit new and existing methods to it.
 #' @name simulate_SLDeepAssay_sd
 #' @param M Total number of wells (a scalar).
-#' @param tau DVL-specific rates of infection (a vector of length \code{n}). (Note: All elements in \code{tau} must be > 0.)
+#' @param tau Mean counts of cells per million infected with each DVL (a vector). (Note: All elements in \code{tau} must be > 0.)
 #' @param q Fixed proportion of p24-positive wells to be deep sequenced (a scalar between 0 and 1).
-#' @param dilution Number of cells per well (a scalar, in millions). Default is \code{dilution = 1}.
+#' @param u Dilution level in millions of cells per well (a positive scalar). Default is \code{dilution = 1}.
 #' @param remove_undetected Logical, if \code{remove_undetected = TRUE} (the default), then DVL which were not detected in any of the deep sequenced wells are deleted.
 #' @param seed (Optional) An integer setting the random seed used to simulate the assay data. Default is \code{seed = NULL}.
 #' @return Named list with the following slots:
@@ -17,7 +17,7 @@
 #' @importFrom SLDAssay get.mle
 #' @export
 #'
-simulate_SLDeepAssay_sd <- function(M, tau, q, dilution = 1, remove_undetected = TRUE, seed = NULL) {
+simulate_SLDeepAssay_sd <- function(M, tau, q, u = 1, remove_undetected = TRUE, seed = NULL) {
   # If supplied, set the random seed
   if (!is.null(seed)) {
     set.seed(seed)
@@ -29,8 +29,9 @@ simulate_SLDeepAssay_sd <- function(M, tau, q, dilution = 1, remove_undetected =
 
   # Simulate single-dilution assay data
   assay = simulate_assay_sd(M = M,
-                            lambda = tau,
+                            tau = tau,
                             q = q,
+                            u = u,
                             remove_undetected = remove_undetected)
 
   # Checks for need to re-simulate
@@ -46,8 +47,9 @@ simulate_SLDeepAssay_sd <- function(M, tau, q, dilution = 1, remove_undetected =
     }
     # Re-simulate single-dilution assay data
     assay = simulate_assay_sd(M = M,
-                              lambda = tau,
+                              tau = tau,
                               q = q,
+                              u = u,
                               remove_undetected = remove_undetected)
     # Check for need to continue re-simulating
     prop_DVL_detected = tryCatch(expr = rowMeans(assay$DVL_specific, na.rm = TRUE),
@@ -57,7 +59,7 @@ simulate_SLDeepAssay_sd <- function(M, tau, q, dilution = 1, remove_undetected =
   # Methods without UDSA
   woUDSA_res = get.mle(pos = sum(assay$any_DVL),
                        replicates = length(assay$any_DVL),
-                       dilutions = dilution * 1E6)
+                       dilutions = u * 1E6)
   se = (log(woUDSA_res$MLE) - log(woUDSA_res$Asymp_CI[1])) / qnorm(p = 1 - (0.05 / 2))
   MLE_woUDSA = data.frame(Est = woUDSA_res$MLE,
                           SE = se,
@@ -69,8 +71,8 @@ simulate_SLDeepAssay_sd <- function(M, tau, q, dilution = 1, remove_undetected =
                             UB = exp(log(woUDSA_res$BC_MLE) + qnorm(1 - 0.05 / 2) * se))
 
   # Methods with UDSA
-  wUDSA_res = fit_SLDeepAssay_sd(assay$DVL_specific,
-                                 dilution = dilution)
+  wUDSA_res = fit_SLDeepAssay_sd(assay = assay$DVL_specific,
+                                 dilution = u)
 
   MLE_wUDSA = data.frame(Est = wUDSA_res$mle,
                          SE = wUDSA_res$se,

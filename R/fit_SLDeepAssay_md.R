@@ -16,8 +16,13 @@
 #' @export
 #'
 #'
-fit_SLDeepAssay_md <- function(assay = NULL, u = NULL, assay_summary,
-                      corrected = NULL, maxit = 1E6, lb = 1E-6, ub = Inf) {
+fit_SLDeepAssay_md <- function(assay = NULL,
+                               u = NULL,
+                               assay_summary,
+                               corrected = NULL,
+                               maxit = 1E6,
+                               lb = 1E-6,
+                               ub = Inf) {
 
   # For each dilution level, compute summary data
   if (!is.null(assay)) {
@@ -59,7 +64,9 @@ fit_SLDeepAssay_md <- function(assay = NULL, u = NULL, assay_summary,
   Tau_hat = sum(tau_hat) # MLE of the IUPM
 
   # Fisher information matrix
-  I <- fisher_md(tau = tau_hat, M = assay_summary$M, q = assay_summary$q,
+  I <- fisher_md(tau = tau_hat,
+                 M = assay_summary$M,
+                 q = assay_summary$q,
                  u = assay_summary$u)
 
   # inverse of fisher information
@@ -80,7 +87,9 @@ fit_SLDeepAssay_md <- function(assay = NULL, u = NULL, assay_summary,
   } else {
 
     ### bias correction
-    tau_hat_bc <- BC_md(tau = tau_hat, M = assay_summary$M, q = assay_summary$q,
+    tau_hat_bc <- BC_md(tau = tau_hat,
+                        M = assay_summary$M,
+                        q = assay_summary$q,
                         u = assay_summary$u)
 
     # bias-corrected MLE for Tau

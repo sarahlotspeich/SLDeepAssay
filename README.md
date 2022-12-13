@@ -66,21 +66,20 @@ the optional arguments.
 
 ``` r
 assay = simulate_assay_sd(M = 12, 
-                          n = 6, 
                           lambda = rep(0.5 / 6, 6), 
                           q = 0.5, 
-                          remove_undetected = TRUE,
-                          seed = 114)
+                          remove_undetected = TRUE)
 assay
 ```
 
     ## $any_DVL
-    ##  [1] 1 1 0 0 0 0 0 0 0 1 1 1
+    ##  [1] 1 1 1 0 0 0 0 0 0 1 1 1
     ## 
     ## $DVL_specific
     ##      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11] [,12]
-    ## [1,]    0    1    0    0    0    0    0    0    0    NA    NA    NA
-    ## [2,]    1    0    0    0    0    0    0    0    0    NA    NA    NA
+    ## [1,]    0    0    1    0    0    0    0    0    0    NA    NA    NA
+    ## [2,]    0    1    0    0    0    0    0    0    0    NA    NA    NA
+    ## [3,]    1    0    0    0    0    0    0    0    0    NA    NA    NA
 
 A few things to notice here…
 
@@ -103,26 +102,24 @@ Now what if I leave the `seed` the same, but instead set
 `remove_undetected = FALSE`?
 
 ``` r
-assay = simulate_assay_sd(M = 12, 
-                          n = 6, 
+assay = simulate_assay_sd(M = 12,
                           lambda = rep(0.5 / 6, 6), 
                           q = 0.5, 
-                          remove_undetected = FALSE,
-                          seed = 114)
+                          remove_undetected = FALSE)
 assay
 ```
 
     ## $any_DVL
-    ##  [1] 1 1 0 0 0 0 0 0 0 1 1 1
+    ##  [1] 1 1 0 0 0 0 0 0 0 0 1 1
     ## 
     ## $DVL_specific
     ##      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11] [,12]
-    ## [1,]    0    0    0    0    0    0    0    0    0    NA    NA    NA
-    ## [2,]    0    0    0    0    0    0    0    0    0    NA    NA    NA
-    ## [3,]    0    1    0    0    0    0    0    0    0    NA    NA    NA
-    ## [4,]    0    0    0    0    0    0    0    0    0    NA    NA    NA
-    ## [5,]    0    0    0    0    0    0    0    0    0    NA    NA    NA
-    ## [6,]    1    0    0    0    0    0    0    0    0    NA    NA    NA
+    ## [1,]    0    1    0    0    0    0    0    0    0     0    NA    NA
+    ## [2,]    0    0    0    0    0    0    0    0    0     0    NA    NA
+    ## [3,]    1    0    0    0    0    0    0    0    0     0    NA    NA
+    ## [4,]    0    0    0    0    0    0    0    0    0     0    NA    NA
+    ## [5,]    0    0    0    0    0    0    0    0    0     0    NA    NA
+    ## [6,]    0    1    0    0    0    0    0    0    0     0    NA    NA
 
 Notice that `assay$any_DVL` is the same as before, which makes sense
 since it’s the same random seed. However, `assay$DVL_specific` now has
@@ -138,8 +135,7 @@ I don’t set the seed, I’ll be dealing with completely different
 datasets!
 
 ``` r
-assay = simulate_assay_sd(M = 12, 
-                          n = 6, 
+assay = simulate_assay_sd(M = 12,
                           lambda = rep(0.5 / 6, 6), 
                           q = 0.5, 
                           remove_undetected = TRUE)
@@ -147,15 +143,15 @@ assay
 ```
 
     ## $any_DVL
-    ##  [1] 1 0 0 0 0 0 0 0 0 0 0 1
+    ##  [1] 1 1 0 0 0 0 0 0 0 0 0 1
     ## 
     ## $DVL_specific
     ##      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11] [,12]
     ## [1,]    1    0    0    0    0    0    0    0    0     0     0    NA
+    ## [2,]    0    1    0    0    0    0    0    0    0     0     0    NA
 
 ``` r
-assay = simulate_assay_sd(M = 12, 
-                          n = 6, 
+assay = simulate_assay_sd(M = 12,
                           lambda = rep(0.5 / 6, 6), 
                           q = 0.5, 
                           remove_undetected = TRUE)
@@ -163,12 +159,11 @@ assay
 ```
 
     ## $any_DVL
-    ##  [1] 1 1 0 0 0 0 0 0 0 1 1 1
+    ##  [1] 1 1 0 0 0 0 0 0 0 0 0 1
     ## 
     ## $DVL_specific
     ##      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11] [,12]
-    ## [1,]    1    0    0    0    0    0    0    0    0    NA    NA    NA
-    ## [2,]    0    1    0    0    0    0    0    0    0    NA    NA    NA
+    ## [1,]    1    1    0    0    0    0    0    0    0     0     0    NA
 
 It tends to be safer to set the `seed`, but if you’re using this
 function inside of a loop or something as part of a large-scale
@@ -231,19 +226,19 @@ res
 ```
 
     ## $mle
-    ## [1] 0.5074829
+    ## [1] 0.287682
     ## 
     ## $se
-    ## [1] 0.2279808
+    ## [1] 0.1667235
     ## 
     ## $ci
-    ## [1] 0.2103919 1.2240913
+    ## [1] 0.09238609 0.89581604
     ## 
     ## $mle.bc
-    ## [1] 0.422995
+    ## [1] 0.24143
     ## 
     ## $ci.bc
-    ## [1] 0.1470838 1.2164820
+    ## [1] 0.0623706 0.9345501
 
 Finally, we interpret the output as follows.
 

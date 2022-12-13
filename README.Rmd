@@ -46,11 +46,9 @@ We now demonstrate a few ways to simulate, depending on our choices for the opti
 
 ```{r}
 assay = simulate_assay_sd(M = 12, 
-                          n = 6, 
                           lambda = rep(0.5 / 6, 6), 
                           q = 0.5, 
-                          remove_undetected = TRUE,
-                          seed = 114)
+                          remove_undetected = TRUE)
 assay
 ```
 
@@ -65,12 +63,10 @@ A few things to notice here...
 Now what if I leave the `seed` the same, but instead set `remove_undetected = FALSE`? 
 
 ```{r}
-assay = simulate_assay_sd(M = 12, 
-                          n = 6, 
+assay = simulate_assay_sd(M = 12,
                           lambda = rep(0.5 / 6, 6), 
                           q = 0.5, 
-                          remove_undetected = FALSE,
-                          seed = 114)
+                          remove_undetected = FALSE)
 assay
 ```
 
@@ -81,14 +77,12 @@ Notice that `assay$any_DVL` is the same as before, which makes sense since it's 
 When should I bother to specify the `seed` myself? Well, for reproducibility it's a great idea! That way, every time you run your code, you know that you'll be getting the same simulated assay. Suppose I run my code once, change my mind about something, and run it again. If I don't set the seed, I'll be dealing with completely different datasets!
 
 ```{r}
-assay = simulate_assay_sd(M = 12, 
-                          n = 6, 
+assay = simulate_assay_sd(M = 12,
                           lambda = rep(0.5 / 6, 6), 
                           q = 0.5, 
                           remove_undetected = TRUE)
 assay
-assay = simulate_assay_sd(M = 12, 
-                          n = 6, 
+assay = simulate_assay_sd(M = 12,
                           lambda = rep(0.5 / 6, 6), 
                           q = 0.5, 
                           remove_undetected = TRUE)

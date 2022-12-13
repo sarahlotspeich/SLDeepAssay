@@ -25,8 +25,6 @@ fit_SLDeepAssay_sd(
 
 \item{M}{(Optional) Instead of supplying \code{assay}, supply the total number of wells (a scalar). Default is \code{M = NULL}.}
 
-\item{n}{(Optional) Instead of supplying \code{assay}, supply the total number of DVL detected (a scalar). Default is \code{n = NULL}.}
-
 \item{MP}{(Optional) Instead of supplying \code{assay}, supply the total number of p24-positive wells (a scalar). Default is \code{MP = NULL}.}
 
 \item{m}{(Optional) Instead of supplying \code{assay}, supply the total number of p24-positive wells that underwent deep sequencing (a scalar). Default is \code{m = NULL}.}

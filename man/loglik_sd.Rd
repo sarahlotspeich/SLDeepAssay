@@ -4,20 +4,18 @@
 \alias{loglik_sd}
 \title{Log-likelihood for IUPM from single-dilution assay data}
 \usage{
-loglik_sd(l, n, M, MP, m, Y)
+loglik_sd(l, M, MP, m, Y)
 }
 \arguments{
-\item{l}{Vector of DVL-specific parameters (of length \code{n}).}
-
-\item{n}{Number of distinct viral lineages.}
+\item{l}{Vector of DVL-specific parameters.}
 
 \item{M}{Total number of wells originally sequenced with the QVOA.}
 
 \item{MP}{Number of p24-positive wells.}
 
-\item{m}{Number of p24-positive wells that underwent the USDA.}
+\item{m}{Number of p24-positive wells that underwent the UDSA.}
 
-\item{y}{A vector of  DVL-specific infection counts (of length \code{n}).}
+\item{y}{A vector of DVL-specific infection counts.}
 }
 \value{
 A scalar

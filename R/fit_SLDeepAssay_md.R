@@ -79,7 +79,7 @@ fit_SLDeepAssay_md = function(assay = NULL,
   ci = exp(c(log(Tau_hat) + c(-1, 1) * (qnorm(0.975) * se / Tau_hat)))
 
   # For large n, do not compute bias correction unless user overrides
-  if (bc == F) {
+  if (corrected == F) {
 
     Tau_hat_bc = NA
     ci_bc = NA

@@ -21,7 +21,7 @@ fit_SLDeepAssay_sd(
 \arguments{
 \item{assay}{Assay data, with rows representing the distinct viral lineages (DVL) and columns representing the wells. Any columns with \code{NA} values will be treated as positive but missing deep sequencing information.}
 
-\item{u}{Dilution level in millions of cells per well (a positive scalar). Default is \code{dilution = 1}.}
+\item{u}{Dilution level in millions of cells per well (a positive scalar). Default is \code{u = 1}.}
 
 \item{M}{(Optional) Instead of supplying \code{assay}, supply the total number of wells (a scalar). Default is \code{M = NULL}.}
 

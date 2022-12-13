@@ -20,7 +20,7 @@ simulate_assay_md = function(M, tau, q, u, remove_undetected = T, seed = NULL) {
                                                      n = n,
                                                      lambda = tau * u[d],
                                                      q = q[d],
-                                                     remove_undetected = F)
+                                                     remove_undetected = F))
   assay_summary = vapply(X = 1:D,
                          FUN.VALUE = numeric(7 + n),
                          FUN = function(d) {

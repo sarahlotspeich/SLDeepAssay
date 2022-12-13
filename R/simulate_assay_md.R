@@ -17,21 +17,21 @@ simulate_assay_md = function(M, tau, q, u, remove_undetected = T, seed = NULL) {
   # Observed matrix for each dilution level
   assay = lapply(X = 1:D,
                  FUN = function(d) simulate_assay_sd(M = M[d],
-                                                     n = n,
-                                                     lambda = tau * u[d],
+                                                     tau = tau,
+                                                     u = u[d],
                                                      q = q[d],
                                                      remove_undetected = F))
   assay_summary = vapply(X = 1:D,
                          FUN.VALUE = numeric(7 + n),
                          FUN = function(d) {
-                           M = ncol(assay[[d]]) # number of wells
-                           n = nrow(assay[[d]]) # number of DVLs detected
-                           MN = sum(colSums(assay[[d]]) == 0, na.rm = TRUE) # number of p24-negative wells
+                           M = ncol(assay[[d]]$DVL_specific) # number of wells
+                           n = nrow(assay[[d]]$DVL_specific) # number of DVLs detected
+                           MN = sum(colSums(assay[[d]]$DVL_specific) == 0, na.rm = TRUE) # number of p24-negative wells
                            MP = M - MN # number of p24-positive wells = MP
-                           m = MP - sum(is.na(colSums(assay[[d]]))) # number of deep-sequenced wells = m
+                           m = MP - sum(is.na(colSums(assay[[d]]$DVL_specific))) # number of deep-sequenced wells = m
                            q = ifelse(MP == 0, 0, m / MP) # proportion of p24-positive wells deep sequenced
-                           Y = rowSums(assay[[d]], na.rm = TRUE) # number of infected wells per DVL = Y
-                           return((c("dilution" = u[d], "M"=M, "n"=n,
+                           Y = rowSums(assay[[d]]$DVL_specific, na.rm = TRUE) # number of infected wells per DVL = Y
+                           return((c("u" = u[d], "M"=M, "n"=n,
                                      "MN"=MN, "MP"=MP, "m"=m, "q"=q, "Y"=Y)))
                          })
 
@@ -45,3 +45,4 @@ simulate_assay_md = function(M, tau, q, u, remove_undetected = T, seed = NULL) {
 
   return(assay_summary)
 }
+

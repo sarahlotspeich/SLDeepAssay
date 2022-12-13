@@ -15,11 +15,7 @@
 #' @importFrom SLDAssay get.mle 
 #' @export
 #'
-simulate_SLDeepAssay_md = function(M, tau, q, u, remove_undetected = TRUE, seed = NULL) {
-  # If supplied, set the random seed
-  if (!is.null(seed)) {
-    set.seed(seed)  
-  }
+simulate_SLDeepAssay_md = function(M, tau, q, u, remove_undetected = TRUE) {
   
   # Create indicators of whether data need to be re-simulated
   num_redo_all = 0 # Due to any DVL being detected in all wells or
@@ -62,7 +58,7 @@ simulate_SLDeepAssay_md = function(M, tau, q, u, remove_undetected = TRUE, seed 
   # Methods without UDSA
   woUDSA_res = get.mle(pos = assay_summary$MP,
                        replicates = assay_summary$M,
-                       u = assay_summary$u * 10^6)
+                       dilutions = assay_summary$u * 10^6)
   se = (log(woUDSA_res$MLE) - log(woUDSA_res$Asymp_CI[1])) / qnorm(p = 1 - (0.05 / 2))
   MLE_woUDSA = data.frame(Est = woUDSA_res$MLE, 
                           SE = se, 
@@ -80,10 +76,10 @@ simulate_SLDeepAssay_md = function(M, tau, q, u, remove_undetected = TRUE, seed 
                          SE = wUDSA_res$se, 
                          LB = wUDSA_res$ci[1], 
                          UB = wUDSA_res$ci[2])
-  BCMLE_wUDSA = data.frame(Est = wUDSA_res$mle.bc,
+  BCMLE_wUDSA = data.frame(Est = wUDSA_res$mle_bc,
                            SE = wUDSA_res$se, 
-                           LB = wUDSA_res$ci.bc[1], 
-                           UB = wUDSA_res$ci.bc[2])
+                           LB = wUDSA_res$ci_bc[1], 
+                           UB = wUDSA_res$ci_bc[2])
   
   # Construct Message
   Message = ifelse(test = num_redo_all > 0, 
@@ -106,7 +102,7 @@ simulate_SLDeepAssay_md = function(M, tau, q, u, remove_undetected = TRUE, seed 
   }
   
   # Construct list to return
-  return(list(Assay = assay$DVL_specific,
+  return(list(assay_summary = assay_summary,
               MLE_woUDSA = MLE_woUDSA,
               BCMLE_woUDSA = BCMLE_woUDSA,
               MLE_wUDSA = MLE_wUDSA,

@@ -16,7 +16,7 @@
 #' @export
 #'
 #'
-fit_SLDeepAssay_md <- function(assay = NULL,
+fit_SLDeepAssay_md = function(assay = NULL,
                                u = NULL,
                                assay_summary,
                                corrected = NULL,
@@ -43,7 +43,7 @@ fit_SLDeepAssay_md <- function(assay = NULL,
 
   # Indicator for whether bias correction should be computed:
   # user specified value if provided, else yes if n <= 40
-  corrected = ifelse(test = is.null(correctedc),
+  corrected = ifelse(test = is.null(corrected),
               yes = assay_summary$n[1] <= 40,
               no = corrected)
 
@@ -79,7 +79,7 @@ fit_SLDeepAssay_md <- function(assay = NULL,
   ci = exp(c(log(Tau_hat) + c(-1, 1) * (qnorm(0.975) * se / Tau_hat)))
 
   # For large n, do not compute bias correction unless user overrides
-  if (bc == F) {
+  if (corrected == F) {
 
     Tau_hat_bc = NA
     ci_bc = NA
@@ -106,3 +106,4 @@ fit_SLDeepAssay_md <- function(assay = NULL,
               "mle_bc" = Tau_hat_bc,
               "ci_bc" = ci_bc))
 }
+

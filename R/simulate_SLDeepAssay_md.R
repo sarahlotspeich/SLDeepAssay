@@ -76,10 +76,10 @@ simulate_SLDeepAssay_md = function(M, tau, q, u, remove_undetected = TRUE) {
                          SE = wUDSA_res$se, 
                          LB = wUDSA_res$ci[1], 
                          UB = wUDSA_res$ci[2])
-  BCMLE_wUDSA = data.frame(Est = wUDSA_res$mle.bc,
+  BCMLE_wUDSA = data.frame(Est = wUDSA_res$mle_bc,
                            SE = wUDSA_res$se, 
-                           LB = wUDSA_res$ci.bc[1], 
-                           UB = wUDSA_res$ci.bc[2])
+                           LB = wUDSA_res$ci_bc[1], 
+                           UB = wUDSA_res$ci_bc[2])
   
   # Construct Message
   Message = ifelse(test = num_redo_all > 0, 
@@ -102,7 +102,7 @@ simulate_SLDeepAssay_md = function(M, tau, q, u, remove_undetected = TRUE) {
   }
   
   # Construct list to return
-  return(list(Assay = assay$DVL_specific,
+  return(list(assay_summary = assay_summary,
               MLE_woUDSA = MLE_woUDSA,
               BCMLE_woUDSA = BCMLE_woUDSA,
               MLE_wUDSA = MLE_wUDSA,

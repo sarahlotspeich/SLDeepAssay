@@ -6,22 +6,20 @@
 \usage{
 fit_SLDeepAssay_md(
   assay = NULL,
-  dilutions = NULL,
-  assay.summary,
-  bc = NULL,
+  u = NULL,
+  assay_summary,
+  corrected = NULL,
   maxit = 1e+06,
   lb = 1e-06,
   ub = Inf
 )
 }
 \arguments{
-\item{assay}{List of data frames with assay data from each dilution level. Default is \code{NULL}.}
+\item{u}{Vector of dilution levels, in millions of cells per well. Default is \code{NULL}.}
 
-\item{dilutions}{Vector of dilutions. Default is \code{NULL}.}
+\item{assay_summary}{(Optional) Instead of supplying \code{assay} and \code{u}, supply a summary of assay results in the form of a data frame. This summary should contain one row per dilution level and the following columns: M (total number of wells), n (number of distinct viral lineages \[DVL\]), MN (number of p24-negative wells), m (number of deep sequenced wells), Y1,..., Yn (counts of wells positive for DVL i, (i = 1,...,n), and u (dilution levels, in millions of cells per well).}
 
-\item{assay.summary}{(Optional) Instead of supplying \code{assay}, supply a summary of assay results. This summary should contain one row per dilution level and the following columns: M (total number of wells), n (number of distinct viral lineages \[DVL\]), MN (number of p24-negative wells), m (number of deep sequenced wells), Y1,..., Yn (counts of wells positive for DVL i, (i = 1,...,n), and dilutions (dilution levels, in millions of cells per well).}
-
-\item{bc}{Logical indicator for returning bias corrected MLE and CI. By default, the bias correction is not computed if n>40.}
+\item{corrected}{Logical, if \code{corrected = TRUE} the bias-corrected MLE will be returned. If there are <= 40 DVL in \code{assay}, default is \code{corrected = TRUE}; otherwise default is \code{corrected = FALSE}.}
 
 \item{maxit}{The maximum number of iterations (passed to \code{optim}). Default is \code{maxit = 1E4}.}
 
@@ -34,8 +32,8 @@ Named list with the following slots:
 \item{mle}{MLE}
 \item{se}{Standard error for the MLE}
 \item{ci}{95\% confidence interval for the MLE}
-\item{mle.bc}{Bias-corrected MLE}
-\item{ci.bc}{95\% confidence interval for the bias-corrected MLE}
+\item{mle_bc}{Bias-corrected MLE}
+\item{ci_bc}{95\% confidence interval for the bias-corrected MLE}
 }
 \description{
 Maximum likelihood estimator (MLE) for multiple-dilution assay data

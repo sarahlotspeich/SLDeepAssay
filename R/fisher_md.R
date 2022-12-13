@@ -13,7 +13,7 @@ fisher_md = function(tau, M, q, u) {
   # fisher information for each dilution level
   I.d <- vapply(X = 1:D,
                 FUN.VALUE = matrix(0, n, n),
-                FUN = function(d) fisher(lambda = u[d] * tau,
+                FUN = function(d) fisher_sd(lambda = u[d] * tau,
                                          M = M[d],
                                          q = q[d]) * u[d] ^ 2
   )

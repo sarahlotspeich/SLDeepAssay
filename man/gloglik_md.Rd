@@ -4,12 +4,12 @@
 \alias{gloglik_md}
 \title{Gradient of the log-likelihood for IUPM from multiple-dilution assay data}
 \usage{
-gloglik_md(tau, assay.summary)
+gloglik_md(tau, assay_summary)
 }
 \arguments{
-\item{tau}{Parameter}
+\item{tau}{Vector of DVL-specific IUPM parameters}
 
-\item{assay.summary}{Data}
+\item{assay_summary}{Summary of assay data from multiple dilutions}
 }
 \value{
 A vector (of length \code{n})

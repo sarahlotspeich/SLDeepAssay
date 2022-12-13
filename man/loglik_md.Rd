@@ -4,15 +4,15 @@
 \alias{loglik_md}
 \title{Log-likelihood for IUPM from multiple-dilution assay data}
 \usage{
-loglik_md(tau, assay.summary)
+loglik_md(tau, assay_summary)
 }
 \arguments{
-\item{tau}{Parameter}
+\item{tau}{Vector of DVL-specific IUPM parameters}
 
-\item{assay.summary}{Data}
+\item{assay_summary}{Summary of assay data from multiple dilutions}
 }
 \value{
-A scalar
+A scalar value of the log-likelihood
 }
 \description{
 Log-likelihood for IUPM from multiple-dilution assay data

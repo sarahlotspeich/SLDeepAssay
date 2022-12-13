@@ -1,23 +1,23 @@
 #' Gradient of the log-likelihood for IUPM from multiple-dilution assay data
 #' @name gloglik_md
-#' @param tau Parameter
-#' @param assay.summary Data
+#' @param tau Vector of DVL-specific IUPM parameters
+#' @param assay_summary Summary of assay data from multiple dilutions
 #' @return A vector (of length \code{n})
 #'
-gloglik_md = function(tau, assay.summary) {
+gloglik_md = function(tau, assay_summary) {
 
-  D = nrow(assay.summary)
+  D = nrow(assay_summary)
   n = length(tau)
 
   # compute gradients for each dilution
-  glogliks_byDilution <- vapply(X = 1:D, FUN.VALUE = numeric(n),
+  glogliks_byDilution = vapply(X = 1:D, FUN.VALUE = numeric(n),
                                 FUN = function(d) {
-                                  as.numeric(gloglik_sd(l = assay.summary$dilution[d] * tau,
-                                                        n = assay.summary$n[d],
-                                                        M = assay.summary$M[d],
-                                                        MP = assay.summary$MP[d],
-                                                        m = assay.summary$m[d],
-                                                        Y = as.numeric(assay.summary[d, grepl("Y", colnames(assay.summary))]))) * assay.summary$dilution[d]
+                                  as.numeric(gloglik_sd(l = assay_summary$dilution[d] * tau,
+                                                        n = assay_summary$n[d],
+                                                        M = assay_summary$M[d],
+                                                        MP = assay_summary$MP[d],
+                                                        m = assay_summary$m[d],
+                                                        Y = as.numeric(assay_summary[d, grepl("Y", colnames(assay_summary))]))) * assay_summary$dilution[d]
                                   }
                                 )
 

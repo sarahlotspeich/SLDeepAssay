@@ -31,7 +31,7 @@ simulate_assay_md = function(M, tau, q, u, remove_undetected = T, seed = NULL) {
                            m = MP - sum(is.na(colSums(assay[[d]]$DVL_specific))) # number of deep-sequenced wells = m
                            q = ifelse(MP == 0, 0, m / MP) # proportion of p24-positive wells deep sequenced
                            Y = rowSums(assay[[d]]$DVL_specific, na.rm = TRUE) # number of infected wells per DVL = Y
-                           return((c("dilution" = u[d], "M"=M, "n"=n,
+                           return((c("u" = u[d], "M"=M, "n"=n,
                                      "MN"=MN, "MP"=MP, "m"=m, "q"=q, "Y"=Y)))
                          })
 

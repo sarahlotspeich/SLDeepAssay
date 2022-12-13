@@ -44,7 +44,6 @@ fit_SLDeepAssay_sd = function(assay, u = 1, M = NULL, n = NULL, MP = NULL, m = N
   optimization = optim(par = - log(1 - Y / M),
                        fn = loglik_sd,
                        gr = gloglik_sd,
-                       n = n,
                        M = M,
                        MP = MP,
                        m = m,
@@ -59,7 +58,9 @@ fit_SLDeepAssay_sd = function(assay, u = 1, M = NULL, n = NULL, MP = NULL, m = N
   Lambda_hat = sum(lambda_hat) # MLE of the IUPM
 
   # Fisher information matrix
-  I = fisher_sd(lambda = lambda_hat, M = M, q = q)
+  I = fisher_sd(lambda = lambda_hat,
+                M = M,
+                q = q)
 
   # inverse of fisher information
   cov = solve(I)

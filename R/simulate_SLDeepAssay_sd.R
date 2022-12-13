@@ -3,7 +3,7 @@
 #' @param M Total number of wells (a scalar).
 #' @param tau Mean counts of cells per million infected with each DVL (a vector). (Note: All elements in \code{tau} must be > 0.)
 #' @param q Fixed proportion of p24-positive wells to be deep sequenced (a scalar between 0 and 1).
-#' @param u Dilution level in millions of cells per well (a positive scalar). Default is \code{dilution = 1}.
+#' @param u Dilution level in millions of cells per well (a positive scalar). Default is \code{u = 1}.
 #' @param remove_undetected Logical, if \code{remove_undetected = TRUE} (the default), then DVL which were not detected in any of the deep sequenced wells are deleted.
 #' @return Named list with the following slots:
 #' \item{Assay}{Simulated single-dilution assay data (deep sequenced).}
@@ -66,16 +66,16 @@ simulate_SLDeepAssay_sd <- function(M, tau, q, u = 1, remove_undetected = TRUE) 
 
   # Methods with UDSA
   wUDSA_res = fit_SLDeepAssay_sd(assay = assay$DVL_specific,
-                                 dilution = u)
+                                 u = u)
 
   MLE_wUDSA = data.frame(Est = wUDSA_res$mle,
                          SE = wUDSA_res$se,
                          LB = wUDSA_res$ci[1],
                          UB = wUDSA_res$ci[2])
-  BCMLE_wUDSA = data.frame(Est = wUDSA_res$mle.bc,
+  BCMLE_wUDSA = data.frame(Est = wUDSA_res$mle_bc,
                            SE = wUDSA_res$se,
-                           LB = wUDSA_res$ci.bc[1],
-                           UB = wUDSA_res$ci.bc[2])
+                           LB = wUDSA_res$ci_bc[1],
+                           UB = wUDSA_res$ci_bc[2])
 
   # Construct Message
   Message = ifelse(test = num_redo_all > 0,

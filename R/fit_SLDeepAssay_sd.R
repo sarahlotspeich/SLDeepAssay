@@ -74,7 +74,6 @@ fit_SLDeepAssay_sd = function(assay, u = 1, M = NULL, n = NULL, MP = NULL, m = N
   # For large n, do not compute bias correction unless user overrides
   if (!corrected) {
     Lambda_hat_bc = NA
-    se.bc = NA
     ci_bc = NA
   } else {
     # Bias corrected MLE (BC MLE)

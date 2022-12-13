@@ -33,9 +33,11 @@ simulate_SLDeepAssay_sd <- function(M, lambda, q, dilution = 1, remove_undetecte
                             q = q,
                             remove_undetected = remove_undetected)
 
-  # Check for need to re-simulate
+  # Checks for need to re-simulate
+  ## Any DVL is detected in all deep-sequenced and p24 positive wells?
   prop_DVL_detected = tryCatch(expr = rowMeans(assay$DVL_specific, na.rm = TRUE),
                                error = function(e) 0)
+  ## If so, continue resimulating until no longer true
   while (any(prop_DVL_detected == 1) | is.null(assay$DVL_specific)) {
     if (is.null(assay)) {
       num_redo_none = num_redo_none + 1
@@ -94,7 +96,7 @@ simulate_SLDeepAssay_sd <- function(M, lambda, q, dilution = 1, remove_undetecte
                               num_redo_none,
                               " due to no DVL being detected and ",
                               num_redo_all,
-                              " due to a DVL being detected in all wells).")
+                              " due to no well being negative for DVL).")
   } else {
     Message_Detailed = NULL
   }

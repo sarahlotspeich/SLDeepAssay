@@ -75,3 +75,7 @@ Results = do.call(what = rbind,
                                  FUN = one_sim
                                  )
 )
+
+# Save
+Results |>
+  write.csv(file = "raw.csv", row.names = FALSE)

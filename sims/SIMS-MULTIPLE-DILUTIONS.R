@@ -1,3 +1,17 @@
+## Title: Simulations for Multiple Dilutions Setting
+
+## Date: 2022/12/14
+
+## Author: Brian Richardson
+
+## Purpose: produce simulation data to assess performance of SLDeepAssay estimator in the multiple dilutions setting
+
+## Output: md_sim_data.csv
+
+## Note: These simulations take ~12 hours to run. The simulation results can be found in sims/md_sim_data.csv.
+
+
+
 # Install packages
 ## (Run once)
 ## install.packages("SLDAssay")

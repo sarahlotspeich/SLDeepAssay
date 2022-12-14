@@ -1,3 +1,16 @@
+## Title: Table for Multiple Dilutions Setting Simulations
+
+## Date: 2022/12/14
+
+## Author: Brian Richardson
+
+## Purpose: produce a table to summarize simulation data from the multiple dilutions setting
+
+## Input: sims/md_sim_data.csv (produced by sims/SIMS-MULTIPLE-DILUTIONS.R)
+
+## Output: Latex table
+
+
 # load packages
 library(kableExtra)
 library(dplyr)

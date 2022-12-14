@@ -15,8 +15,12 @@ library(tidyr)
 library(dplyr)
 library(pbapply)
 
+
+# Random number seed for reproducibility
+set.seed(130502)
+
 # Number of replicates per simulation setting
-num_reps = 50
+num_reps = 1000
 # Define parameters that remain constant across all settings
 M.ratio = c(1, 2, 3) # ratio of number of wells at each dilution level
 q = c(0, 0.5, 1) # proportion of p24-positive wells deep-sequenced
@@ -68,13 +72,13 @@ sim_out = do.call("rbind", pbapply(Settings, 1,
 results = cbind(Settings, sim_out) |>
   mutate(M = paste0(M.ratio[1] * M.scale, ", ",
                    M.ratio[2] * M.scale, ", ",
-                   M.ratio[3] * M.scale)) |>
+                   M.ratio[3] * M.scale),
+         Tau = Tau) |>
   separate(col = method, into = c("bc", "assay_type"), sep = "_")
 
 
 # save simulations
 path_to_sims = here::here() # Set path to folder where you would like to save results
 
-write.csv(results, file = paste0(path_to_sims, "md_sim_data.csv"),
+write.csv(results, file = paste0(path_to_sims, "/sims/md_sim_data.csv"),
           row.names = FALSE)
-

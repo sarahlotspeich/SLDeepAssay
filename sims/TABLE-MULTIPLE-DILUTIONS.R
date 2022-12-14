@@ -1,0 +1,47 @@
+# load packages
+library(kableExtra)
+library(dplyr)
+library(tidyr)
+
+# load data
+setwd(here::here())
+md_sim_data = read.csv("sims/md_sim_data.csv")
+
+# format numbers (default to 2 decimal places)
+format_nums = function(x, digits = 2) {
+  paste0("$", format(round(x, digits = digits), nsmall = digits) , "$")
+}
+
+# check number of sims removed
+md_sim_data |>
+  select(Message) |>
+  sum()
+
+# summarize sim results
+md_sim_summ = md_sim_data |>
+  group_by(constant_Tau, M, n, assay_type, bc) |>
+  summarise(n_removed = sum(Message),
+            rel_bias = mean(Est - Tau),
+            ase = mean(SE),
+            ese = sd(Est),
+            cp = mean(LB <= Tau & Tau <= UB)) |>
+  pivot_wider(id_cols = c("M", "n", "constant_Tau"),
+              names_from = c("bc", "assay_type"),
+              values_from = c("n_removed", "rel_bias", "ase", "ese", "cp"))
+  
+analysis_cols = as.vector(outer(c("rel_bias", "ase", "ese", "cp"),
+                as.vector(outer(c("_MLE", "_BCMLE"), c("_woUDSA", "_wUDSA"), paste0)), paste0))
+
+col_order = c("constant_Tau", "M", "n", analysis_cols)
+
+# procude table with simulation summary
+md_sim_summ |> 
+  dplyr::ungroup() |>
+  dplyr::select(col_order) |>
+  dplyr::mutate_at(analysis_cols, format_nums) |>
+  magrittr::set_colnames(c("Constant $\\pmb{T}$", "$\\pmb{M}$", "$\\pmb{n}$", rep(c("Bias", "ASE", "ESE", "CP"), times = 4))) |>
+  kable(format = "latex", digits = 3, align = c(rep("c", 4), rep("r", 16)),
+        booktabs = TRUE, linesep = c("", "", "\\addlinespace"), escape = FALSE) |>
+  add_header_above(header = c(" " = 3, "MLE" = 4, "Bias-Corrected MLE" = 4, "MLE" = 4, "Bias-Corrected MLE" = 4), bold = TRUE) |>
+  add_header_above(header = c(" " = 3, "Without UDSA" = 8, "With UDSA" = 8), bold = TRUE) |>
+  row_spec(row = 0, bold = TRUE)

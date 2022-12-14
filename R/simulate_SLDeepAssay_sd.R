@@ -54,15 +54,17 @@ simulate_SLDeepAssay_sd <- function(M, tau, q, u = 1, remove_undetected = TRUE) 
   woUDSA_res = get.mle(pos = sum(assay$any_DVL),
                        replicates = length(assay$any_DVL),
                        dilutions = u * 1E6)
-  se = (log(woUDSA_res$MLE) - log(woUDSA_res$Asymp_CI[1])) / qnorm(p = 1 - (0.05 / 2))
+  ## Solve for the standard error estimator
+  Z = qnorm(p = 1 - (0.05 / 2)) ## Critical value for 95% confidence interval
+  se = woUDSA_res$MLE * (log(woUDSA_res$MLE) - log(woUDSA_res$Asymp_CI[1])) / Z
   MLE_woUDSA = data.frame(Est = woUDSA_res$MLE,
                           SE = se,
                           LB = woUDSA_res$Asymp_CI[1],
                           UB = woUDSA_res$Asymp_CI[2])
   BCMLE_woUDSA = data.frame(Est = woUDSA_res$BC_MLE,
                             SE = se,
-                            LB = exp(log(woUDSA_res$BC_MLE) - qnorm(1 - 0.05 / 2) * se),
-                            UB = exp(log(woUDSA_res$BC_MLE) + qnorm(1 - 0.05 / 2) * se))
+                            LB = exp(log(woUDSA_res$BC_MLE) - Z * se),
+                            UB = exp(log(woUDSA_res$BC_MLE) + Z * se))
 
   # Methods with UDSA
   wUDSA_res = fit_SLDeepAssay_sd(assay = assay$DVL_specific,

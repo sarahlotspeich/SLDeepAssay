@@ -8,7 +8,7 @@
 
 ## Output: md_sim_data.csv
 
-## Note: These simulations take ~12 hours to run. The simulation results can be found in sims/md_sim_data.csv.
+## Note: These simulations take ~12 hours to run. The simulation results can be found in sims/sim_data/md_sim_data.csv.
 
 
 
@@ -94,5 +94,5 @@ results = cbind(Settings, sim_out) |>
 # save simulations
 path_to_sims = here::here() # Set path to folder where you would like to save results
 
-write.csv(results, file = paste0(path_to_sims, "/sims/md_sim_data.csv"),
+write.csv(results, file = paste0(path_to_sims, "/sims/sim_data/md_sim_data.csv"),
           row.names = FALSE)

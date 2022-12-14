@@ -6,7 +6,7 @@
 
 ## Purpose: produce a table to summarize simulation data from the multiple dilutions setting
 
-## Input: sims/md_sim_data.csv (produced by sims/SIMS-MULTIPLE-DILUTIONS.R)
+## Input: sims/sim_data/md_sim_data.csv (produced by sims/SIMS-MULTIPLE-DILUTIONS.R)
 
 ## Output: Latex table
 
@@ -18,7 +18,7 @@ library(tidyr)
 
 # load data
 setwd(here::here())
-md_sim_data = read.csv("sims/md_sim_data.csv")
+md_sim_data = read.csv("sims/sim_data/md_sim_data.csv")
 
 # format numbers (default to 2 decimal places)
 format_nums = function(x, digits = 2) {
@@ -52,7 +52,7 @@ md_sim_summ |>
   dplyr::ungroup() |>
   dplyr::select(col_order) |>
   dplyr::mutate_at(analysis_cols, format_nums) |>
-  magrittr::set_colnames(c("Constant $\\pmb{T}$", "$\\pmb{M}$", "$\\pmb{n}$", rep(c("Bias", "ASE", "ESE", "CP"), times = 4))) |>
+  magrittr::set_colnames(c("Constant $\\pmb{T}$", "$\\pmb{M}$", "$\\pmb{n'}$", rep(c("Bias", "ASE", "ESE", "CP"), times = 4))) |>
   kable(format = "latex", digits = 3, align = c(rep("c", 4), rep("r", 16)),
         booktabs = TRUE, linesep = c("", "", "\\addlinespace"), escape = FALSE) |>
   add_header_above(header = c(" " = 3, "MLE" = 4, "Bias-Corrected MLE" = 4, "MLE" = 4, "Bias-Corrected MLE" = 4), bold = TRUE) |>

@@ -1,5 +1,5 @@
 # Load data
-res = read.csv("~sarahlotspeich/Dropbox (Wake Forest University)/4 - PAPERS/Hudgens-IUPM-Paper/2 - SIMULATIONS/1 - SINGLE DILUTION/All_Sims_Summary_Wide.csv")
+res = read.csv("https://raw.githubusercontent.com/sarahlotspeich/SLDeepAssay/main/sim_data/single_dilution_results.csv")
 
 # Run once
 ## install.packages("kableExtra)

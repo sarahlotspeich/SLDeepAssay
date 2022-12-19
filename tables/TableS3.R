@@ -1,4 +1,4 @@
-## Title: Table 2: Multiple Dilutions Setting Simulations (Constant Tau)
+## Title: Table S3: Multiple Dilutions Setting Simulations (Non-onstant Tau)
 
 ## Date: 2022/12/19
 
@@ -41,15 +41,15 @@ md_sim_summ = md_sim_data |>
   pivot_wider(id_cols = c("M", "n", "constant_Tau"),
               names_from = c("bc", "assay_type"),
               values_from = c("n_removed", "rel_bias", "ase", "ese", "cp"))
-  
+
 analysis_cols = as.vector(outer(c("rel_bias", "ase", "ese", "cp"),
-                as.vector(outer(c("_MLE", "_BCMLE"), c("_woUDSA", "_wUDSA"), paste0)), paste0))
+                                as.vector(outer(c("_MLE", "_BCMLE"), c("_woUDSA", "_wUDSA"), paste0)), paste0))
 
 col_order = c("M", "n", analysis_cols)
 
 # produce table with simulation summary
 md_sim_summ |> 
-  filter(constant_Tau == 1) |> # Subset to columns with constant Tau
+  filter(constant_Tau == 0) |> # Subset to columns with constant Tau
   dplyr::ungroup() |>
   dplyr::select(all_of(col_order)) |>
   dplyr::mutate_at(analysis_cols, format_nums) |>

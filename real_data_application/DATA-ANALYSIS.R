@@ -31,7 +31,7 @@ for (id in paste0("C", 1:17)) {
 }
 
 
-## tore experimental setup data
+## store experimental setup data
 exp_setup = matrix(nrow = 0, ncol = 5)
 colnames(exp_setup) = c("id", "n", "M", "MP", "m")
 
@@ -97,10 +97,43 @@ for (id in paste0("C", 1:17)) {
   
 }
 
-exp_setup = as.data.frame(exp_setup)
 colnames(results)[1:2] = c("id", "method")
 
-# Save results
-write.csv(exp_setup, "real_data_application/tableS4_data.csv", row.names = F)
-write.csv(results, "real_data_application/tableS5_data.csv", row.names = F)
+## create plot data for Figure 2
+figure2_data = rbind(results[, c("id", "method", "mle", "se", "ci1", "ci2")],
+                 results[, c("id", "method", "mle_bc", "se", "ci_bc1", "ci_bc2")]) %>% 
+  as.data.frame() %>% 
+  `colnames<-`(c("id", "method",
+                 "mle", "se", "ci.lower", "ci.upper")) %>% 
+  mutate_at(c("mle", "se", "ci.lower", "ci.upper"), as.numeric) %>% 
+  mutate(bias.correction = factor(rep(c("MLE", "BC-MLE"),
+                                      each = nrow(results)),
+                                  levels = c("MLE", "BC-MLE")),
+         method = factor(method,
+                         levels = c("Without UDSA (Multiple Dilutions)",
+                                    "With UDSA (Single Dilution)",
+                                    "With UDSA (Multiple Dilutions)")),
+         id.lab = factor(paste0("Subject ", id),
+                         levels = paste0("Subject C", 1:17))) %>% 
+  mutate(method.bc = factor(paste0(method, "_", bias.correction)),
+         method.bc = factor(method.bc, levels = rev(levels(method.bc))))
+
+## data for Table S4
+tableS4_data = as.data.frame(exp_setup)
+
+# Create data for Table S5
+tableS5_data = figure2_data %>%
+  mutate(mle.ci = paste0("$", format(round(mle, 2), nsmall = 2), "$ $(",
+                         format(round(ci.lower, 2), nsmall = 2), ", ",
+                         format(round(ci.upper, 2), nsmall = 2), ")$"),
+         id = factor(id, levels = paste0("C", 1:17))) %>% 
+  select(id, method, bias.correction, mle.ci) %>% 
+  pivot_wider(names_from = "method",
+              values_from = "mle.ci") %>% 
+  arrange(id)
+
+# Save data
+write.csv(figure2_data, "real_data_application/tableS4_data.csv", row.names = F)
+write.csv(tableS4_data, "real_data_application/tableS4_data.csv", row.names = F)
+write.csv(tableS5_data, "real_data_application/tableS5_data.csv", row.names = F)
 

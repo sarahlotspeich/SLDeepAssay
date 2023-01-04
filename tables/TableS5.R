@@ -18,19 +18,11 @@ library(kableExtra)
 library(magick)
 
 # Load data
-tabS5_dat = read.csv("https://raw.githubusercontent.com/sarahlotspeich/SLDeepAssay/main/real-data-application/tableS5_data.csv")
+tableS5_data = read.csv("https://raw.githubusercontent.com/sarahlotspeich/SLDeepAssay/main/real_data_application/tableS5_data.csv") %>%
+  as.matrix()
 
 ## create Table S5
-tabS5_dat %>%
-  mutate(mle.ci = paste0("$", format(round(mle, 2), nsmall = 2), "$ $(",
-                         format(round(ci.lower, 2), nsmall = 2), ", ",
-                         format(round(ci.upper, 2), nsmall = 2), ")$"),
-         id = factor(id, levels = paste0("C", 1:17))) %>% 
-  select(id, method, bias.correction, mle.ci) %>% 
-  pivot_wider(names_from = "method",
-              values_from = "mle.ci") %>% 
-  arrange(id) %>% 
-  table.dat %>% 
+tableS5_data %>% 
   kable(format = "latex",
         booktabs = T,
         escape = F,

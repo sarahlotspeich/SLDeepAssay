@@ -17,19 +17,11 @@ library(dplyr)
 library(tidyr)
 
 # Load data
-tableS5_data = read.csv("https://raw.githubusercontent.com/sarahlotspeich/SLDeepAssay/main/real_data_application/tableS5_data.csv") %>%
-  as.matrix
+figure2_data = read.csv("https://raw.githubusercontent.com/sarahlotspeich/SLDeepAssay/main/real_data_application/figure2_data.csv")
 
-## create plot data
-
-plot.dat = rbind(tableS5_data[, c("id", "method", "mle", "se", "ci1", "ci2")],
-                 tableS5_data[, c("id", "method", "mle_bc", "se", "ci_bc1", "ci_bc2")]) %>% 
-  as.data.frame() %>% 
-  `colnames<-`(c("id", "method",
-                 "mle", "se", "ci.lower", "ci.upper")) %>% 
-  mutate_at(c("mle", "se", "ci.lower", "ci.upper"), as.numeric) %>% 
-  mutate(bias.correction = factor(rep(c("MLE", "BC-MLE"),
-                                      each = nrow(tableS5_data)),
+## create Figure 2
+figure2_data %>% 
+  mutate(bias.correction = factor(bias.correction,
                                   levels = c("MLE", "BC-MLE")),
          method = factor(method,
                          levels = c("Without UDSA (Multiple Dilutions)",
@@ -38,10 +30,8 @@ plot.dat = rbind(tableS5_data[, c("id", "method", "mle", "se", "ci1", "ci2")],
          id.lab = factor(paste0("Subject ", id),
                          levels = paste0("Subject C", 1:17))) %>% 
   mutate(method.bc = factor(paste0(method, "_", bias.correction)),
-         method.bc = factor(method.bc, levels = rev(levels(method.bc))))
-
-## create plot
-ggplot(plot.dat, aes(x = method.bc, y = mle, ymin = ci.lower, ymax = ci.upper,
+         method.bc = factor(method.bc, levels = rev(levels(method.bc)))) %>%
+  ggplot(aes(x = method.bc, y = mle, ymin = ci.lower, ymax = ci.upper,
                      color = method, shape = bias.correction)) +
   geom_point(size = 2) +
   geom_errorbar(width = 0.3) +

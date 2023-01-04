@@ -58,4 +58,4 @@ real_data_plot +
   ggtitle("IUPM MLEs and 95% Confidence Intervals by Method",
           subtitle="MLEs and Bias-Corrected MLEs")
 
-ggsave(real_data_plot, filename = "real_data_application/real_data_plot.png", width = 10, height = 10)
+ggsave(real_data_plot, filename = "figures/real_data_plot.png", width = 10, height = 10)

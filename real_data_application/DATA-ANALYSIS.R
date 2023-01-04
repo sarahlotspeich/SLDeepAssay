@@ -107,16 +107,7 @@ figure2_data = rbind(results[, c("id", "method", "mle", "se", "ci1", "ci2")],
                  "mle", "se", "ci.lower", "ci.upper")) %>% 
   mutate_at(c("mle", "se", "ci.lower", "ci.upper"), as.numeric) %>% 
   mutate(bias.correction = factor(rep(c("MLE", "BC-MLE"),
-                                      each = nrow(results)),
-                                  levels = c("MLE", "BC-MLE")),
-         method = factor(method,
-                         levels = c("Without UDSA (Multiple Dilutions)",
-                                    "With UDSA (Single Dilution)",
-                                    "With UDSA (Multiple Dilutions)")),
-         id.lab = factor(paste0("Subject ", id),
-                         levels = paste0("Subject C", 1:17))) %>% 
-  mutate(method.bc = factor(paste0(method, "_", bias.correction)),
-         method.bc = factor(method.bc, levels = rev(levels(method.bc))))
+                                      each = nrow(results))))
 
 ## data for Table S4
 tableS4_data = as.data.frame(exp_setup)
@@ -133,7 +124,7 @@ tableS5_data = figure2_data %>%
   arrange(id)
 
 # Save data
-write.csv(figure2_data, "real_data_application/tableS4_data.csv", row.names = F)
+write.csv(figure2_data, "real_data_application/figure2_data.csv", row.names = F)
 write.csv(tableS4_data, "real_data_application/tableS4_data.csv", row.names = F)
 write.csv(tableS5_data, "real_data_application/tableS5_data.csv", row.names = F)
 

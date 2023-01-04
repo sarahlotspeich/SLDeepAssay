@@ -17,17 +17,19 @@ library(dplyr)
 library(tidyr)
 
 # Load data
-results = read.csv("https://raw.githubusercontent.com/sarahlotspeich/SLDeepAssay/main/real-data-application/tableS5_data.csv")
+tableS5_data = read.csv("https://raw.githubusercontent.com/sarahlotspeich/SLDeepAssay/main/real_data_application/tableS5_data.csv") %>%
+  as.matrix
 
 ## create plot data
-plot.dat = rbind(results[, c("id", "method", "mle", "se", "ci1", "ci2")],
-                 results[, c("id", "method", "mle_bc", "se", "ci_bc1", "ci_bc2")]) %>% 
+
+plot.dat = rbind(tableS5_data[, c("id", "method", "mle", "se", "ci1", "ci2")],
+                 tableS5_data[, c("id", "method", "mle_bc", "se", "ci_bc1", "ci_bc2")]) %>% 
   as.data.frame() %>% 
   `colnames<-`(c("id", "method",
                  "mle", "se", "ci.lower", "ci.upper")) %>% 
   mutate_at(c("mle", "se", "ci.lower", "ci.upper"), as.numeric) %>% 
   mutate(bias.correction = factor(rep(c("MLE", "BC-MLE"),
-                                      each = nrow(results)),
+                                      each = nrow(tableS5_data)),
                                   levels = c("MLE", "BC-MLE")),
          method = factor(method,
                          levels = c("Without UDSA (Multiple Dilutions)",

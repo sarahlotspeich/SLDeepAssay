@@ -128,3 +128,32 @@ write.csv(figure2_data, "real_data_application/figure2_data.csv", row.names = F)
 write.csv(tableS4_data, "real_data_application/tableS4_data.csv", row.names = F)
 write.csv(tableS5_data, "real_data_application/tableS5_data.csv", row.names = F)
 
+# Compare CI widths (on log scale) for selected subjects
+ci.widths = figure2_data %>% 
+  mutate(ci.width = log(ci.upper) - log(ci.lower)) %>% 
+  select(id, method, bias.correction, ci.width)
+
+ci.widths.udsa.md = ci.widths %>% 
+  filter(method == "With UDSA (Multiple Dilutions)") %>% 
+  rename(ci.width.new = ci.width) %>% 
+  select(!method)
+
+ci.change = ci.widths %>% 
+  filter(method != "With UDSA (Multiple Dilutions)") %>% 
+  left_join(ci.widths.udsa.md,
+            by = c("id", "bias.correction")) %>% 
+  mutate(pct.change = 100 * (ci.width.new - ci.width) / ci.width)
+
+# compare UDSA + QVOA at multiple dilutions to QVOA at multiple dilutions
+ci.change %>% 
+  filter(method == "Without UDSA (Multiple Dilutions)") %>% 
+  arrange(by = pct.change)
+
+# compare UDSA + QVOA at multiple dilutions to UDSA + QVOA at one dilution
+ci.change %>% 
+  filter(method == "With UDSA (Single Dilution)") %>% 
+  arrange(by = pct.change)
+
+
+
+

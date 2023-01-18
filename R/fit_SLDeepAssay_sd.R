@@ -35,9 +35,9 @@ fit_SLDeepAssay_sd = function(assay, u = 1, M = NULL, n = NULL, MP = NULL, m = N
 
   # Indicator for whether bias correction should be computed:
   # User-specified value if provided, else yes if n <= 40
-  corrected = ifelse(test = is.null(corrected),
-                     yes = n <= 40,
-                     no = corrected)
+  corrected = ifelse(is.null(corrected),
+                     n <= 40,
+                     corrected)
   # Fit MLE
   optimization = optim(par = - log(1 - Y / M),
                        fn = loglik_sd,

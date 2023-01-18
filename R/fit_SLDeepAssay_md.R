@@ -3,7 +3,7 @@
 #' @param assay_summary List of data frames with assay data from each dilution level. Default is \code{NULL}.
 #' @param u Vector of dilution levels, in millions of cells per well. Default is \code{NULL}.
 #' @param assay_summary (Optional) Instead of supplying \code{assay} and \code{u}, supply a summary of assay results in the form of a data frame. This summary should contain one row per dilution level and the following columns: M (total number of wells), n (number of distinct viral lineages \[DVL\]), MN (number of p24-negative wells), m (number of deep sequenced wells), Y1,..., Yn (counts of wells positive for DVL i, (i = 1,...,n), and u (dilution levels, in millions of cells per well).
-#' @param corrected Logical, if \code{corrected = TRUE} the bias-corrected MLE will be returned. If there are <= 40 DVL in \code{assay}, default is \code{corrected = TRUE}; otherwise default is \code{corrected = FALSE}.
+#' @param corrected Logical, if \code{corrected = TRUE} the bias-corrected MLE will be returned. If \code{corrected = FALSE} the bias-corrected MLE will be not be returned. If \code{corrected = NULL}, the bias correction will be computed if here are <= 40 DVLs in \code{assay}. Default is \code{corrected = NULL}.
 #' @param maxit The maximum number of iterations (passed to \code{optim}). Default is \code{maxit = 1E4}.
 #' @param lb Lower-bound on the IUPM (passed to \code{optim}). Default is \code{lb = 1E-6}.
 #' @param ub Upper-bound on the IUPM (passed to \code{optim}). Default is \code{ub = Inf}.

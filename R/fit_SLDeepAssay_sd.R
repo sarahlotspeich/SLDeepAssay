@@ -6,7 +6,7 @@
 #' @param MP (Optional) Instead of supplying \code{assay}, supply the total number of p24-positive wells (a scalar). Default is \code{MP = NULL}.
 #' @param m (Optional) Instead of supplying \code{assay}, supply the total number of p24-positive wells that underwent deep sequencing (a scalar). Default is \code{m = NULL}.
 #' @param Y (Optional) Instead of supplying \code{assay}, supply the numbers of wells (without missing data) that were infected with each DVL (a vector of length \code{n}). Default is \code{Y = NULL}.
-#' @param corrected Logical, if \code{corrected = TRUE} the bias-corrected MLE will be returned. If there are <= 40 DVL in \code{assay}, default is \code{corrected = TRUE}; otherwise default is \code{corrected = FALSE}.
+#' @param corrected Logical, if \code{corrected = TRUE} the bias-corrected MLE will be returned. If \code{corrected = FALSE} the bias-corrected MLE will be not be returned. If \code{corrected = NULL}, the bias correction will be computed if here are <= 40 DVLs in \code{assay}. Default is \code{corrected = NULL}.
 #' @param maxit The maximum number of iterations (passed to \code{optim}). Default is \code{maxit = 1E4}.
 #' @param lb Parameter lower bound (passed to \code{optim}). Default is \code{lb = 1E-6}.
 #' @param ub Parameter upper bound (passed to \code{optim}). Default is \code{ub = Inf}.
@@ -19,7 +19,7 @@
 #' @export
 #'
 #'
-fit_SLDeepAssay_sd = function(assay, u = 1, M = NULL, n = NULL, MP = NULL, m = NULL, Y = NULL, corrected = FALSE, maxit = 1E4, lb = 1E-6, ub = Inf) {
+fit_SLDeepAssay_sd = function(assay, u = 1, M = NULL, n = NULL, MP = NULL, m = NULL, Y = NULL, corrected = NULL, maxit = 1E4, lb = 1E-6, ub = Inf) {
   # If the raw assay data are provided then compute the following values
   if (!is.null(assay)) {
     M = ncol(assay) # number of wells (total)

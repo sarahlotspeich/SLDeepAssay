@@ -70,7 +70,7 @@ fit_SLDeepAssay_sd = function(assay, u = 1, M = NULL, n = NULL, MP = NULL, m = N
   ci = exp(c(log(Lambda_hat) + c(-1, 1) * (qnorm(0.975) * se / Lambda_hat)))
 
   # For large n, do not compute bias correction unless user overrides
-  if (!corrected) {
+  if (corrected == F) {
     Lambda_hat_bc = NA
     ci_bc = NA
   } else {

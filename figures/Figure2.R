@@ -31,7 +31,8 @@ figure2_data |>
                          levels = paste0("Subject C", 1:17)),
          method.bc = factor(paste0(method, "_", bias.correction)),
          method.bc = factor(method.bc, levels = rev(levels(method.bc)))) |>
-  ggplot(aes(x = bias.correction, y = mle, ymin = ci.lower, ymax = ci.upper,
+  ggplot(aes(x = bias.correction, y = log(mle),
+             ymin = log(ci.lower), ymax = log(ci.upper),
              color = method, shape = bias.correction)) +
   geom_point(size = 2,
              position = position_dodge(width = 0.5)) +
@@ -49,15 +50,14 @@ figure2_data |>
         legend.justification = c("right", "bottom"),
         legend.box = "horizontal",
         legend.key.width = unit(1.5, "cm")) +
-  ylab("IUPM of HIV") +#ylab("IUPM MLE and 95% CI") +
+  ylab("IUPM of HIV") +
   labs(color = "Method",
        shape = "Bias Correction") +
-  ggthemes::scale_colour_colorblind() + #scale_color_grey() +
-  #scale_y_continuous(trans = "log10") +
-  facet_wrap(~ id.lab, ncol = 5, scales = "free") -> real_data_plot
+  ggthemes::scale_colour_colorblind() +
+  facet_wrap(~ id.lab, ncol = 5, scales = "free") -> real_data_plot_log_IUPM
 
-real_data_plot +
+real_data_plot_log_IUPM +
   ggtitle("IUPM MLEs and 95% Confidence Intervals by Method",
           subtitle="MLEs and Bias-Corrected MLEs")
 
-ggsave(real_data_plot, filename = "figures/real_data_plot.png", width = 10, height = 10)
+ggsave(real_data_plot_log_IUPM, filename = "figures/real_data_plot_log_IUPM.png", width = 10, height = 10)

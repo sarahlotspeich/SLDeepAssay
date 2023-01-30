@@ -32,7 +32,7 @@ md_sim_data |>
 # summarize sim results
 md_sim_summ = md_sim_data |>
   mutate(M = factor(M, levels = c("6, 12, 18", "9, 18, 27", "12, 24, 36"))) |>
-  group_by(constant_Tau, M, n, assay_type, bc) |>
+  group_by(constant_Tau, n, M, assay_type, bc) |>
   summarise(n_removed = sum(Message),
             rel_bias = mean(Est - Tau),
             ase = mean(SE),
@@ -45,7 +45,7 @@ md_sim_summ = md_sim_data |>
 analysis_cols = as.vector(outer(c("rel_bias", "ase", "ese", "cp"),
                 as.vector(outer(c("_MLE", "_BCMLE"), c("_woUDSA", "_wUDSA"), paste0)), paste0))
 
-col_order = c("M", "n", analysis_cols)
+col_order = c("n", "M", analysis_cols)
 
 # produce table with simulation summary
 md_sim_summ |> 
@@ -53,7 +53,7 @@ md_sim_summ |>
   dplyr::ungroup() |>
   dplyr::select(all_of(col_order)) |>
   dplyr::mutate_at(analysis_cols, format_nums) |>
-  magrittr::set_colnames(c("M", "$\\pmb{n'}$", rep(c("Bias", "ASE", "ESE", "CP"), times = 4))) |>
+  magrittr::set_colnames(c("$\\pmb{n'}$", "M", rep(c("Bias", "ASE", "ESE", "CP"), times = 4))) |>
   kable(format = "latex", digits = 3, align = c(rep("c", 4), rep("r", 16)),
         booktabs = TRUE, linesep = c("", "", "\\addlinespace"), escape = FALSE) |>
   add_header_above(header = c(" " = 2, "MLE" = 4, "Bias-Corrected MLE" = 4, "MLE" = 4, "Bias-Corrected MLE" = 4), bold = TRUE) |>

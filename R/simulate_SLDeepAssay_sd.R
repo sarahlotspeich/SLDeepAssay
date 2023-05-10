@@ -94,7 +94,7 @@ simulate_SLDeepAssay_sd <- function(M, tau, q, u = 1, sens_UDSA = 1, spec_UDSA =
   if (Message > 0) {
     Message_Detailed = paste0("Assay was resimulated ",
                               num_redo_none + num_redo_all,
-                              ifelse((num_redo_none + num_redo_all) == 1, "time (", "times ("),
+                              ifelse((num_redo_none + num_redo_all) == 1, " time (", "times ("),
                               num_redo_none,
                               " due to no DVL being detected and ",
                               num_redo_all,

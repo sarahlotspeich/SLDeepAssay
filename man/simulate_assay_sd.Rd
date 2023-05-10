@@ -4,7 +4,15 @@
 \alias{simulate_assay_sd}
 \title{Simulate single-dilution assay data}
 \usage{
-simulate_assay_sd(M, tau, q, u = 1, remove_undetected = TRUE)
+simulate_assay_sd(
+  M,
+  tau,
+  q,
+  u = 1,
+  tpr_UDSA = 1,
+  fpr_UDSA = 0,
+  remove_undetected = TRUE
+)
 }
 \arguments{
 \item{M}{Total number of wells (a scalar).}
@@ -14,6 +22,10 @@ simulate_assay_sd(M, tau, q, u = 1, remove_undetected = TRUE)
 \item{q}{Proportion of p24-positive wells that underwent UDSA (a scalar between 0 and 1).}
 
 \item{u}{Dilution level in millions of cells per well (a positive scalar). Default is \code{dilution = 1}.}
+
+\item{tpr_UDSA}{True positive rate for the UDSA (a scalar between 0 and 1). Default is \code{tpr_UDSA = 1}, corresponding to a "perfect" assay.}
+
+\item{fpr_UDSA}{False positive rate for the UDSA (a scalar between 0 and 1). Default is \code{fpr_UDSA = 0}, corresponding to a "perfect" assay.}
 
 \item{remove_undetected}{Logical, if \code{remove_undetected = TRUE} (the default), then DVL which were not detected in any of the deep sequenced wells are deleted.}
 }

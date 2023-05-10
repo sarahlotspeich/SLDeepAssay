@@ -54,10 +54,14 @@ simulate_assay_sd = function(M, tau, q, u = 1, sens_UDSA = 1, spec_UDSA = 1, rem
   Wstar = W ## assume for now that they're perfect
   
   # Generate imperfect UDSA results
-  if (sens_UDSA < 1 & spec_UDSA < 1) {
+  if (sens_UDSA < 1 | spec_UDSA < 1) {
     # Define parameters for imperfect assays 
-    alpha0 = - log((1 - (1 - spec_UDSA)) / (1 - spec_UDSA))
-    alpha1 = - log((1 - sens_UDSA) / sens_UDSA) - alpha0
+    alpha0 = ifelse(test = spec_UDSA < 1, 
+                    yes = - log((1 - (1 - spec_UDSA)) / (1 - spec_UDSA)), 
+                    no = - log((1 - (1 - 0.99999)) / (1 - 0.99999)))
+    alpha1 = ifelse(test = sens_UDSA < 1, 
+                    yes = - log((1 - sens_UDSA) / sens_UDSA) - alpha0, 
+                    no = - log((1 - 0.99999) / 0.99999) - alpha0)
     
     # Generate Z*: observed UDSA statuses for all DVL and wells
     Zstar = rbinom(n = M * n, 

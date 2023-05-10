@@ -4,8 +4,8 @@
 #' @param tau Mean counts of cells per million infected with each DVL (a vector). (Note: All elements in \code{tau} must be > 0.)
 #' @param q Fixed proportion of p24-positive wells to be deep sequenced (a scalar between 0 and 1).
 #' @param u Dilution level in millions of cells per well (a positive scalar). Default is \code{u = 1}.
-#' @param tpr_UDSA True positive rate for the UDSA (a scalar between 0 and 1). Default is \code{tpr_UDSA = 1}, corresponding to a "perfect" assay.
-#' @param fpr_UDSA False positive rate for the UDSA (a scalar between 0 and 1). Default is \code{fpr_UDSA = 0}, corresponding to a "perfect" assay.
+#' @param sens_UDSA Sensitivity (i.e., true positive rate) for the UDSA (a scalar between 0 and 1). Default is \code{sens_UDSA = 1}. 
+#' @param spec_UDSA Specificity (i.e., true negative rate) for the UDSA (a scalar between 0 and 1). Default is \code{spec_UDSA = 1}.
 #' @param remove_undetected Logical, if \code{remove_undetected = TRUE} (the default), then DVL which were not detected in any of the deep sequenced wells are deleted.
 #' @return Named list with the following slots:
 #' \item{Assay}{Simulated single-dilution assay data (deep sequenced).}
@@ -18,7 +18,7 @@
 #' @importFrom SLDAssay get.mle
 #' @export
 #'
-simulate_SLDeepAssay_sd <- function(M, tau, q, u = 1, tpr_UDSA = 1, fpr_UDSA = 0, remove_undetected = TRUE) {
+simulate_SLDeepAssay_sd <- function(M, tau, q, u = 1, sens_UDSA = 1, spec_UDSA = 1, remove_undetected = TRUE) {
   # Create indicators of whether data need to be re-simulated
   num_redo_all = 0 # Due to any DVL being detected in all wells or
   num_redo_none = 0 # No DVL being detected in any wells
@@ -28,8 +28,8 @@ simulate_SLDeepAssay_sd <- function(M, tau, q, u = 1, tpr_UDSA = 1, fpr_UDSA = 0
                             tau = tau,
                             q = q,
                             u = u,
-                            tpr_UDSA = tpr_UDSA, 
-                            fpr_UDSA = fpr_UDSA,
+                            sens_UDSA = sens_UDSA, 
+                            spec_UDSA = spec_UDSA,
                             remove_undetected = remove_undetected)
 
   # Checks for need to re-simulate

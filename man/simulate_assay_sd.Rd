@@ -9,8 +9,8 @@ simulate_assay_sd(
   tau,
   q,
   u = 1,
-  tpr_UDSA = 1,
-  fpr_UDSA = 0,
+  sens_UDSA = 1,
+  spec_UDSA = 1,
   remove_undetected = TRUE
 )
 }
@@ -23,9 +23,9 @@ simulate_assay_sd(
 
 \item{u}{Dilution level in millions of cells per well (a positive scalar). Default is \code{dilution = 1}.}
 
-\item{tpr_UDSA}{True positive rate for the UDSA (a scalar between 0 and 1). Default is \code{tpr_UDSA = 1}, corresponding to a "perfect" assay.}
+\item{sens_UDSA}{Sensitivity (i.e., true positive rate) for the UDSA (a scalar between 0 and 1). Default is \code{sens_UDSA = 1}.}
 
-\item{fpr_UDSA}{False positive rate for the UDSA (a scalar between 0 and 1). Default is \code{fpr_UDSA = 0}, corresponding to a "perfect" assay.}
+\item{spec_UDSA}{Specificity (i.e., true negative rate) for the UDSA (a scalar between 0 and 1). Default is \code{spec_UDSA = 1}.}
 
 \item{remove_undetected}{Logical, if \code{remove_undetected = TRUE} (the default), then DVL which were not detected in any of the deep sequenced wells are deleted.}
 }

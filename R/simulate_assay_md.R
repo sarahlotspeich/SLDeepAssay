@@ -6,7 +6,7 @@
 #' @param u Vector of dilution levels (in millions of cells per well).
 #' @param remove_undetected Logical, if \code{remove_undetected = TRUE} (the default), then DVL which were not detected in any of the deep sequenced wells across all dilution levels are deleted.
 #' @return Named list with the following slots:
-#' \item{assay_summary} {A This summary should contain one row per dilution level and the following columns: M (total number of wells), n (number of distinct viral lineages \[DVL\]), MN (number of p24-negative wells), m (number of deep sequenced wells), Y1,..., Yn (counts of wells positive for DVL i, (i = 1,...,n), and dilutions (dilution levels, in millions of cells per well).}
+#' \item{assay_summary}{A This summary should contain one row per dilution level and the following columns: M (total number of wells), n (number of distinct viral lineages \[DVL\]), MN (number of p24-negative wells), m (number of deep sequenced wells), Y1,..., Yn (counts of wells positive for DVL i, (i = 1,...,n), and dilutions (dilution levels, in millions of cells per well).}
 #' @export
 #'
 simulate_assay_md = function(M, tau, q, u, remove_undetected = T, seed = NULL) {

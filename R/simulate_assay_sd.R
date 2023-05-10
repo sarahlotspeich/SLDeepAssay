@@ -14,66 +14,69 @@ simulate_assay_sd = function(M, tau, q, u = 1, remove_undetected = TRUE) {
   # Calculate lambda: mean number of infected cells per well with each DVL
   lambda = tau * u
 
-  # Create constant for number of existing DVLs
+  # Create n: a constant for the number of underlying DVLs
   n = length(lambda)
 
-  # Generate Z = I(Xij >= 1) for all i, j
+  # Generate true UDSA statuses, Z = I(Xij >= 1), for all i, j
   Z = rbinom(n = M * n,
              size = 1,
              prob = (1 - exp(- rep(x = lambda, each = M))))
-
-  data_mat = matrix(data = Z,
+  
+  # Reshape to get rows per DVL, columns per replicate well
+  Z_mat = matrix(data = Z,
                     nrow = n,
                     ncol = M,
                     byrow = TRUE)
-
+  
+  # Construct true QVOA results from true UDSA results
+  W = get_any_DVL(Z_mat)
+  
   # Calculate MP: number of wells with >= 1 DVL (p24+)
-  MP = sum(colSums(data_mat) >= 1)
+  MP = sum(W == 1)
 
-  # Calculate the number of p24 positive wells for UDSA
-  if (q == 1) {
-    m = MP
-  } else {
-    m = round(q * MP, 0)
+  # Calculate m: ## the number of p24-positive wells to deep sequence
+  m = ifelse(test = q == 1, yes = MP, no = round(q * MP, 0)) 
+  
+  # Make Z for any unsequenced, p24-positive wells NA
+  p24_pos = which(W == 1) ## ids of p24-positive wells
+  p24_neg = which(W == 0) ## ids of p24-negative wells
+  # If only partially sequencing (m < MP), make Z missing for unsequenced wells 
+  if (m < MP) { 
+    make_miss = p24_pos[-c(1:m)]
+    Z_mat[, make_miss] = NA
   }
-
-  # Randomly select columns to make missing
-  p24_pos = which(colSums(data_mat) >= 1)
-  p24_neg = which(colSums(data_mat) == 0)
-  if (m < MP) {
-    make_miss = p24_pos[1:(MP - m)]
-    data_mat[, make_miss] = NA
-  }
-
-  # initiate n_
-  n_ = n
+  
+  # Subset to DVLs to return, either all (if remove_undetected = FALSE)  
+  # or only those that were detected in >= 1 well (if remove_undetected = TRUE) 
+  ## Create n_: a constant for the number of detected DVLs
+  n_ = n ### initialize as equal to the number of underlying DVLs
   if (remove_undetected) {
-    # Check for which DVL detected
-    detected = rowSums(data_mat, na.rm = TRUE) >= 1
-
-    # Number of DVL detected
+    detected = rowSums(Z_mat, na.rm = TRUE) >= 1
     n_ = sum(detected)
-    data_mat = data_mat[detected, ]
+    Z_mat = Z_mat[detected, ]
     if (n_ == 0) {
-      return(list("any_DVL" = rep(x = 0, M),
-                  "DVL_specific" = NULL))
+      Z_mat = matrix(0, ncol = M)
     } else if (n_ == 1) {
-      data_mat = matrix(data_mat, ncol = M, byrow = TRUE)
+      Z_mat = matrix(Z_mat, ncol = M, byrow = TRUE)
     }
-  }
-
-  # Reorder to look like the paper
-  ## With non-missing data first
+  } 
+  
+  # Reorder columns of assay returned to be... 
+  ## (i) p24-positive + sequenced, 
+  ## (ii) p24-negative, and 
+  ## (iii) p24-positive + unsequenced 
   if (m < MP) {
-    data_mat = data_mat[, c(setdiff(p24_pos, make_miss), p24_neg, make_miss)]
+    Z_mat = Z_mat[, c(setdiff(p24_pos, make_miss), p24_neg, make_miss)]
+    W = W[c(setdiff(p24_pos, make_miss), p24_neg, make_miss)]
   } else {
-    data_mat = data_mat[, c(p24_pos, p24_neg)]
+    Z_mat = Z_mat[, c(p24_pos, p24_neg)]
+    W = W[c(p24_pos, p24_neg)]
   }
   if (n_ == 1) {
-    data_mat = matrix(data_mat, ncol = M, byrow = TRUE)
+    Z_mat = matrix(Z_mat, ncol = M, byrow = TRUE)
   }
-
+ 
   # Return simulated data
-  return(list("any_DVL" = any_DVL(data_mat),
-              "DVL_specific" = data_mat))
+  return(list("any_DVL" = W,
+              "DVL_specific" = Z_mat))
 }

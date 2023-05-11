@@ -15,7 +15,7 @@ simulate_assay_md(M, tau, q, u, k = Inf, remove_undetected = T, seed = NULL)
 
 \item{u}{Vector of dilution levels (in millions of cells per well).}
 
-\item{k}{Overdispersion parameter (a positive number). Default is Inf, which corresponds to no overdispersion.}
+\item{k}{Overdispersion parameter (a positive number). Default is \code{Inf}, which corresponds to no overdispersion.}
 
 \item{remove_undetected}{Logical, if \code{remove_undetected = TRUE} (the default), then DVL which were not detected in any of the deep sequenced wells across all dilution levels are deleted.}
 }

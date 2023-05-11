@@ -11,7 +11,8 @@ lrt_SLDeepAssay_md(
   corrected = NULL,
   maxit = 1e+06,
   lb = 1e-06,
-  ub = Inf
+  ub = Inf,
+  k0 = 1
 )
 }
 \arguments{
@@ -26,6 +27,8 @@ lrt_SLDeepAssay_md(
 \item{lb}{Lower-bound on the IUPM (passed to \code{optim}). Default is \code{lb = 1E-6}.}
 
 \item{ub}{Upper-bound on the IUPM (passed to \code{optim}). Default is \code{ub = Inf}.}
+
+\item{k0}{initial value for k in optimization procedure (default is \code{k = 1}.}
 }
 \value{
 Named list with the following slots:

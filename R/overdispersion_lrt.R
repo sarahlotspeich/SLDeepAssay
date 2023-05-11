@@ -144,6 +144,7 @@ negbin_gloglik_md = function(tau, k, assay_summary) {
 #' @param maxit The maximum number of iterations (passed to \code{optim}). Default is \code{maxit = 1E4}.
 #' @param lb Lower-bound on the IUPM (passed to \code{optim}). Default is \code{lb = 1E-6}.
 #' @param ub Upper-bound on the IUPM (passed to \code{optim}). Default is \code{ub = Inf}.
+#' @param k0 initial value for k in optimization procedure (default is \code{k = 1}.
 #' @return Named list with the following slots:
 #' \item{mle}{MLE}
 #' \item{se}{Standard error for the MLE}
@@ -159,7 +160,8 @@ lrt_SLDeepAssay_md = function(assay = NULL,
                               corrected = NULL,
                               maxit = 1E6,
                               lb = 1E-6,
-                              ub = Inf) {
+                              ub = Inf,
+                              k0 = 1) {
   
   # For each dilution level, compute summary data
   if (!is.null(assay)) {
@@ -198,7 +200,7 @@ lrt_SLDeepAssay_md = function(assay = NULL,
   
   # Fit MLE under NegBin model
   opt_negbin = optim(
-    par = c(rep(0, assay_summary$n[1]), 10),
+    par = c(rep(0, assay_summary$n[1]), k0),
     fn = function(tk) negbin_loglik_md(tau = head(tk, assay_summary$n[1]),
                                        k = tail(tk, 1),
                                        assay_summary = assay_summary),
@@ -223,7 +225,7 @@ lrt_SLDeepAssay_md = function(assay = NULL,
   Tau_hat = sum(tau_hat)
   
   # negative binomial model parameter estimates
-  if (loglik_negbin < loglik_pois) {
+  if (loglik_negbin > loglik_pois) {
     tau_hat_negbin = head(opt_negbin$par, assay_summary$n[1])
     Tau_hat_negbin = sum(tau_hat_negbin)
     k_hat_negbin = tail(opt_negbin$par, 1)

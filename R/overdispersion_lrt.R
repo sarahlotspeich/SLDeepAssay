@@ -136,7 +136,7 @@ negbin_gloglik_md = function(tau, k, assay_summary) {
 
 
 #' Maximum likelihood estimator (MLE) for multiple-dilution assay data with LRT
-#' @name fit_SLDeepAssay_md_lrt
+#' @name lrt_SLDeepAssay_md
 #' @param assay_summary List of data frames with assay data from each dilution level. Default is \code{NULL}.
 #' @param u Vector of dilution levels, in millions of cells per well. Default is \code{NULL}.
 #' @param assay_summary (Optional) Instead of supplying \code{assay} and \code{u}, supply a summary of assay results in the form of a data frame. This summary should contain one row per dilution level and the following columns: M (total number of wells), n (number of distinct viral lineages \[DVL\]), MN (number of p24-negative wells), m (number of deep sequenced wells), Y1,..., Yn (counts of wells positive for DVL i, (i = 1,...,n), and u (dilution levels, in millions of cells per well).
@@ -198,7 +198,7 @@ lrt_SLDeepAssay_md = function(assay = NULL,
   
   # Fit MLE under NegBin model
   opt_negbin = optim(
-    par = c(rep(0, assay_summary$n[1]), k0),
+    par = c(rep(0, assay_summary$n[1]), 10),
     fn = function(tk) negbin_loglik_md(tau = head(tk, assay_summary$n[1]),
                                        k = tail(tk, 1),
                                        assay_summary = assay_summary),

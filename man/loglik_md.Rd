@@ -12,7 +12,7 @@ loglik_md(tau, assay_summary)
 \item{assay_summary}{Summary of assay data from multiple dilutions}
 }
 \value{
-A scalar value of the log-likelihood
+A scalar value of the negative log-likelihood
 }
 \description{
 Log-likelihood for IUPM from multiple-dilution assay data

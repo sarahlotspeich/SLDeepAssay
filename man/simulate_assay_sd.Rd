@@ -4,7 +4,7 @@
 \alias{simulate_assay_sd}
 \title{Simulate single-dilution assay data}
 \usage{
-simulate_assay_sd(M, tau, q, u = 1, remove_undetected = TRUE)
+simulate_assay_sd(M, tau, q, u = 1, k = Inf, remove_undetected = TRUE)
 }
 \arguments{
 \item{M}{Total number of wells (a scalar).}
@@ -14,6 +14,8 @@ simulate_assay_sd(M, tau, q, u = 1, remove_undetected = TRUE)
 \item{q}{Proportion of p24-positive wells that underwent UDSA (a scalar between 0 and 1).}
 
 \item{u}{Dilution level in millions of cells per well (a positive scalar). Default is \code{dilution = 1}.}
+
+\item{k}{Overdispersion parameter (a positive number). Default is Inf, which corresponds to no overdispersion.}
 
 \item{remove_undetected}{Logical, if \code{remove_undetected = TRUE} (the default), then DVL which were not detected in any of the deep sequenced wells are deleted.}
 }

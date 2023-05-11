@@ -4,7 +4,7 @@
 \alias{simulate_SLDeepAssay_md}
 \title{Simulate multiple-dilution assay data and fit new and existing methods to it.}
 \usage{
-simulate_SLDeepAssay_md(M, tau, q, u, remove_undetected = TRUE, seed = NULL)
+simulate_SLDeepAssay_md(M, tau, q, u, remove_undetected = TRUE)
 }
 \arguments{
 \item{M}{Total number of wells at each dilution level (a vector of length D).}

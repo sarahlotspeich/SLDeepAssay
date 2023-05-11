@@ -12,7 +12,7 @@ fit_SLDeepAssay_sd(
   MP = NULL,
   m = NULL,
   Y = NULL,
-  corrected = FALSE,
+  corrected = NULL,
   maxit = 10000,
   lb = 1e-06,
   ub = Inf
@@ -31,7 +31,7 @@ fit_SLDeepAssay_sd(
 
 \item{Y}{(Optional) Instead of supplying \code{assay}, supply the numbers of wells (without missing data) that were infected with each DVL (a vector of length \code{n}). Default is \code{Y = NULL}.}
 
-\item{corrected}{Logical, if \code{corrected = TRUE} the bias-corrected MLE will be returned. If there are <= 40 DVL in \code{assay}, default is \code{corrected = TRUE}; otherwise default is \code{corrected = FALSE}.}
+\item{corrected}{Logical, if \code{corrected = TRUE} the bias-corrected MLE will be returned. If \code{corrected = FALSE} the bias-corrected MLE will be not be returned. If \code{corrected = NULL}, the bias correction will be computed if here are <= 40 DVLs in \code{assay}. Default is \code{corrected = NULL}.}
 
 \item{maxit}{The maximum number of iterations (passed to \code{optim}). Default is \code{maxit = 1E4}.}
 

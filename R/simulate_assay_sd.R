@@ -4,23 +4,29 @@
 #' @param tau Mean counts of cells per million infected with each DVL (a vector). (Note: All elements in \code{tau} must be > 0.)
 #' @param q Proportion of p24-positive wells that underwent UDSA (a scalar between 0 and 1).
 #' @param u Dilution level in millions of cells per well (a positive scalar). Default is \code{dilution = 1}.
+#' @param k Overdispersion parameter (a positive number). Default is Inf, which corresponds to no overdispersion.
 #' @param remove_undetected Logical, if \code{remove_undetected = TRUE} (the default), then DVL which were not detected in any of the deep sequenced wells are deleted.
 #' @return Named list with the following slots:
 #' \item{any_DVL}{A vector containing overall (any DVL) infection indicators of across the wells.}
 #' \item{DVL_specific}{A matrix of infection indicators with rows and columns representing the DVLs and wells, respectively.}
 #' @export
 #'
-simulate_assay_sd = function(M, tau, q, u = 1, remove_undetected = TRUE) {
+simulate_assay_sd = function(M, tau, q, u = 1, k = Inf, remove_undetected = TRUE) {
   # Calculate lambda: mean number of infected cells per well with each DVL
   lambda = tau * u
 
   # Create constant for number of existing DVLs
   n = length(lambda)
 
+  # P(Xij >= 1)
+  p = ifelse(k == Inf,
+             1 - exp(- rep(x = lambda, each = M)),
+             1 - (k / (lambda + k)) ^ k)
+  
   # Generate Z = I(Xij >= 1) for all i, j
   Z = rbinom(n = M * n,
              size = 1,
-             prob = (1 - exp(- rep(x = lambda, each = M))))
+             prob = p)
 
   data_mat = matrix(data = Z,
                     nrow = n,

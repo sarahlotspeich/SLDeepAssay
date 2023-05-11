@@ -4,7 +4,7 @@
 \alias{simulate_assay_md}
 \title{Simulate multiple-dilution assay data}
 \usage{
-simulate_assay_md(M, tau, q, u, remove_undetected = T, seed = NULL)
+simulate_assay_md(M, tau, q, u, k = Inf, remove_undetected = T, seed = NULL)
 }
 \arguments{
 \item{M}{Total number of wells at each dilution level (a vector of length D).}
@@ -14,6 +14,8 @@ simulate_assay_md(M, tau, q, u, remove_undetected = T, seed = NULL)
 \item{q}{Proportions of p24-positive wells that underwent UDSA at each dilution level (a vector of length D).}
 
 \item{u}{Vector of dilution levels (in millions of cells per well).}
+
+\item{k}{Overdispersion parameter (a positive number). Default is Inf, which corresponds to no overdispersion.}
 
 \item{remove_undetected}{Logical, if \code{remove_undetected = TRUE} (the default), then DVL which were not detected in any of the deep sequenced wells across all dilution levels are deleted.}
 }

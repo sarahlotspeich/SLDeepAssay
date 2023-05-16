@@ -10,21 +10,18 @@ gloglik_md = function(tau, assay_summary) {
   n = length(tau)
 
   # compute gradients for each dilution
-  glogliks_byDilution = vapply(X = 1:D, FUN.VALUE = numeric(n),
-                                FUN = function(d) {
-                                  as.numeric(gloglik_sd(l = assay_summary$u[d] * tau,
-                                                        M = assay_summary$M[d],
-                                                        MP = assay_summary$MP[d],
-                                                        m = assay_summary$m[d],
-                                                        Y = as.numeric(assay_summary[d, grepl("Y", colnames(assay_summary))]))) * assay_summary$u[d]
-                                  }
-                                )
+  glogliks_byDilution = vapply(
+    X = 1:D, FUN.VALUE = numeric(n),
+    FUN = function(d) {
+      as.numeric(gloglik_sd(l = assay_summary$u[d] * tau,
+                            M = assay_summary$M[d],
+                            MP = assay_summary$MP[d],
+                            m = assay_summary$m[d],
+                            Y = as.numeric(assay_summary[d, grepl("Y", colnames(assay_summary))]))) * assay_summary$u[d]
+      })
 
   # return the sum of (negative) log-likelihoods
-  # if only 1 DVL is detected, then glogliks_byDilution is a vector and rowSums doen't work
-  gradient = ifelse(is.vector(glogliks_byDilution),        
-                              sum(glogliks_byDilution),
-                              rowSums(glogliks_byDilution))
+  gradient = rowSums(glogliks_byDilution)
 
   return(gradient)
 }

@@ -21,7 +21,11 @@ gloglik_md = function(tau, assay_summary) {
                                 )
 
   # return the sum of (negative) log-likelihoods
-  gradient = rowSums(glogliks_byDilution)
+  # if only 1 DVL is detected, then glogliks_byDilution is a vector and rowSums doen't work
+  gradient = ifelse(is.vector(glogliks_byDilution),        
+                              sum(glogliks_byDilution),
+                              rowSums(glogliks_byDilution))
 
   return(gradient)
 }
+

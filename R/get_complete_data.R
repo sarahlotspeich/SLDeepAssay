@@ -1,7 +1,11 @@
 get_complete_data = function(Wstar, Zstar) {
   # Transform Z* in preparation to augment with cd
   Zstar_seq = t(Zstar) ## transpose to get rows per well, cols per DVL
-  Zstar_seq = Zstar_seq[complete.cases(Zstar_seq), ] ## keep only sequenced wells (rows) 
+  if (ncol(Zstar_seq) == 1) {
+    Zstar_seq = matrix(data = Zstar_seq[complete.cases(Zstar_seq), drop = FALSE], nrow = 1) ## keep only sequenced wells (rows) 
+  } else {
+    Zstar_seq = Zstar_seq[complete.cases(Zstar_seq), drop = FALSE] ## keep only sequenced wells (rows) 
+  }
   colnames(Zstar_seq) = paste0("zstar", 1:ncol(Zstar_seq)) ## name cols {z*1, ..., z*n}
   
   # Save useful constants 

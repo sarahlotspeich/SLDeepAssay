@@ -22,11 +22,13 @@ get_complete_data = function(Wstar, Zstar) {
   
   # Augment complete data with observed data 
   ## For sequenced wells 
-  cd_seq_long = cbind(j = rep(x = 1:m, each = nrow(cd_seq)), 
+  cd_seq_long = cbind(j = rep(x = 1:m, each = nrow(cd_seq)),
+                      wstar = rep(x = Wstar[1:m], each = nrow(cd_seq)),
                       Zstar_seq[rep(x = 1:m, each = nrow(cd_seq)), ], 
                       cd_seq[rep(x = 1:nrow(cd_seq), times = m), ])
   ## For unsequenced wells 
   cd_unseq_long = cbind(j = rep(x = (m + 1):M, each = nrow(cd_unseq)), 
+                        wstar = rep(x = Wstar[(m + 1):M], each = nrow(cd_unseq)),
                         cd_unseq[rep(x = 1:nrow(cd_unseq), times = (M - m)), ])
   ## Stack them for all wells 
   cd_long = rbind(cd_seq_long, 

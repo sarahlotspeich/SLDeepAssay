@@ -140,10 +140,10 @@ simulate_assay_sd = function(M, tau, q, u = 1, sens_QVOA = 1, spec_QVOA = 1, sen
   ## (iii) p24-positive + unsequenced 
   if (m < MP) {
     Zstar_mat = Zstar_mat[, c(setdiff(p24_pos, make_miss), p24_neg, make_miss)]
-    W = W[c(setdiff(p24_pos, make_miss), p24_neg, make_miss)]
+    Wstar = Wstar[c(setdiff(p24_pos, make_miss), p24_neg, make_miss)]
   } else {
     Zstar_mat = Zstar_mat[, c(p24_pos, p24_neg)]
-    W = W[c(p24_pos, p24_neg)]
+    Wstar = Wstar[c(p24_pos, p24_neg)]
   }
   if (n_ == 1) {
     Zstar_mat = matrix(Zstar_mat, ncol = M, byrow = TRUE)

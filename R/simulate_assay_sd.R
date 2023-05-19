@@ -60,18 +60,10 @@ simulate_assay_sd = function(M, tau, q, u = 1, sens_QVOA = 1, spec_QVOA = 1, sen
   
   # Generate imperfect QVOA results
   if (sens_QVOA < 1 | spec_QVOA < 1) {
-    # Define parameters for imperfect assays 
-    alpha0 = ifelse(test = spec_QVOA < 1, 
-                    yes = - log((1 - (1 - spec_QVOA)) / (1 - spec_QVOA)), 
-                    no = - log((1 - (1 - 0.999999)) / (1 - 0.999999)))
-    alpha1 = ifelse(test = sens_QVOA < 1, 
-                    yes = - log((1 - sens_QVOA) / sens_QVOA) - alpha0, 
-                    no = - log((1 - 0.999999) / 0.999999) - alpha0)
-    
     # Generate W*: observed QVOA statuses for all wells
     Wstar = rbinom(n = M, 
                    size = 1, 
-                   prob = 1 / (1 + exp(- (alpha0 + alpha1 * W))))
+                   prob = sens_QVOA * W + (1 - spec_QVOA) * (1 - W))
   } else {
     # Assume perfect assay
     Wstar = W
@@ -79,18 +71,10 @@ simulate_assay_sd = function(M, tau, q, u = 1, sens_QVOA = 1, spec_QVOA = 1, sen
   
   # Generate imperfect UDSA results
   if (sens_UDSA < 1 | spec_UDSA < 1) {
-    # Define parameters for imperfect assays 
-    alpha0 = ifelse(test = spec_UDSA < 1, 
-                    yes = - log((1 - (1 - spec_UDSA)) / (1 - spec_UDSA)), 
-                    no = - log((1 - (1 - 0.999999)) / (1 - 0.999999)))
-    alpha1 = ifelse(test = sens_UDSA < 1, 
-                    yes = - log((1 - sens_UDSA) / sens_UDSA) - alpha0, 
-                    no = - log((1 - 0.999999) / 0.999999) - alpha0)
-    
     # Generate Z*: observed UDSA statuses for all DVL and wells
     Zstar = rbinom(n = M * n, 
                    size = 1, 
-                   prob = 1 / (1 + exp(- (alpha0 + alpha1 * Z))))
+                   prob = sens_UDSA * Z + (1 - spec_UDSA) * (1 - Z))
     
     # Reshape to get rows per DVL, columns per replicate well
     Zstar_mat = matrix(data = Zstar, 

@@ -4,6 +4,8 @@
 #' @param tau Mean counts of cells per million infected with each DVL (a vector). (Note: All elements in \code{tau} must be > 0.)
 #' @param q Proportion of p24-positive wells that underwent UDSA (a scalar between 0 and 1).
 #' @param u Dilution level in millions of cells per well (a positive scalar). Default is \code{dilution = 1}.
+#' @param sens_QVOA Sensitivity (i.e., true positive rate) for the QVOA (a scalar between 0 and 1). Default is \code{sens_QVOA = 1}. 
+#' @param spec_QVOA Specificity (i.e., true negative rate) for the QVOA (a scalar between 0 and 1). Default is \code{spec_QVOA = 1}.
 #' @param sens_UDSA Sensitivity (i.e., true positive rate) for the UDSA (a scalar between 0 and 1). Default is \code{sens_UDSA = 1}. 
 #' @param spec_UDSA Specificity (i.e., true negative rate) for the UDSA (a scalar between 0 and 1). Default is \code{spec_UDSA = 1}.
 #' @param k Overdispersion parameter (a positive number). Default is \code{Inf}, which corresponds to no overdispersion.
@@ -13,7 +15,7 @@
 #' \item{DVL_specific}{A matrix of infection indicators with rows and columns representing the DVLs and wells, respectively.}
 #' @export
 #'
-simulate_assay_sd = function(M, tau, q, u = 1, sens_UDSA = 1, spec_UDSA = 1, k = Inf, remove_undetected = TRUE) {
+simulate_assay_sd = function(M, tau, q, u = 1, sens_QVOA = 1, spec_QVOA = 1, sens_UDSA = 1, spec_UDSA = 1, k = Inf, remove_undetected = TRUE) {
   # Calculate lambda: mean number of infected cells per well with each DVL
   lambda = tau * u
 
@@ -57,7 +59,23 @@ simulate_assay_sd = function(M, tau, q, u = 1, sens_UDSA = 1, spec_UDSA = 1, k =
   }
   
   # Generate imperfect QVOA results
-  Wstar = W ## assume for now that they're perfect
+  if (sens_QVOA < 1 | spec_QVOA < 1) {
+    # Define parameters for imperfect assays 
+    alpha0 = ifelse(test = spec_QVOA < 1, 
+                    yes = - log((1 - (1 - spec_QVOA)) / (1 - spec_QVOA)), 
+                    no = - log((1 - (1 - 0.999999)) / (1 - 0.999999)))
+    alpha1 = ifelse(test = sens_QVOA < 1, 
+                    yes = - log((1 - sens_QVOA) / sens_QVOA) - alpha0, 
+                    no = - log((1 - 0.999999) / 0.999999) - alpha0)
+    
+    # Generate W*: observed QVOA statuses for all wells
+    Wstar = rbinom(n = M, 
+                   size = 1, 
+                   prob = 1 / (1 + exp(- (alpha0 + alpha1 * W))))
+  } else {
+    # Assume perfect assay
+    Wstar = W
+  }
   
   # Generate imperfect UDSA results
   if (sens_UDSA < 1 | spec_UDSA < 1) {

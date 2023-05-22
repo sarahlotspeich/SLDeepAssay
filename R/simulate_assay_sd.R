@@ -8,7 +8,7 @@
 #' @param spec_QVOA Specificity (i.e., true negative rate) for the QVOA (a scalar between 0 and 1). Default is \code{spec_QVOA = 1}.
 #' @param sens_UDSA Sensitivity (i.e., true positive rate) for the UDSA (a scalar between 0 and 1). Default is \code{sens_UDSA = 1}. 
 #' @param spec_UDSA Specificity (i.e., true negative rate) for the UDSA (a scalar between 0 and 1). Default is \code{spec_UDSA = 1}.
-#' @param k Overdispersion parameter (a positive number). Default is \code{Inf}, which corresponds to no overdispersion.
+#' @param k Overdispersion parameter (a positive number). Default is \code{k = Inf}, which corresponds to no overdispersion.
 #' @param remove_undetected Logical, if \code{remove_undetected = TRUE} (the default), then DVL which were not detected in any of the deep sequenced wells are deleted.
 #' @return Named list with the following slots:
 #' \item{any_DVL}{A vector containing overall (any DVL) infection indicators of across the wells.}
@@ -23,9 +23,9 @@ simulate_assay_sd = function(M, tau, q, u = 1, sens_QVOA = 1, spec_QVOA = 1, sen
   n = length(lambda)
   
   # Calculate p: probabilitiy of success for Z based on Poisson or NegBin
-  p = ifelse(k == Inf,
-             1 - exp(- rep(x = lambda, each = M)),
-             1 - (k / (lambda + k)) ^ k)
+  p = ifelse(test = k == Inf,
+             yes = 1 - exp(- rep(x = lambda, each = M)),
+             no = 1 - (k / (lambda + k)) ^ k)
 
   # Generate Z: true UDSA statuses for all DVL and wells
   Z = rbinom(n = M * n,

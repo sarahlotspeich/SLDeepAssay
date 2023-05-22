@@ -116,7 +116,7 @@ simulate_assay_sd = function(M, tau, q, u = 1, sens_QVOA = 1, spec_QVOA = 1, sen
     n_ = sum(detected)
     Zstar_mat = Zstar_mat[detected, ]
     if (n_ == 0) {
-      Zstar_mat = matrix(0, ncol = M)
+      Zstar_mat = matrix(NA, ncol = M)
     } else if (n_ == 1) {
       Zstar_mat = matrix(Zstar_mat, ncol = M, byrow = TRUE)
     }

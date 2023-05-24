@@ -18,9 +18,9 @@ get_pZstar_iGivZ_i = function(z_i, zstar_i, sens, spec) {
 
 # Get joint probability of (Z1*,...,Zn*) given (Z1,...,Zn)
 ## P(Z1*,...,Zn*|Z1, ..., Zn) = P(Z1*|Z1)...P(Zn*|Zn)
-get_pZstarGivZ = function(complete_data, sens, spec) {
+get_pZstarGivZ = function(complete_data, n, sens, spec) {
   pZstarGivZ = 1
-  for (i in 1:length(lambda)) {
+  for (i in 1:n) {
     pZstarGivZ = pZstarGivZ * 
       get_pZstar_iGivZ_i(z_i = complete_data[, paste0("z", i)], 
                          zstar_i = complete_data[, paste0("zstar", i)],

@@ -31,7 +31,11 @@ get_complete_data = function(Wstar, Zstar) {
   cd_unseq = expand.grid(replicate(n = 2 * n, expr = c(0, 1), simplify = F))
   colnames(cd_unseq) = c(paste0("z", 1:n), paste0("zstar", 1:n)) ## name cols {z1, ..., zn, z*1, ..., z*n}
   ## Compute true W from true Z
-  cd_unseq$w = as.numeric(rowSums(cd_unseq[, paste0("z", 1:n)]) > 0)
+  if (n > 1) {
+    cd_unseq$w = as.numeric(rowSums(cd_unseq[, paste0("z", 1:n)]) > 0)  
+  } else {
+    cd_unseq$w = as.numeric(cd_unseq[, paste0("z", 1:n)] > 0)
+  }
   
   # Augment complete data with observed data 
   ## For sequenced wells 

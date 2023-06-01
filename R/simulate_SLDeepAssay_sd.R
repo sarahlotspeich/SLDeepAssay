@@ -20,7 +20,7 @@
 #' @importFrom SLDAssay get.mle
 #' @export
 #'
-simulate_SLDeepAssay_sd <- function(M, tau, q, u = 1, sens_UDSA = 1, spec_UDSA = 1, remove_undetected = TRUE) {
+simulate_SLDeepAssay_sd <- function(M, tau, q, u = 1, sens_QVOA = 1, spec_QVOA = 1, sens_UDSA = 1, spec_UDSA = 1, remove_undetected = TRUE) {
   # Create indicators of whether data need to be re-simulated
   num_redo_all = 0 # Due to any DVL being detected in all wells or
   num_redo_none = 0 # No DVL being detected in any wells

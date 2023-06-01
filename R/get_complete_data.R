@@ -43,13 +43,18 @@ get_complete_data = function(Wstar, Zstar) {
                       cd_seq[rep(x = 1:nrow(cd_seq), times = m), ], 
                       Zstar_seq[rep(x = 1:m, each = nrow(cd_seq)), , drop = F], 
                       wstar = rep(x = Wstar[1:m], each = nrow(cd_seq)))
-  ## For unsequenced wells 
-  cd_unseq_long = cbind(j = rep(x = (m + 1):M, each = nrow(cd_unseq)), 
-                        cd_unseq[rep(x = 1:nrow(cd_unseq), times = (M - m)), ],
-                        wstar = rep(x = Wstar[(m + 1):M], each = nrow(cd_unseq)))
-  ## Stack them for all wells 
-  cd_long = rbind(cd_seq_long, 
-                  cd_unseq_long)
+  
+  if ((M - m) > 0) {
+    ## For unsequenced wells 
+    cd_unseq_long = cbind(j = rep(x = (m + 1):M, each = nrow(cd_unseq)), 
+                          cd_unseq[rep(x = 1:nrow(cd_unseq), times = (M - m)), ],
+                          wstar = rep(x = Wstar[(m + 1):M], each = nrow(cd_unseq)))
+    ## Stack them for all wells 
+    cd_long = rbind(cd_seq_long, 
+                    cd_unseq_long)
+  } else {
+    cd_long = cd_seq_long
+  }
   
   return(cd_long)
 }

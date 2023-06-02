@@ -39,12 +39,12 @@ get_pZi = function(z_i, lambda_i) {
 
 # Get joint probability of Z1,...,Zn
 ## P(Z_1, ..., Z_n) = P(Z_1)...P(Z_n)
-get_pZ = function(complete_data, lambda) {
+get_pZ = function(complete_data, l) {
   pZ = 1
-  for (i in 1:length(lambda)) {
+  for (i in 1:length(l)) {
     pZ = pZ * 
       get_pZi(z_i = complete_data[, paste0("z", i)], 
-              lambda_i = lambda[i])
+              lambda_i = l[i])
   }
   return(pZ)
 }

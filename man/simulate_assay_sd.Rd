@@ -13,6 +13,7 @@ simulate_assay_sd(
   spec_QVOA = 1,
   sens_UDSA = 1,
   spec_UDSA = 1,
+  sequence_all = FALSE,
   k = Inf,
   remove_undetected = TRUE
 )
@@ -34,7 +35,9 @@ simulate_assay_sd(
 
 \item{spec_UDSA}{Specificity (i.e., true negative rate) for the UDSA (a scalar between 0 and 1). Default is \code{spec_UDSA = 1}.}
 
-\item{k}{Overdispersion parameter (a positive number). Default is \code{k = Inf}, which corresponds to no overdispersion.}
+\item{sequence_all}{(Optional) Logical, if \code{sequence_all = FALSE} (the default), then only p24-positive wells are considered for UDSA. If \code{sequence_all = TRUE} and \code{q = 1}, then all wells will undergo UDSA.}
+
+\item{k}{(Optional) Overdispersion parameter (a positive number). Default is \code{k = Inf}, which corresponds to no overdispersion.}
 
 \item{remove_undetected}{Logical, if \code{remove_undetected = TRUE} (the default), then DVL which were not detected in any of the deep sequenced wells are deleted.}
 }

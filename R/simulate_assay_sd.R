@@ -8,14 +8,15 @@
 #' @param spec_QVOA Specificity (i.e., true negative rate) for the QVOA (a scalar between 0 and 1). Default is \code{spec_QVOA = 1}.
 #' @param sens_UDSA Sensitivity (i.e., true positive rate) for the UDSA (a scalar between 0 and 1). Default is \code{sens_UDSA = 1}. 
 #' @param spec_UDSA Specificity (i.e., true negative rate) for the UDSA (a scalar between 0 and 1). Default is \code{spec_UDSA = 1}.
-#' @param k Overdispersion parameter (a positive number). Default is \code{k = Inf}, which corresponds to no overdispersion.
+#' @param sequence_all (Optional) Logical, if \code{sequence_all = FALSE} (the default), then only p24-positive wells are considered for UDSA. If \code{sequence_all = TRUE} and \code{q = 1}, then all wells will undergo UDSA. 
+#' @param k (Optional) Overdispersion parameter (a positive number). Default is \code{k = Inf}, which corresponds to no overdispersion.
 #' @param remove_undetected Logical, if \code{remove_undetected = TRUE} (the default), then DVL which were not detected in any of the deep sequenced wells are deleted.
 #' @return Named list with the following slots:
 #' \item{any_DVL}{A vector containing overall (any DVL) infection indicators of across the wells.}
 #' \item{DVL_specific}{A matrix of infection indicators with rows and columns representing the DVLs and wells, respectively.}
 #' @export
 #'
-simulate_assay_sd = function(M, tau, q, u = 1, sens_QVOA = 1, spec_QVOA = 1, sens_UDSA = 1, spec_UDSA = 1, k = Inf, remove_undetected = TRUE) {
+simulate_assay_sd = function(M, tau, q, u = 1, sens_QVOA = 1, spec_QVOA = 1, sens_UDSA = 1, spec_UDSA = 1, sequence_all = FALSE, k = Inf, remove_undetected = TRUE) {
   # Calculate lambda: mean number of infected cells per well with each DVL
   lambda = tau * u
 
@@ -93,15 +94,19 @@ simulate_assay_sd = function(M, tau, q, u = 1, sens_QVOA = 1, spec_QVOA = 1, sen
     # Make Z for any unsequenced, p24-positive wells NA
     p24_pos = which(Wstar == 1) ## ids of p24-positive wells
     p24_neg = which(Wstar == 0) ## ids of p24-negative wells
-    # If only partially sequencing (m < MP), make Z missing for unsequenced positive wells 
-    if (m < MP) { 
-      make_miss = p24_pos[-c(1:m)]
-      Zstar_mat[, make_miss] = NA
-    }
-    # If QVOA was imperfect, make Z missing for negative wells 
-    if (sens_QVOA < 1 | spec_QVOA < 1) { 
-      Zstar_mat[, p24_neg] = NA
-    }
+    
+    # Unless sequence_all and q = 1, make some UDSA results missing 
+    if (!(sequence_all & q == 1)) {
+      # If only partially sequencing (m < MP), make Z missing for unsequenced positive wells 
+      if (m < MP) { 
+        make_miss = p24_pos[-c(1:m)]
+        Zstar_mat[, make_miss] = NA
+      }
+      # If QVOA was imperfect, make Z missing for negative wells 
+      if (sens_QVOA < 1 | spec_QVOA < 1) { 
+        Zstar_mat[, p24_neg] = NA
+      }    
+    } 
   } else {
     # Assume perfect assay
     Zstar_mat = Z_mat 

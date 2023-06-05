@@ -82,35 +82,35 @@ simulate_assay_sd = function(M, tau, q, u = 1, sens_QVOA = 1, spec_QVOA = 1, sen
                        nrow = n, 
                        ncol = M, 
                        byrow = TRUE)
-    
-    # Calculate MP: number of wells with >= 1 DVL (p24+)
-    MP = sum(Wstar == 1)
-    
-    # Calculate m: the number of p24-positive wells to deep sequence
-    m = ifelse(test = q == 1, 
-               yes = MP, 
-               no = round(q * MP, 0)) 
-    
-    # Make Z for any unsequenced, p24-positive wells NA
-    p24_pos = which(Wstar == 1) ## ids of p24-positive wells
-    p24_neg = which(Wstar == 0) ## ids of p24-negative wells
-    
-    # Unless sequence_all and q = 1, make some UDSA results missing 
-    if (!(sequence_all & q == 1)) {
-      # If only partially sequencing (m < MP), make Z missing for unsequenced positive wells 
-      if (m < MP) { 
-        make_miss = p24_pos[-c(1:m)]
-        Zstar_mat[, make_miss] = NA
-      }
-      # If QVOA was imperfect, make Z missing for negative wells 
-      if (sens_QVOA < 1 | spec_QVOA < 1) { 
-        Zstar_mat[, p24_neg] = NA
-      }    
-    } 
   } else {
     # Assume perfect assay
     Zstar_mat = Z_mat 
   }
+  
+  # Calculate MP: number of wells with >= 1 DVL (p24+)
+  MP = sum(Wstar == 1)
+  
+  # Calculate m: the number of p24-positive wells to deep sequence
+  m = ifelse(test = q == 1, 
+             yes = MP, 
+             no = round(q * MP, 0)) 
+  
+  # Make Z for any unsequenced, p24-positive wells NA
+  p24_pos = which(Wstar == 1) ## ids of p24-positive wells
+  p24_neg = which(Wstar == 0) ## ids of p24-negative wells
+  
+  # Unless sequence_all and q = 1, make some UDSA results missing 
+  if (!(sequence_all & q == 1)) {
+    # If only partially sequencing (m < MP), make Z missing for unsequenced positive wells 
+    if (m < MP) { 
+      make_miss = p24_pos[-c(1:m)]
+      Zstar_mat[, make_miss] = NA
+    }
+    # If QVOA was imperfect, make Z missing for negative wells 
+    if (sens_QVOA < 1 | spec_QVOA < 1) { 
+      Zstar_mat[, p24_neg] = NA
+    }    
+  } 
  
   # Subset to DVLs to return, either all (if remove_undetected = FALSE)  
   # or only those that were detected in >= 1 well (if remove_undetected = TRUE) 

@@ -4,8 +4,8 @@
 ## (iii) P(W* = 1|W = 1) = sens (true positive)
 ## (iv) P(W* = 0|W = 1) = 1 - sens (false negative)
 get_pWstarGivW = function(complete_data, sens, spec) {
-  (1 - complete_data[, "wstar"]) * spec ^ (1 - z) * (1 - sens) ^ z + ### If Z* = 0
-    complete_data[, "wstar"] * sens ^ z * (1 - spec) ^ (1 - z)
+  (1 - complete_data[, "wstar"]) * spec ^ (1 - complete_data[, "w"]) * (1 - sens) ^ complete_data[, "w"] + ### If W* = 0
+    complete_data[, "wstar"] * sens ^ complete_data[, "w"] * (1 - spec) ^ (1 - complete_data[, "w"]) ### If W* = 1
   #(1 - complete_data[, "wstar"]) * spec ^ (1 - complete_data[, "w"]) * (1 - spec) ^ complete_data[, "w"] + 
   #  complete_data[, "wstar"] * sens ^ complete_data[, "w"] * (1 - sens) ^ (1 - complete_data[, "w"])
 }

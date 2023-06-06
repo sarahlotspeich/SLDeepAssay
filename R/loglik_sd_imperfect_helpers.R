@@ -4,7 +4,10 @@
 ## (iii) P(W* = 1|W = 1) = sens (true positive)
 ## (iv) P(W* = 0|W = 1) = 1 - sens (false negative)
 get_pWstarGivW = function(complete_data, sens, spec) {
-  (1 - complete_data[, "wstar"]) * spec ^ (1 - complete_data[, "w"]) * (1 - spec) ^ complete_data[, "w"] + complete_data[, "wstar"] * sens ^ complete_data[, "w"] * (1 - sens) ^ (1 - complete_data[, "w"])
+  (1 - complete_data[, "wstar"]) * spec ^ (1 - z) * (1 - sens) ^ z + ### If Z* = 0
+    complete_data[, "wstar"] * sens ^ z * (1 - spec) ^ (1 - z)
+  #(1 - complete_data[, "wstar"]) * spec ^ (1 - complete_data[, "w"]) * (1 - spec) ^ complete_data[, "w"] + 
+  #  complete_data[, "wstar"] * sens ^ complete_data[, "w"] * (1 - sens) ^ (1 - complete_data[, "w"])
 }
 
 # Get probabilities of Zi* given Zi
@@ -13,7 +16,10 @@ get_pWstarGivW = function(complete_data, sens, spec) {
 ## (iii) P(Zi* = 1|Zi = 1) = sens (true positive)
 ## (iv) P(Zi* = 0|Zi = 1) = 1 - sens (false negative)
 get_pZstar_iGivZ_i = function(z_i, zstar_i, sens, spec) {
-  (1 - zstar_i) * spec ^ (1 - z_i) * (1 - spec) ^ z_i + zstar_i * sens ^ z_i * (1 - sens) ^ (1 - z_i)
+  (1 - zstar_i) * spec ^ (1 - z_i) * (1 - sens) ^ z_i + 
+    zstar_i * sens ^ z_i * (1 - spec) ^ (1 - z_i)
+  # (1 - zstar_i) * spec ^ (1 - z_i) * (1 - spec) ^ z_i + 
+  #   zstar_i * sens ^ z_i * (1 - sens) ^ (1 - z_i)
 }
 
 # Get joint probability of (Z1*,...,Zn*) given (Z1,...,Zn)

@@ -9,6 +9,8 @@ simulate_SLDeepAssay_sd(
   tau,
   q,
   u = 1,
+  sens_QVOA = 1,
+  spec_QVOA = 1,
   sens_UDSA = 1,
   spec_UDSA = 1,
   remove_undetected = TRUE
@@ -23,15 +25,15 @@ simulate_SLDeepAssay_sd(
 
 \item{u}{Dilution level in millions of cells per well (a positive scalar). Default is \code{u = 1}.}
 
+\item{sens_QVOA}{Sensitivity (i.e., true positive rate) for the QVOA (a scalar between 0 and 1). Default is \code{sens_QVOA = 1}.}
+
+\item{spec_QVOA}{Specificity (i.e., true negative rate) for the QVOA (a scalar between 0 and 1). Default is \code{spec_QVOA = 1}.}
+
 \item{sens_UDSA}{Sensitivity (i.e., true positive rate) for the UDSA (a scalar between 0 and 1). Default is \code{sens_UDSA = 1}.}
 
 \item{spec_UDSA}{Specificity (i.e., true negative rate) for the UDSA (a scalar between 0 and 1). Default is \code{spec_UDSA = 1}.}
 
 \item{remove_undetected}{Logical, if \code{remove_undetected = TRUE} (the default), then DVL which were not detected in any of the deep sequenced wells are deleted.}
-
-\item{sens_QVOA}{Sensitivity (i.e., true positive rate) for the QVOA (a scalar between 0 and 1). Default is \code{sens_QVOA = 1}.}
-
-\item{spec_QVOA}{Specificity (i.e., true negative rate) for the QVOA (a scalar between 0 and 1). Default is \code{spec_QVOA = 1}.}
 }
 \value{
 Named list with the following slots:

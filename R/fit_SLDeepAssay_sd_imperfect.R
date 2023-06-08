@@ -35,7 +35,7 @@ fit_SLDeepAssay_sd_imperfect = function(assay, u = 1, sens_QVOA = 1, spec_QVOA =
   ########################################################################################
   # Build complete assay dataset
   cd = get_complete_data(Wstar = assay_QVOA, 
-                         Zstar = temp$DVL_specific)
+                         Zstar = assay_UDSA)
   
   # Add column of P(W*|W) to complete data 
   ## < this won't change with lambda, so calculate once >

@@ -5,7 +5,8 @@
 \title{Maximum likelihood estimator (MLE) for single-dilution assay data from imperfect assays}
 \usage{
 fit_SLDeepAssay_sd_imperfect(
-  assay,
+  assay_QVOA,
+  assay_UDSA,
   u = 1,
   sens_QVOA = 1,
   spec_QVOA = 1,
@@ -17,6 +18,10 @@ fit_SLDeepAssay_sd_imperfect(
 )
 }
 \arguments{
+\item{assay_QVOA}{Assay data, with columns representing the wells.}
+
+\item{assay_UDSA}{Assay data, with rows representing the distinct viral lineages (DVL) and columns representing the wells.}
+
 \item{u}{Dilution level in millions of cells per well (a positive scalar). Default is \code{u = 1}.}
 
 \item{sens_QVOA}{Sensitivity (i.e., true positive rate) for the QVOA (a scalar between 0 and 1). Default is \code{sens_QVOA = 1}.}
@@ -32,10 +37,6 @@ fit_SLDeepAssay_sd_imperfect(
 \item{lb}{Parameter lower bound (passed to \code{optim}). Default is \code{lb = 1E-6}.}
 
 \item{ub}{Parameter upper bound (passed to \code{optim}). Default is \code{ub = Inf}.}
-
-\item{assay_QVOA}{Assay data, with columns representing the wells.}
-
-\item{assay_UDSA}{Assay data, with rows representing the distinct viral lineages (DVL) and columns representing the wells.}
 
 \item{corrected}{Logical, if \code{corrected = TRUE} the bias-corrected MLE will be returned. If \code{corrected = FALSE} the bias-corrected MLE will be not be returned. If \code{corrected = NULL}, the bias correction will be computed if here are <= 40 DVLs in \code{assay}. Default is \code{corrected = NULL}.}
 }

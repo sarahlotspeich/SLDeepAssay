@@ -6,10 +6,10 @@ Results = do.call(rbind,
   dplyr::mutate(
     Lambda = ifelse(conv == 0, 
                     yes = as.numeric(Lambda), 
-                    no = NA),
-    Lambda_naive = ifelse(conv_naive == 0, 
-                          yes = as.numeric(Lambda_naive), 
-                          no = NA)
+                    no = NA)#,
+    # Lambda_naive = ifelse(conv_naive == 0, 
+    #                       yes = as.numeric(Lambda_naive), 
+    #                       no = NA)
   )
 
 Results |> 
@@ -24,7 +24,7 @@ Results |>
     min_uncorrected_reps = min(uncorrected_reps) 
   )
 ## Corrected IUPM estimator converged in >= 997 / 1000 reps per setting
-## Uncorrected IUPM estimator converged in >= 957 / 1000 reps per setting
+## Uncorrected IUPM estimator converged in 1000 / 1000 reps per setting
 table(Results$msg)
 table(Results$msg_naive)
 
@@ -58,24 +58,8 @@ Results |>
   ggtitle(label = "Results under varied sensitivities", 
           subtitle = "Assume: specificity = 0.9, n = 6 DVLs, true IUPM = 1, q = 1") +
   labs(caption = "*Two extreme replicates where the corrected IUPM was > 10 were excluded (one with QVOA/UDSA sensitivity 0.9/0.8, one with 0.8/0.8).") 
-ggsave(filename = "~/Downloads/boxplot-vary-sens.png", 
+ggsave(filename = "~/Documents/SLDeepAssay/figures/boxplot-vary-sens.png", 
        device = "png", units = "in", width = 8, height = 8)
-
-Results |> 
-  dplyr::group_by(M, sensQVOA, sensUDSA) |> 
-  dplyr::summarize(
-    corrected_reps = sum(!is.na(Lambda)),
-    uncorrected_reps = sum(!is.na(Lambda_naive))
-  ) |> 
-  dplyr::ungroup() |> 
-  dplyr::summarize(
-    min_corrected_reps = min(corrected_reps), 
-    min_uncorrected_reps = min(uncorrected_reps) 
-  )
-## Corrected IUPM estimator converged in >= 997 / 1000 reps per setting
-## Uncorrected IUPM estimator converged in >= 957 / 1000 reps per setting
-table(Results$msg)
-table(Results$msg_naive)
 
 Results |>
   dplyr::mutate(sensQVOA = factor(x = sensQVOA, 
@@ -104,5 +88,5 @@ Results |>
   theme(legend.position = "top") + 
   ylab("IUPM Estimate") + 
   xlab("Number of Replicate Wells (M)") 
-ggsave(filename = "~/Downloads/boxplot-vary-sens-plain.png", 
+ggsave(filename = "~/Documents/SLDeepAssay/figures/boxplot-vary-sens-plain.png", 
        device = "png", units = "in", width = 8, height = 8)

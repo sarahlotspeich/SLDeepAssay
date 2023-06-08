@@ -6,10 +6,10 @@ Results = do.call(rbind,
   dplyr::mutate(
     Lambda = ifelse(conv == 0, 
                     yes = as.numeric(Lambda), 
-                    no = NA),
-    Lambda_naive = ifelse(conv_naive == 0, 
-                          yes = as.numeric(Lambda_naive), 
-                          no = NA)
+                    no = NA)#,
+    # Lambda_naive = ifelse(conv_naive == 0, 
+    #                       yes = as.numeric(Lambda_naive), 
+    #                       no = NA)
   )
 Results |> 
   dplyr::group_by(M, q) |> 
@@ -23,7 +23,7 @@ Results |>
     min_uncorrected_reps = min(uncorrected_reps) 
   )
 ## Corrected IUPM estimator converged in >= 993 / 1000 reps per setting
-## Uncorrected IUPM estimator converged in >= 962 / 1000 reps per setting
+## Uncorrected IUPM estimator converged in >= 1000 / 1000 reps per setting
 table(Results$msg)
 table(Results$msg_naive)
 
@@ -56,23 +56,7 @@ Results |>
           subtitle = "Assume: sensitivity = 0.9, specificity = 0.9, n = 6 DVLs, true IUPM = 1") +
   labs(caption = "*Two extreme replicates where the corrected IUPM was > 10 were excluded (one with q = 1, one with q = 0.5).")
 ggsave(filename = "~/Documents/SLDeepAssay/figures/boxplot-vary-q.png", 
-       device = "png", units = "in", width = 8, height = 8)
-
-Results |> 
-  dplyr::group_by(M, q) |> 
-  dplyr::summarize(
-    corrected_reps = sum(!is.na(Lambda)),
-    uncorrected_reps = sum(!is.na(Lambda_naive))
-  ) |> 
-  dplyr::ungroup() |> 
-  dplyr::summarize(
-    min_corrected_reps = min(corrected_reps), 
-    min_uncorrected_reps = min(uncorrected_reps) 
-  )
-## Corrected IUPM estimator converged in >= 993 / 1000 reps per setting
-## Uncorrected IUPM estimator converged in >= 962 / 1000 reps per setting
-table(Results$msg)
-table(Results$msg_naive)
+       device = "png", units = "in", width = 8, height = 4)
 
 Results |>
   dplyr::mutate(q = factor(x = q, 
@@ -92,8 +76,6 @@ Results |>
   facet_grid(cols = vars(q), 
              scales = "free") + 
   ggthemes::scale_fill_colorblind(name = "Method") +
-  # scale_fill_manual(values = wesanderson::wes_palette("Royal2", n = 3)[c(1, 3)], 
-  #                   name = "Method") + 
   theme_minimal() + 
   theme(legend.position = "top") + 
   ylab("IUPM Estimate") + 

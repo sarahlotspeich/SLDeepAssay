@@ -6,10 +6,10 @@ Results = do.call(rbind,
   dplyr::mutate(
     Lambda = ifelse(conv == 0, 
                     yes = as.numeric(Lambda), 
-                    no = NA),
-    Lambda_naive = ifelse(conv_naive == 0, 
-                          yes = as.numeric(Lambda_naive), 
-                          no = NA)
+                    no = NA)#,
+    # Lambda_naive = ifelse(conv_naive == 0, 
+    #                       yes = as.numeric(Lambda_naive), 
+    #                       no = NA)
   )
 
 Results |> 
@@ -57,7 +57,7 @@ Results |>
   xlab("Number of Replicate Wells (M)") + 
   ggtitle(label = "Results under varied specificities", 
           subtitle = "Assume: sensitivity = 0.9, n = 6 DVLs, true IUPM = 1, q = 1") 
-ggsave(filename = "~/Downloads/boxplot-vary-spec.png", 
+ggsave(filename = "~/Documents/SLDeepAssay/figures/boxplot-vary-spec.png", 
        device = "png", units = "in", width = 8, height = 8)
 
 Results |>
@@ -86,5 +86,5 @@ Results |>
   theme(legend.position = "top") + 
   ylab("Estimated IUPM") + 
   xlab("Number of Replicate Wells (M)")  
-ggsave(filename = "~/Downloads/boxplot-vary-spec-plain.png", 
+ggsave(filename = "~/Documents/SLDeepAssay/figures/boxplot-vary-spec-plain.png", 
        device = "png", units = "in", width = 8, height = 8)

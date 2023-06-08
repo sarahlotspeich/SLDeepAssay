@@ -32,10 +32,10 @@ library(ggplot2)
 Results |>
   dplyr::mutate(specQVOA = factor(x = specQVOA, 
                                   levels = seq(1, 0.8, by = -0.1), 
-                                  labels = paste0("QVOA Specificity = ", seq(1, 0.8, by = -0.1))),
+                                  labels = paste0("QVOA Specificity = ", seq(100, 80, by = -10), "%")),
                 specUDSA = factor(x = specUDSA, 
                                   levels = seq(0.8, 1, by = 0.1), 
-                                  labels = paste0("UDSA Specificity = ", seq(0.8, 1, by = 0.1)))
+                                  labels = paste0("UDSA Specificity = ", seq(80, 100, by = 10), "%"))
   ) |>
   dplyr::select(M, q, specQVOA, specUDSA, Lambda, Lambda_naive) |>
   tidyr::gather("estimator", "value", -c(1:4)) |>
@@ -51,8 +51,6 @@ Results |>
              cols = vars(specUDSA), 
              scales = "free") + 
   ggthemes::scale_fill_colorblind(name = "Method") +
-  # scale_fill_manual(values = wesanderson::wes_palette("Royal2", n = 3)[c(1, 3)], 
-  #                   name = "Method") + 
   theme_minimal() + 
   theme(legend.position = "top") + 
   ylab("Estimated IUPM") + 
@@ -65,10 +63,10 @@ ggsave(filename = "~/Downloads/boxplot-vary-spec.png",
 Results |>
   dplyr::mutate(specQVOA = factor(x = specQVOA, 
                                   levels = seq(1, 0.8, by = -0.1), 
-                                  labels = paste0("QVOA Specificity = ", seq(1, 0.8, by = -0.1))),
+                                  labels = paste0("QVOA Specificity = ", seq(100, 80, by = -10), "%")),
                 specUDSA = factor(x = specUDSA, 
                                   levels = seq(0.8, 1, by = 0.1), 
-                                  labels = paste0("UDSA Specificity = ", seq(0.8, 1, by = 0.1)))
+                                  labels = paste0("UDSA Specificity = ", seq(80, 100, by = 10), "%"))
   ) |>
   dplyr::select(M, q, specQVOA, specUDSA, Lambda, Lambda_naive) |>
   tidyr::gather("estimator", "value", -c(1:4)) |>

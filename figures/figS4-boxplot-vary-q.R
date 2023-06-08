@@ -55,7 +55,7 @@ Results |>
   ggtitle(label = "Results under varied proportions deep-sequenced (q)", 
           subtitle = "Assume: sensitivity = 0.9, specificity = 0.9, n = 6 DVLs, true IUPM = 1") +
   labs(caption = "*Two extreme replicates where the corrected IUPM was > 10 were excluded (one with q = 1, one with q = 0.5).")
-ggsave(filename = "~/Downloads/boxplot-vary-q.png", 
+ggsave(filename = "~/Documents/SLDeepAssay/figures/boxplot-vary-q.png", 
        device = "png", units = "in", width = 8, height = 8)
 
 Results |> 
@@ -99,6 +99,6 @@ Results |>
   ylab("IUPM Estimate") + 
   xlab("Number of Replicate Wells (M)") + 
   ylim(c(-1, 6))
-ggsave(filename = "~/Downloads/boxplot-vary-q-plain.png", 
-       device = "png", units = "in", width = 8, height = 8)
+ggsave(filename = "~/Documents/SLDeepAssay/figures/boxplot-vary-q-plain.png", 
+       device = "png", units = "in", width = 8, height = 4)
 

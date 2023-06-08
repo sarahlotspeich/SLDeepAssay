@@ -31,10 +31,10 @@ table(Results$msg_naive)
 Results |>
   dplyr::mutate(sensQVOA = factor(x = sensQVOA, 
                                   levels = seq(1, 0.8, by = -0.1), 
-                                  labels = paste0("QVOA Sensitivity = ", seq(1, 0.8, by = -0.1))),
+                                  labels = paste0("QVOA Sensitivity = ", seq(100, 80, by = -10), "%")),
                 sensUDSA = factor(x = sensUDSA, 
                                   levels = seq(0.8, 1, by = 0.1), 
-                                  labels = paste0("UDSA Sensitivity = ", seq(0.8, 1, by = 0.1)))
+                                  labels = paste0("UDSA Sensitivity = ", seq(80, 100, by = 10), "%"))
   ) |>
   dplyr::select(M, q, sensQVOA, sensUDSA, Lambda, Lambda_naive) |>
   tidyr::gather("estimator", "value", -c(1:4)) |>
@@ -51,8 +51,6 @@ Results |>
              cols = vars(sensUDSA), 
              scales = "free") + 
   ggthemes::scale_fill_colorblind(name = "Method") +
-  #scale_fill_manual(values = wesanderson::wes_palette("Royal2", n = 3)[c(1, 3)], 
-  #                  name = "Method") + 
   theme_minimal() + 
   theme(legend.position = "top") + 
   ylab("IUPM Estimate") + 
@@ -82,10 +80,10 @@ table(Results$msg_naive)
 Results |>
   dplyr::mutate(sensQVOA = factor(x = sensQVOA, 
                                   levels = seq(1, 0.8, by = -0.1), 
-                                  labels = paste0("QVOA Sensitivity = ", seq(1, 0.8, by = -0.1))),
+                                  labels = paste0("QVOA Sensitivity = ", seq(100, 80, by = -10), "%")),
                 sensUDSA = factor(x = sensUDSA, 
                                   levels = seq(0.8, 1, by = 0.1), 
-                                  labels = paste0("UDSA Sensitivity = ", seq(0.8, 1, by = 0.1)))
+                                  labels = paste0("UDSA Sensitivity = ", seq(80, 100, by = 10), "%"))
   ) |>
   dplyr::select(M, q, sensQVOA, sensUDSA, Lambda, Lambda_naive) |>
   tidyr::gather("estimator", "value", -c(1:4)) |>
@@ -102,8 +100,6 @@ Results |>
              cols = vars(sensUDSA), 
              scales = "free") + 
   ggthemes::scale_fill_colorblind(name = "Method") +
-  #scale_fill_manual(values = wesanderson::wes_palette("Royal2", n = 3)[c(1, 3)], 
-  #                  name = "Method") + 
   theme_minimal() + 
   theme(legend.position = "top") + 
   ylab("IUPM Estimate") + 

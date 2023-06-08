@@ -18,16 +18,12 @@
 #' @export
 #'
 #'
-fit_SLDeepAssay_sd_imperfect = function(assay, u = 1, sens_QVOA = 1, spec_QVOA = 1, sens_UDSA = 1, spec_UDSA = 1, maxit = 1E4, lb = 1E-6, ub = Inf) {
+fit_SLDeepAssay_sd_imperfect = function(assay_QVOA, assay_UDSA, u = 1, sens_QVOA = 1, spec_QVOA = 1, sens_UDSA = 1, spec_UDSA = 1, maxit = 1E4, lb = 1E-6, ub = Inf) {
   ########################################################################################
   # Compute constants ####################################################################
   ########################################################################################
-  M = ncol(assay) # number of wells (total)
-  MN = sum(colSums(assay) == 0, na.rm = TRUE) # number of wells (p24-negative)
-  MP = M - MN # number of wells (p24-positive)
-  m = M - MN - sum(is.na(colSums(assay))) # number of deep-sequenced p24-positive wells
-  Y = rowSums(assay, na.rm = TRUE) # number of infected wells per DVL = Y
-  q = m / MP # proportion of p24-positive wells deep sequenced
+  M = length(assay_QVOA) # number of wells (total)
+  Y = rowSums(assay_UDSA, na.rm = TRUE) # number of infected wells per DVL = Y
   n = length(Y) # number of observed DVLs
 
   ########################################################################################

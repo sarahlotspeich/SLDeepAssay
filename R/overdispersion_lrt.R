@@ -2,13 +2,19 @@
 #' @name negbin_loglik_sd
 #' @param l Vector of DVL-specific parameters.
 #' @param k Overdispersion parameter (a positive number)
+#' @param gamma alternative overdispersion parameter, `gamma = 1/k` (a non-negative number)
 #' @param M Total number of wells originally sequenced with the QVOA.
 #' @param MP Number of p24-positive wells.
 #' @param m Number of p24-positive wells that underwent the UDSA.
 #' @param y A vector of DVL-specific infection counts.
 #' @return A scalar
 #'
-negbin_loglik_sd = function(l, k, M, MP, m, Y) {
+negbin_loglik_sd = function(l, k, gamma = NULL, M, MP, m, Y) {
+  
+  # transform gamma to k if gamma supplied
+  if (!is.null(gamma)) {
+    k = 1 / gamma
+  }
   
   # Save n = # DVL detected
   n = length(l)

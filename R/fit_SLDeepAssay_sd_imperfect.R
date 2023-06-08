@@ -36,15 +36,15 @@ fit_SLDeepAssay_sd_imperfect = function(assay_QVOA, assay_UDSA, u = 1, sens_QVOA
   # Add column of P(W*|W) to complete data 
   ## < this won't change with lambda, so calculate once >
   pWstarGivW = get_pWstarGivW(complete_data = cd,
-                              sens = sensQVOA, 
-                              spec = specQVOA)
+                              sens = sens_QVOA, 
+                              spec = spec_QVOA)
   
   # Add column of P(Z*|Z) to complete data 
   ## < this won't change with lambda, so calculate once >
   pZstarGivZ = get_pZstarGivZ(complete_data = cd,
                               n = n,
-                              sens = sensUDSA, 
-                              spec = specUDSA)
+                              sens = sens_UDSA, 
+                              spec = spec_UDSA)
   
   ########################################################################################
   # Find MLEs ############################################################################

@@ -2,6 +2,7 @@
 
 export(fit_SLDeepAssay_md)
 export(fit_SLDeepAssay_sd)
+export(fit_SLDeepAssay_sd_imperfect)
 export(lrt_SLDeepAssay_md)
 export(simulate_SLDeepAssay_md)
 export(simulate_SLDeepAssay_sd)

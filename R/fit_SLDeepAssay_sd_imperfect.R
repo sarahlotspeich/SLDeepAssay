@@ -1,4 +1,4 @@
-#' Maximum likelihood estimator (MLE) for single-dilution assay data from imperfect assays
+#' Maximum likelihood estimator (MLE) for single-dilution imperfect assays data
 #' @name fit_SLDeepAssay_sd_imperfect
 #' @param assay_QVOA Assay data, with columns representing the wells. 
 #' @param assay_UDSA Assay data, with rows representing the distinct viral lineages (DVL) and columns representing the wells. 

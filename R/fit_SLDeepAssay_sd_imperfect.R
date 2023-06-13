@@ -25,47 +25,48 @@ fit_SLDeepAssay_sd_imperfect = function(assay_QVOA, assay_UDSA, u = 1, sens_QVOA
   M = length(assay_QVOA) # number of wells (total)
   Y = rowSums(assay_UDSA, na.rm = TRUE) # number of infected wells per DVL = Y
   n = length(Y) # number of observed DVLs
-
+  
   ########################################################################################
   # Set up for log-likelihood function ###################################################
   ########################################################################################
   # Build complete assay dataset
-  cd = get_complete_data(Wstar = assay_QVOA, 
-                         Zstar = assay_UDSA)
+  cd = get_complete_data_big(Wstar = assay_QVOA, 
+                             Zstar = assay_UDSA)
   
-  # Add column of P(W*|W) to complete data 
+  # Add columns of P(W*|W) to complete data for all wells
   ## < this won't change with lambda, so calculate once >
-  pWstarGivW = get_pWstarGivW(complete_data = cd,
-                              sens = sens_QVOA, 
-                              spec = spec_QVOA)
+  cd$complete_seq$pWstarGivW = get_pWstarGivW(complete_data = cd$complete_seq,
+                                              sens = sens_QVOA, 
+                                              spec = spec_QVOA)
+  cd$complete_unseq$pWstarGivW = get_pWstarGivW(complete_data = cd$complete_unseq,
+                                                sens = sens_QVOA, 
+                                                spec = spec_QVOA)
   
-  # Add column of P(Z*|Z) to complete data 
+  # Add column of P(Z*|Z) to complete data for sequenced wells
   ## < this won't change with lambda, so calculate once >
-  pZstarGivZ = get_pZstarGivZ(complete_data = cd,
-                              n = n,
-                              sens = sens_UDSA, 
-                              spec = spec_UDSA)
+  cd$complete_seq$pZstarGivZ = get_pZstarGivZ(complete_data = cd$complete_seq,
+                                              n = n,
+                                              sens = sens_UDSA, 
+                                              spec = spec_UDSA)
   
   ########################################################################################
   # Find MLEs ############################################################################
   ########################################################################################
   optimization = optim(par = - log(1 - Y / M),
-                       fn = loglik_sd_imperfect,
+                       fn = loglik_sd_imperfect_big,
                        complete_data = cd, 
-                       pWstarGivW = pWstarGivW, 
-                       pZstarGivZ = pZstarGivZ,
                        method = "L-BFGS-B",
                        control = list(maxit = maxit),
                        lower = rep(lb, n),
                        upper = rep(ub, n),
                        hessian = F)
-
+  
   lambda_hat = optimization$par
   Lambda_hat = sum(lambda_hat) # MLE of the IUPM
   
   results = list("mle" = Lambda_hat / u,
                  "convergence" = optimization$convergence,
                  "message" = optimization$message)
-
+  
   return(results)
 }

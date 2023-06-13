@@ -2,7 +2,7 @@
 % Please edit documentation in R/simulate_assay_md_imperfect.R
 \name{simulate_assay_md_imperfect}
 \alias{simulate_assay_md_imperfect}
-\title{Simulate multiple-dilution imperfect assay data}
+\title{Simulate multiple-dilution imperfect assays data}
 \usage{
 simulate_assay_md_imperfect(
   M,
@@ -44,5 +44,5 @@ Named list with the following slots:
 \item{assay_summary}{A This summary should contain one row per dilution level and the following columns: M (total number of wells), n (number of distinct viral lineages \[DVL\]), MN (number of p24-negative wells), m (number of deep sequenced wells), Y1,..., Yn (counts of wells positive for DVL i, (i = 1,...,n), and dilutions (dilution levels, in millions of cells per well).}
 }
 \description{
-Simulate multiple-dilution imperfect assay data
+Simulate multiple-dilution imperfect assays data
 }

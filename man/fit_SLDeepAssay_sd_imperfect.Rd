@@ -2,7 +2,7 @@
 % Please edit documentation in R/fit_SLDeepAssay_sd_imperfect.R
 \name{fit_SLDeepAssay_sd_imperfect}
 \alias{fit_SLDeepAssay_sd_imperfect}
-\title{Maximum likelihood estimator (MLE) for single-dilution assay data from imperfect assays}
+\title{Maximum likelihood estimator (MLE) for single-dilution imperfect assays data}
 \usage{
 fit_SLDeepAssay_sd_imperfect(
   assay_QVOA,
@@ -47,5 +47,5 @@ A named list with the following slots:
 \item{message}{A character string giving any additional information about the convergence status (returned by \code{optim})}
 }
 \description{
-Maximum likelihood estimator (MLE) for single-dilution assay data from imperfect assays
+Maximum likelihood estimator (MLE) for single-dilution imperfect assays data
 }

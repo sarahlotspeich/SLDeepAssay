@@ -30,8 +30,8 @@ fit_SLDeepAssay_sd_imperfect = function(assay_QVOA, assay_UDSA, u = 1, sens_QVOA
   # Set up for log-likelihood function ###################################################
   ########################################################################################
   # Build complete assay dataset
-  cd = get_complete_data_big(Wstar = assay_QVOA, 
-                             Zstar = assay_UDSA)
+  cd = get_complete_data(Wstar = assay_QVOA, 
+                         Zstar = assay_UDSA)
   
   # Add columns of P(W*|W) to complete data for all wells
   ## < this won't change with lambda, so calculate once >

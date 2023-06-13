@@ -1,3 +1,11 @@
+# Get marginal probabilities of W
+## (i) P(W = 0) = exp(-Lambda) (HIV-negative)
+## (ii) P(W = 1) = 1 - exp(-Lambda) (HIV-positive)
+get_pW = function(complete_data, l) {
+  Lambda = sum(l) ## sum over DVL-specific rate parameters 
+  (1 - exp(-Lambda)) ^ complete_data[, "w"] * exp(-Lambda) ^ (1 - complete_data[, "w"])  
+}
+
 # Get conditional probabilities of W* given W
 ## (i) P(W* = 0|W = 0) = spec (true negative)
 ## (ii) P(W* = 1|W = 0) = 1 - spec (false positive)

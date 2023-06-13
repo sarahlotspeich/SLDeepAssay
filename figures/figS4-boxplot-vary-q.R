@@ -36,7 +36,7 @@ Results |>
   tidyr::gather("estimator", "value", -c(1:2)) |>
   dplyr::mutate(estimator = factor(x = estimator, 
                                    levels = c("Lambda", "Lambda_naive"),
-                                   labels = c("MLE (Corrected)", "MLE (Uncorrected)"))) |> 
+                                   labels = c("MLE (Imperfect Assays)", "MLE (Perfect Assays)"))) |> 
   ggplot(aes(x = factor(M), y = value, fill = estimator)) +
   geom_boxplot() +
   geom_hline(yintercept = 1, 
@@ -67,7 +67,7 @@ Results |>
   tidyr::gather("estimator", "value", -c(1:2)) |>
   dplyr::mutate(estimator = factor(x = estimator, 
                                    levels = c("Lambda", "Lambda_naive"),
-                                   labels = c("MLE (Corrected)", "MLE (Uncorrected)"))) |> 
+                                   labels = c("MLE (Imperfect Assays)", "MLE (Perfect Assays)"))) |> 
   ggplot(aes(x = factor(M), y = value, fill = estimator)) +
   geom_boxplot() +
   geom_hline(yintercept = 1, 

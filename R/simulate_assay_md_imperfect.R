@@ -1,4 +1,4 @@
-#' Simulate multiple-dilution imperfect assay data
+#' Simulate multiple-dilution imperfect assays data
 #' @name simulate_assay_md_imperfect
 #' @param M Total number of wells at each dilution level (a vector of length D).
 #' @param tau DVL-specific IUPMs (a vector of length \code{n}). (Note: All elements in \code{tau} must be > 0.)

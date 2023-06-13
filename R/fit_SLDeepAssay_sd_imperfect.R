@@ -53,7 +53,7 @@ fit_SLDeepAssay_sd_imperfect = function(assay_QVOA, assay_UDSA, u = 1, sens_QVOA
   # Find MLEs ############################################################################
   ########################################################################################
   optimization = optim(par = - log(1 - Y / M),
-                       fn = loglik_sd_imperfect_big,
+                       fn = loglik_sd_imperfect,
                        complete_data = cd, 
                        method = "L-BFGS-B",
                        control = list(maxit = maxit),

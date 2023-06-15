@@ -43,6 +43,8 @@ fit_SLDeepAssay_sd_imperfect(
 \value{
 A named list with the following slots:
 \item{mle}{MLE}
+\item{se}{Standard error for the MLE}
+\item{ci}{95\% confidence interval for the MLE}
 \item{convergence}{An integer code for the convergence status (returned by \code{optim})}
 \item{message}{A character string giving any additional information about the convergence status (returned by \code{optim})}
 }

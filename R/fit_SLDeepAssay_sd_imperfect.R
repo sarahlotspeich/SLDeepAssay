@@ -13,6 +13,8 @@
 #' @param ub Parameter upper bound (passed to \code{optim}). Default is \code{ub = Inf}.
 #' @return A named list with the following slots:
 #' \item{mle}{MLE}
+#' \item{se}{Standard error for the MLE}
+#' \item{ci}{95\% confidence interval for the MLE}
 #' \item{convergence}{An integer code for the convergence status (returned by \code{optim})}
 #' \item{message}{A character string giving any additional information about the convergence status (returned by \code{optim})}
 #' @export
@@ -33,14 +35,14 @@ fit_SLDeepAssay_sd_imperfect = function(assay_QVOA, assay_UDSA, u = 1, sens_QVOA
   cd = get_complete_data(Wstar = assay_QVOA, 
                          Zstar = assay_UDSA)
   
+  ########################################################################################
+  # Contributions of sequenced wells #####################################################
+  ########################################################################################
   # Add columns of P(W*|W) to complete data for all wells
   ## < this won't change with lambda, so calculate once >
   cd$complete_seq$pWstarGivW = get_pWstarGivW(complete_data = cd$complete_seq,
                                               sens = sens_QVOA, 
                                               spec = spec_QVOA)
-  cd$complete_unseq$pWstarGivW = get_pWstarGivW(complete_data = cd$complete_unseq,
-                                                sens = sens_QVOA, 
-                                                spec = spec_QVOA)
   
   # Add column of P(Z*|Z) to complete data for sequenced wells
   ## < this won't change with lambda, so calculate once >
@@ -48,6 +50,13 @@ fit_SLDeepAssay_sd_imperfect = function(assay_QVOA, assay_UDSA, u = 1, sens_QVOA
                                               n = n,
                                               sens = sens_UDSA, 
                                               spec = spec_UDSA)
+  
+  ########################################################################################
+  # Contributions of unsequenced wells ###################################################
+  ########################################################################################
+  cd$complete_unseq$pWstarGivW = get_pWstarGivW(complete_data = cd$complete_unseq,
+                                                sens = sens_QVOA, 
+                                                spec = spec_QVOA)
   
   ########################################################################################
   # Find MLEs ############################################################################
@@ -59,14 +68,30 @@ fit_SLDeepAssay_sd_imperfect = function(assay_QVOA, assay_UDSA, u = 1, sens_QVOA
                        control = list(maxit = maxit),
                        lower = rep(lb, n),
                        upper = rep(ub, n),
-                       hessian = F)
+                       hessian = T)
   
   lambda_hat = optimization$par
   Lambda_hat = sum(lambda_hat) # MLE of the IUPM
   
+  # Fisher information matrix
+  I = optimization$hessian
+  
+  # inverse of fisher information
+  cov = tryCatch(expr = solve(I), 
+                 error = function(e) matrix(data = NA, 
+                                            nrow = length(lambda_hat), 
+                                            ncol = length(lambda_hat)))
+    
+  # variance estimate
+  se = sqrt(sum(cov))
+  
+  # confidence interval
+  ci = exp(c(log(Lambda_hat) + c(-1, 1) * (qnorm(0.975) * se / Lambda_hat)))
+  
   results = list("mle" = Lambda_hat / u,
+                 "se" = se / u,
+                 "ci" = ci / u,
                  "convergence" = optimization$convergence,
                  "message" = optimization$message)
-  
   return(results)
 }

@@ -2,7 +2,7 @@ library(ggplot2)
 
 Results = read.csv("https://raw.githubusercontent.com/sarahlotspeich/SLDeepAssay/main/sim_data/sd_imperfect_vary_sensitivity.csv") |> 
   dplyr::mutate(
-    Lambda = ifelse(conv == 0, 
+    Lambda = ifelse(conv == 0, ## Make any reps that didn't converge NA
                     yes = as.numeric(Lambda), 
                     no = NA)
   )

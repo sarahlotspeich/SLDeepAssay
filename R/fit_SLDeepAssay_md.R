@@ -58,16 +58,16 @@ fit_SLDeepAssay_md = function(assay = NULL, u = NULL, assay_summary, corrected =
   Tau_hat = sum(tau_hat) # MLE of the IUPM
 
   # Fisher information matrix
-  I <- fisher_md(tau = tau_hat,
+  I = fisher_md(tau = tau_hat,
                  M = assay_summary$M,
                  q = assay_summary$q,
                  u = assay_summary$u)
 
   # inverse of fisher information
-  cov <- solve(I)
+  cov = solve(I)
 
   ### variance estimate 4
-  se <- sqrt(sum(cov))
+  se = sqrt(sum(cov))
 
   ### confidence interval
   ci = exp(c(log(Tau_hat) + c(-1, 1) * (qnorm(0.975) * se / Tau_hat)))
@@ -78,14 +78,14 @@ fit_SLDeepAssay_md = function(assay = NULL, u = NULL, assay_summary, corrected =
     ci_bc = NA
   } else {
     ### bias correction
-    tau_hat_bc <- BC_md(tau = tau_hat,
+    tau_hat_bc = BC_md(tau = tau_hat,
                         M = assay_summary$M,
                         q = assay_summary$q,
                         u = assay_summary$u)
     # bias-corrected MLE for Tau
-    Tau_hat_bc <- sum(tau_hat_bc)
+    Tau_hat_bc = sum(tau_hat_bc)
     # bias corrected CI
-    ci_bc <- exp(c(log(Tau_hat_bc) + c(-1, 1) *
+    ci_bc = exp(c(log(Tau_hat_bc) + c(-1, 1) *
                      (qnorm(0.975) * se / Tau_hat_bc)))
   }
 

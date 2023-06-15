@@ -16,17 +16,12 @@
 #' @export
 #'
 #'
-fit_SLDeepAssay_md = function(assay = NULL,
-                               u = NULL,
-                               assay_summary,
-                               corrected = NULL,
-                               maxit = 1E6,
-                               lb = 1E-6,
-                               ub = Inf) {
+fit_SLDeepAssay_md = function(assay = NULL, u = NULL, assay_summary, corrected = NULL, maxit = 1E6, lb = 1E-6, ub = Inf) {
 
   # For each dilution level, compute summary data
   if (!is.null(assay)) {
-    assay_summary = vapply(X = 1:D, FUN.VALUE = numeric(7 + n),
+    assay_summary = vapply(X = 1:D, 
+                           FUN.VALUE = numeric(7 + n),
                            FUN = function(d) {
                              M = ncol(assay[[d]])
                              n = nrow(assay[[d]])
@@ -44,15 +39,18 @@ fit_SLDeepAssay_md = function(assay = NULL,
   # Indicator for whether bias correction should be computed:
   # user specified value if provided, else yes if n <= 40
   corrected = ifelse(test = is.null(corrected),
-              yes = assay_summary$n[1] <= 40,
-              no = corrected)
+                     yes = assay_summary$n[1] <= 40,
+                     no = corrected)
 
   # Fit MLE
   optimization = optim(par = rep(0, assay_summary$n[1]),
-                       fn = function(t)
-                         loglik_md(tau = t, assay_summary = assay_summary),
-                       gr = function(t)
-                         gloglik_md(tau = t, assay_summary = assay_summary),
+                       fn = loglik_md, 
+                       # fn = function(t)
+                       #   loglik_md(tau = t, assay_summary = assay_summary),
+                       # gr = function(t)
+                       gr = gloglik_md, 
+                       #   gloglik_md(tau = t, assay_summary = assay_summary),
+                       assay_summary = assay_summary
                        method = "L-BFGS-B",
                        control = list(maxit = maxit),
                        lower = rep(lb, assay_summary$n[1]),
@@ -80,21 +78,16 @@ fit_SLDeepAssay_md = function(assay = NULL,
 
   # For large n, do not compute bias correction unless user overrides
   if (corrected == F) {
-
     Tau_hat_bc = NA
     ci_bc = NA
-
   } else {
-
     ### bias correction
     tau_hat_bc <- BC_md(tau = tau_hat,
                         M = assay_summary$M,
                         q = assay_summary$q,
                         u = assay_summary$u)
-
     # bias-corrected MLE for Tau
     Tau_hat_bc <- sum(tau_hat_bc)
-
     # bias corrected CI
     ci_bc <- exp(c(log(Tau_hat_bc) + c(-1, 1) *
                      (qnorm(0.975) * se / Tau_hat_bc)))

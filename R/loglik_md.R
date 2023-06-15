@@ -10,8 +10,8 @@ loglik_md = function(tau, assay_summary) {
 
   # Compute negative log-likelihoods for each dilution
   logliks_by_dilution = vapply(X = 1:D,
-                                FUN.VALUE = numeric(1),
-                                FUN = function(d) {
+                               FUN.VALUE = numeric(1),
+                               FUN = function(d) {
                                   as.numeric(loglik_sd(l = assay_summary$u[d] * tau,
                                                        M = assay_summary$M[d],
                                                        MP = assay_summary$MP[d],
@@ -20,7 +20,7 @@ loglik_md = function(tau, assay_summary) {
                                 })
 
   # Return the sum of (negative) log-likelihoods
-  ll <- sum(logliks_by_dilution)
+  ll = sum(logliks_by_dilution)
 
   return(ll)
 }

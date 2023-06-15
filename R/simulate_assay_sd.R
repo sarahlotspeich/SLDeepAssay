@@ -54,9 +54,11 @@ simulate_assay_sd = function(M, tau, q, u = 1, sens_QVOA = 1, spec_QVOA = 1, sen
   p24_pos = which(W == 1) ## ids of p24-positive wells
   p24_neg = which(W == 0) ## ids of p24-negative wells
   # If only partially sequencing (m < MP), make Z missing for unsequenced wells 
-  if (m < MP) { 
+  if (m < MP & m > 0) { 
     make_miss = p24_pos[-c(1:m)]
     Z_mat[, make_miss] = NA
+  } else if (m == 0) {
+    Z_mat[, p24_pos] = NA
   }
   
   # Generate imperfect QVOA results

@@ -46,7 +46,7 @@ fit_SLDeepAssay_md = function(assay = NULL, u = NULL, assay_summary, corrected =
   optimization = optim(par = rep(0, assay_summary$n[1]),
                        fn = loglik_md, 
                        gr = gloglik_md, 
-                       assay_summary = assay_summary
+                       assay_summary = assay_summary,
                        method = "L-BFGS-B",
                        control = list(maxit = maxit),
                        lower = rep(lb, assay_summary$n[1]),

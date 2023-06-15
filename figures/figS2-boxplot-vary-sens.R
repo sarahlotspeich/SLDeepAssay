@@ -18,8 +18,8 @@ Results |>
     min_corrected_reps = min(corrected_reps), 
     min_uncorrected_reps = min(uncorrected_reps) 
   )
-## Corrected IUPM estimator converged in >= 996 / 1000 reps per setting
-## Uncorrected IUPM estimator converged in 1000 / 1000 reps per setting
+## MLE (Imperfect Assays) converged in >= 996 / 1000 reps per setting
+## MLE (Perfect Assays) converged in 1000 / 1000 reps per setting
 table(Results$msg) ### only 19 / 270000 replicates total 
 
 plot_data = Results |>
@@ -54,5 +54,5 @@ plot_data |>
   theme(legend.position = "top") + 
   ylab("IUPM Estimate") + 
   xlab("Number of Replicate Wells (M)") 
-ggsave(filename = "~/Documents/SLDeepAssay/figures/boxplot-vary-sens.png", 
+ggsave(filename = "figS2-boxplot-vary-sens.png", 
        device = "png", units = "in", width = 8, height = 8)

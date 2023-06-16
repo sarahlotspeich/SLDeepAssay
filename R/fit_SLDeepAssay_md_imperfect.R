@@ -40,19 +40,23 @@ fit_SLDeepAssay_md_imperfect = function(assay_md, u, sens_QVOA = 1, spec_QVOA = 
     
     # Add columns of P(W*|W) to complete data for all wells
     ## < this won't change with lambda, so calculate once >
-    cd_md[[d]]$complete_seq$pWstarGivW = get_pWstarGivW(complete_data = cd_md[[d]]$complete_seq,
-                                                        sens = sens_QVOA, 
-                                                        spec = spec_QVOA)
-    cd_md[[d]]$complete_unseq$pWstarGivW = get_pWstarGivW(complete_data = cd_md[[d]]$complete_unseq,
+    if (nrow(cd_md[[d]]$complete_seq) > 0) {
+      cd_md[[d]]$complete_seq$pWstarGivW = get_pWstarGivW(complete_data = cd_md[[d]]$complete_seq,
                                                           sens = sens_QVOA, 
                                                           spec = spec_QVOA)
+      # Add column of P(Z*|Z) to complete data for sequenced wells
+      ## < this won't change with lambda, so calculate once >
+      cd_md[[d]]$complete_seq$pZstarGivZ = get_pZstarGivZ(complete_data = cd_md[[d]]$complete_seq,
+                                                          n = n[d],
+                                                          sens = sens_UDSA, 
+                                                          spec = spec_UDSA)
+    }
     
-    # Add column of P(Z*|Z) to complete data for sequenced wells
-    ## < this won't change with lambda, so calculate once >
-    cd_md[[d]]$complete_seq$pZstarGivZ = get_pZstarGivZ(complete_data = cd_md[[d]]$complete_seq,
-                                                n = n[d],
-                                                sens = sens_UDSA, 
-                                                spec = spec_UDSA)
+    if (nrow(cd_md[[d]]$complete_unseq) > 0) {
+      cd_md[[d]]$complete_unseq$pWstarGivW = get_pWstarGivW(complete_data = cd_md[[d]]$complete_unseq,
+                                                            sens = sens_QVOA, 
+                                                            spec = spec_QVOA)
+    }
   }
   
   ########################################################################################

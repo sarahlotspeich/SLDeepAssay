@@ -1,7 +1,7 @@
 loglik_sd_imperfect = function(l, complete_data) {
   # Log-likelihood contributions
   ## Sequenced wells 
-  if (!any(is.na(complete_data$complete_seq$j))) {
+  if (!any(is.na(complete_data$complete_seq$j)) & nrow(complete_data$complete_seq) > 0) {
     ### Calculate P(Z) for all rows in sequenced wells' complete data 
     complete_data$complete_seq$pZ = get_pZ(complete_data = complete_data$complete_seq, 
                                            l = l) 
@@ -19,7 +19,7 @@ loglik_sd_imperfect = function(l, complete_data) {
   }
   
   ## Unsequenced wells
-  if (!any(is.na(complete_data$complete_unseq$j))) {
+  if (!any(is.na(complete_data$complete_unseq$j)) & nrow(complete_data$complete_unseq) > 0) {
     ### Calculate P(W) for all rows in unsequenced wells' complete data 
     complete_data$complete_unseq$pW = get_pW(complete_data = complete_data$complete_unseq, 
                                              l = l) 

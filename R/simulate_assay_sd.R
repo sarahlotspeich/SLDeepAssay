@@ -104,9 +104,11 @@ simulate_assay_sd = function(M, tau, q, u = 1, sens_QVOA = 1, spec_QVOA = 1, sen
   # Unless sequence_all and q = 1, make some UDSA results missing 
   if (!(sequence_all & q == 1)) {
     # If only partially sequencing (m < MP), make Z missing for unsequenced positive wells 
-    if (m < MP) { 
+    if (m < MP & m > 0) { 
       make_miss = p24_pos[-c(1:m)]
       Zstar_mat[, make_miss] = NA
+    } else if (m == 0) {
+      Zstar_mat[, p24_pos] = NA
     }
     # If QVOA was imperfect, make Z missing for negative wells 
     if (sens_QVOA < 1 | spec_QVOA < 1) { 

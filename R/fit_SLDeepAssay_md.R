@@ -85,8 +85,7 @@ fit_SLDeepAssay_md = function(assay = NULL, u = NULL, assay_summary, corrected =
     # bias-corrected MLE for Tau
     Tau_hat_bc = sum(tau_hat_bc)
     # bias corrected CI
-    ci_bc = exp(c(log(Tau_hat_bc) + c(-1, 1) *
-                     (qnorm(0.975) * se / Tau_hat_bc)))
+    ci_bc = exp(c(log(Tau_hat_bc) + c(-1, 1) * (qnorm(0.975) * se / Tau_hat_bc)))
   }
 
   return(list("mle" = Tau_hat,

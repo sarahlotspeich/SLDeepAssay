@@ -1,6 +1,6 @@
 ## Title: Simulations for Multiple Dilutions Setting
 
-## Date: 2022/12/14
+## Date: 2023/06/16
 
 ## Author: Brian Richardson
 
@@ -8,7 +8,7 @@
 
 ## Output: md_sim_data.csv
 
-## Note: These simulations take ~12 hours to run. The simulation results can be found in sims/sim_data/md_sim_data.csv.
+## Note: These simulations take ~16 hours to run. The simulation results can be found in sims/sim_data/md_sim_data.csv.
 
 
 
@@ -22,16 +22,12 @@
 ## from Trumble et al. (2017)
 library(SLDAssay)
 ## Functions for MLE/bias-corrected MLE with UDSA
-## from Lotspeich et al. (2022+)
+## from Lotspeich et al. (2023+)
 library(SLDeepAssay)
 ## Functions for running simulations
 library(tidyr)
 library(dplyr)
 library(pbapply)
-
-
-# Random number seed for reproducibility
-set.seed(130502)
 
 # Number of replicates per simulation setting
 num_reps = 1000
@@ -63,6 +59,7 @@ one_sim = function(setting_row) {
   M.scale = as.numeric(setting_row["M.scale"])
   n = as.numeric(setting_row["n"])
   constant_Tau = setting_row["constant_Tau"] == 1
+  set.seed(setting_row["sim_id"])
   if (constant_Tau) {
     tau = rep(x = Tau / n, times = n)
   } else {
@@ -83,7 +80,8 @@ one_sim = function(setting_row) {
 sim_out = do.call("rbind", pbapply(Settings, 1,
                                    function(row) one_sim(setting_row = row)))
 
-results = cbind(Settings, sim_out) |>
+results = cbind(slice(Settings, rep(1:n(), each = 4)),
+                sim_out) |>
   mutate(M = paste0(M.ratio[1] * M.scale, ", ",
                    M.ratio[2] * M.scale, ", ",
                    M.ratio[3] * M.scale),
@@ -94,5 +92,6 @@ results = cbind(Settings, sim_out) |>
 # save simulations
 path_to_sims = here::here() # Set path to folder where you would like to save results
 
-write.csv(results, file = paste0(path_to_sims, "/sims/sim_data/md_sim_data.csv"),
+write.csv(results, file = paste0(path_to_sims, "/sim_data/md_sim_data.csv"),
           row.names = FALSE)
+

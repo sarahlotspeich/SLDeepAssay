@@ -17,8 +17,7 @@ library(kableExtra)
 library(magick)
 
 # Load data
-tableS2_data = read.csv("https://raw.githubusercontent.com/sarahlotspeich/SLDeepAssay/main/real_data_application_revision/tableS2_data.csv") %>%
-  as.matrix()
+tableS2_data = read.csv("https://raw.githubusercontent.com/sarahlotspeich/SLDeepAssay/main/real_data_application_revision/tableS2_data.csv")
 
 ## create Table S2
 tableS2_data %>% 

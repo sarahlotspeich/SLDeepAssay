@@ -18,8 +18,7 @@ library(kableExtra)
 library(magick)
 
 # Load data
-tableS3_data = read.csv("https://raw.githubusercontent.com/sarahlotspeich/SLDeepAssay/main/real_data_application_revision/tableS2_data.csv") %>%
-  as.matrix()
+tableS3_data = read.csv("https://raw.githubusercontent.com/sarahlotspeich/SLDeepAssay/main/real_data_application_revision/tableS2_data.csv")
 
 ## create Table S3
 tableS3_data$MP <- paste0(tableS3_data$MP1,
@@ -30,7 +29,6 @@ tableS3_data$MP <- paste0(tableS3_data$MP1,
 
 
 tableS3_data %>% 
-  mutate(MP = paste0("(", paste(MP1, MP2, MP3, MP4, sep = ", "), ")")) %>% 
   select(MP, lrt_stat, lrt_pval, mle_negbin) %>% 
   kable(format = "latex",
         booktabs = T,

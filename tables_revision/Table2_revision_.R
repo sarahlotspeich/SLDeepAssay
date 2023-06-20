@@ -1,6 +1,6 @@
-## Title: Table 2: Multiple Dilutions Setting Simulations (Constant Tau)
+## Title: Table 2: Multiple dilutions setting simulations
 
-## Date: 2022/12/19
+## Date: 2023/06/20
 
 ## Author: Brian Richardson
 

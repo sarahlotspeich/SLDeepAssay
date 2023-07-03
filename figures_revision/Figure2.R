@@ -60,4 +60,4 @@ real_data_plot_log_IUPM +
   ggtitle("IUPM MLEs and 95% Confidence Intervals by Method",
           subtitle="MLEs and Bias-Corrected MLEs")
 
-ggsave(real_data_plot_log_IUPM, filename = "figures/real_data_plot_log_IUPM.png", width = 10, height = 10)
+ggsave(real_data_plot_log_IUPM, filename = "figures_revision/real_data_plot_log_IUPM.png", width = 10, height = 10)

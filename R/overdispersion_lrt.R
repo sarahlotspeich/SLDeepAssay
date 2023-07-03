@@ -165,8 +165,6 @@ lrt_SLDeepAssay_md = function(assay = NULL,
                               assay_summary,
                               corrected = NULL,
                               maxit = 1E6,
-                              lb = 1E-6,
-                              ub = Inf,
                               k0 = 1) {
   
   # For each dilution level, compute summary data
@@ -230,7 +228,7 @@ lrt_SLDeepAssay_md = function(assay = NULL,
   lrt_stat = max(-2 * (loglik_pois - loglik_negbin), 0)
   
   # Poisson model parameter estimates
-  tau_hat = opt_pois$par
+  tau_hat = exp(opt_pois$par)
   Tau_hat = sum(tau_hat)
   
   # negative binomial model parameter estimates

@@ -38,21 +38,36 @@ fit_SLDeepAssay_sd = function(assay, u = 1, M = NULL, n = NULL, MP = NULL, m = N
   corrected = ifelse(is.null(corrected),
                      n <= 40,
                      corrected)
-  # Fit MLE
-  optimization = optim(par = - log(1 - Y / M),
-                       fn = loglik_sd,
-                       gr = gloglik_sd,
+  # Fit MLE (L-BFGS-B)
+  #optimization = optim(par = - log(1 - Y / M),
+  #                     fn = loglik_sd,
+  #                     gr = gloglik_sd,
+  #                     M = M,
+  #                     MP = MP,
+  #                     m = m,
+  #                     Y = Y,
+  #                     method = "L-BFGS-B",
+  #                     control = list(maxit = maxit),
+  #                     lower = rep(lb, n),
+  #                     upper = rep(ub, n),
+  #                     hessian = F)
+  # Fit MLE (BFGS)
+  optimization = optim(par = log(-log(1 - Y / M)),
+                       fn = function(theta, M, MP, m, Y) {
+                         loglik_sd(l = exp(theta),
+                                   M = M, MP = MP, m = m, Y = Y) },
+                       gr = function(theta, M, MP, m, Y) {
+                         gloglik_sd(l = exp(theta),
+                                    M = M, MP = MP, m = m, Y = Y) },
                        M = M,
                        MP = MP,
                        m = m,
                        Y = Y,
-                       method = "L-BFGS-B",
+                       method = "BFGS",
                        control = list(maxit = maxit),
-                       lower = rep(lb, n),
-                       upper = rep(ub, n),
                        hessian = F)
 
-  lambda_hat = optimization$par
+  lambda_hat = exp(optimization$par)
   Lambda_hat = sum(lambda_hat) # MLE of the IUPM
 
   # Fisher information matrix

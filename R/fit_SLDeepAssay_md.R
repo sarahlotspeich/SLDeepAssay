@@ -20,7 +20,7 @@ fit_SLDeepAssay_md = function(assay = NULL, u = NULL, assay_summary, corrected =
 
   # For each dilution level, compute summary data
   if (!is.null(assay)) {
-    assay_summary = vapply(X = 1:D, 
+    assay_summary = vapply(X = 1:nrow(assay_summary), 
                            FUN.VALUE = numeric(7 + n),
                            FUN = function(d) {
                              M = ncol(assay[[d]])
@@ -42,17 +42,29 @@ fit_SLDeepAssay_md = function(assay = NULL, u = NULL, assay_summary, corrected =
                      yes = assay_summary$n[1] <= 40,
                      no = corrected)
 
-  # Fit MLE
-  optimization = optim(par = rep(0, assay_summary$n[1]),
-                       fn = loglik_md, 
-                       gr = gloglik_md, 
-                       assay_summary = assay_summary,
-                       method = "L-BFGS-B",
-                       control = list(maxit = maxit),
-                       lower = rep(lb, assay_summary$n[1]),
-                       upper = rep(ub, assay_summary$n[1]),
-                       hessian = T)
+  # Fit MLE (L-BFGS-B)
+  #optimization = optim(par = rep(0, assay_summary$n[1]),
+  #                     fn = loglik_md, 
+  #                     gr = gloglik_md, 
+  #                     assay_summary = assay_summary,
+  #                     method = "L-BFGS-B",
+  #                     control = list(maxit = maxit),
+  #                     lower = rep(lb, assay_summary$n[1]),
+  #                     upper = rep(ub, assay_summary$n[1]),
+  #                     hessian = F)
 
+  optimization = optim(par = log(rep(0.1, assay_summary$n[1])),
+                       fn = function(theta, assay_summary) {
+                         loglik_md(tau = exp(theta),
+                                   assay_summary = assay_summary) },
+                       gr = function(theta, assay_summary) {
+                         gloglik_md(tau = exp(theta),
+                                    assay_summary = assay_summary) }, 
+                       assay_summary = assay_summary,
+                       method = "BFGS",
+                       control = list(maxit = maxit),
+                       hessian = F)
+  
   ### parameter estimate
   tau_hat = optimization$par
   Tau_hat = sum(tau_hat) # MLE of the IUPM

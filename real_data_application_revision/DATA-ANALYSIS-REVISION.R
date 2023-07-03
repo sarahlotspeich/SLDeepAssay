@@ -86,8 +86,6 @@ for (id in paste0("C", 1:17)) {
                     res_SLDAssay$BC_MLE, SLDAssay_bc_ci,
                     NA, NA, NA, NA))
   
-  #colnames(results)[10:12] = c("mle_negbin", "mle_k", "lrt_stat")
-  
   ### deepIUPM results
   # dilution index where deep sequencing is done
   d_deepseq = which(assay_summary$deepseq == 1) 
@@ -107,13 +105,15 @@ for (id in paste0("C", 1:17)) {
                     NA, NA, NA, NA))
   
   ### deepIUPM MD results
-  #res_SLDeepAssay_md = fit_SLDeepAssay_md(assay = NULL, assay_summary = assay_summary, corrected = T)
-  res_SLDeepAssay_md = lrt_SLDeepAssay_md(assay_summary = assay_summary, corrected = T)
-  lrt_sig = ifelse(res_SLDeepAssay_md$lrt_stat <= cutoff, 0, 1)
+  res_SLDeepAssay_md = fit_SLDeepAssay_md(assay = NULL, assay_summary = assay_summary, corrected = T)
+  res_lrt_SLDeepAssay_md = lrt_SLDeepAssay_md(assay_summary = assay_summary, corrected = T)
+  lrt_sig = ifelse(res_lrt_SLDeepAssay_md$lrt_stat <= cutoff, 0, 1)
   
   results = rbind(results,
                   c(id, "With UDSA (Multiple Dilutions)",
-                    unlist(res_SLDeepAssay_md), lrt_sig))
+                    as.character(unlist(res_SLDeepAssay_md)),
+                    as.character(unlist(res_lrt_SLDeepAssay_md[c("mle_negbin", "mle_k", "lrt_stat")])),
+                    lrt_sig))
   
 }
 

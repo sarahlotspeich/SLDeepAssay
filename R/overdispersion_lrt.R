@@ -143,7 +143,7 @@ negbin_gloglik_md = function(tau, k, assay_summary) {
 
 #' Maximum likelihood estimator (MLE) for multiple-dilution assay data with LRT
 #' @name lrt_SLDeepAssay_md
-#' @param assay_summary List of data frames with assay data from each dilution level. Default is \code{NULL}.
+#' @param assay List of data frames with assay data from each dilution level. Default is \code{NULL}.
 #' @param u Vector of dilution levels, in millions of cells per well. Default is \code{NULL}.
 #' @param assay_summary (Optional) Instead of supplying \code{assay} and \code{u}, supply a summary of assay results in the form of a data frame. This summary should contain one row per dilution level and the following columns: M (total number of wells), n (number of distinct viral lineages \[DVL\]), MN (number of p24-negative wells), m (number of deep sequenced wells), Y1,..., Yn (counts of wells positive for DVL i, (i = 1,...,n), and u (dilution levels, in millions of cells per well).
 #' @param corrected Logical, if \code{corrected = TRUE} the bias-corrected MLE will be returned. If \code{corrected = FALSE} the bias-corrected MLE will be not be returned. If \code{corrected = NULL}, the bias correction will be computed if here are <= 40 DVLs in \code{assay}. Default is \code{corrected = NULL}.
@@ -171,7 +171,8 @@ lrt_SLDeepAssay_md = function(assay = NULL,
   
   # For each dilution level, compute summary data
   if (!is.null(assay)) {
-    assay_summary = vapply(X = 1:D, FUN.VALUE = numeric(7 + n),
+    assay_summary = vapply(X = 1:length(assay),
+                           FUN.VALUE = numeric(7 + n),
                            FUN = function(d) {
                              M = ncol(assay[[d]])
                              n = nrow(assay[[d]])
@@ -193,30 +194,32 @@ lrt_SLDeepAssay_md = function(assay = NULL,
                      no = corrected)
   
   # Fit MLE under Poisson model
-  opt_pois = optim(par = rep(0, assay_summary$n[1]),
-                   fn = function(t)
-                     loglik_md(tau = t, assay_summary = assay_summary),
-                   gr = function(t)
-                     gloglik_md(tau = t, assay_summary = assay_summary),
-                   method = "L-BFGS-B",
-                   control = list(maxit = maxit),
-                   lower = rep(lb, assay_summary$n[1]),
-                   upper = rep(ub, assay_summary$n[1]),
-                   hessian = F)
+  opt_pois = optim(par = log(rep(0.1, assay_summary$n[1])),
+                       fn = function(theta, assay_summary) {
+                         loglik_md(tau = exp(theta),
+                                   assay_summary = assay_summary) },
+                       gr = function(theta, assay_summary) {
+                         gloglik_md(tau = exp(theta),
+                                    assay_summary = assay_summary) }, 
+                       assay_summary = assay_summary,
+                       method = "BFGS",
+                       control = list(maxit = maxit),
+                       hessian = F)
   
   # Fit MLE under NegBin model
   opt_negbin = optim(
-    par = c(rep(0, assay_summary$n[1]), k0),
-    fn = function(tk) negbin_loglik_md(tau = head(tk, assay_summary$n[1]),
-                                       k = tail(tk, 1),
-                                       assay_summary = assay_summary),
-    gr = function(tk) negbin_gloglik_md(tau = head(tk, assay_summary$n[1]),
-                                        k = tail(tk, 1),
-                                        assay_summary = assay_summary),
-    method = "L-BFGS-B",
+    par = log(c(rep(0.1, assay_summary$n[1]), k0)),
+    fn = function(theta, assay_summary) {
+      negbin_loglik_md(tau = exp(head(theta, assay_summary$n[1])),
+                       k = exp(tail(theta, 1)),
+                       assay_summary = assay_summary) },
+    gr = function(theta, assay_summary) {
+      negbin_gloglik_md(tau = exp(head(theta, assay_summary$n[1])),
+                        k = exp(tail(theta, 1)),
+                        assay_summary = assay_summary) },
+    assay_summary = assay_summary,
+    method = "BFGS",
     control = list(maxit = maxit),
-    lower = rep(lb, assay_summary$n[1] + 1),
-    upper = rep(ub, assay_summary$n[1] + 1),
     hessian = T)
   
   # log-likelihood values
@@ -232,28 +235,13 @@ lrt_SLDeepAssay_md = function(assay = NULL,
   
   # negative binomial model parameter estimates
   if (loglik_negbin > loglik_pois) {
-    tau_hat_negbin = head(opt_negbin$par, assay_summary$n[1])
+    tau_hat_negbin = exp(head(opt_negbin$par, assay_summary$n[1]))
     Tau_hat_negbin = sum(tau_hat_negbin)
-    k_hat_negbin = tail(opt_negbin$par, 1)
+    k_hat_negbin = exp(tail(opt_negbin$par, 1))
   } else {
     Tau_hat_negbin = Tau_hat
     k_hat_negbin = Inf
   }
-  
-  # Fisher information matrix
-  I <- fisher_md(tau = tau_hat,
-                 M = assay_summary$M,
-                 q = assay_summary$q,
-                 u = assay_summary$u)
-  
-  # inverse of fisher information
-  cov <- solve(I)
-  
-  ### variance estimate 4
-  se <- sqrt(sum(cov))
-  
-  ### confidence interval
-  ci = exp(c(log(Tau_hat) + c(-1, 1) * (qnorm(0.975) * se / Tau_hat)))
   
   # For large n, do not compute bias correction unless user overrides
   if (corrected == F) {
@@ -272,16 +260,10 @@ lrt_SLDeepAssay_md = function(assay = NULL,
     # bias-corrected MLE for Tau
     Tau_hat_bc <- sum(tau_hat_bc)
     
-    # bias corrected CI
-    ci_bc <- exp(c(log(Tau_hat_bc) + c(-1, 1) *
-                     (qnorm(0.975) * se / Tau_hat_bc)))
   }
   
   return(list("mle" = Tau_hat,
-              "se" = se,
-              "ci" = ci,
               "mle_bc" = Tau_hat_bc,
-              "ci_bc" = ci_bc,
               "mle_negbin" = Tau_hat_negbin,
               "mle_k" = k_hat_negbin,
               "lrt_stat" = lrt_stat))

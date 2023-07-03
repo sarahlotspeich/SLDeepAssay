@@ -66,7 +66,7 @@ fit_SLDeepAssay_md = function(assay = NULL, u = NULL, assay_summary, corrected =
                        hessian = F)
   
   ### parameter estimate
-  tau_hat = optimization$par
+  tau_hat = exp(optimization$par)
   Tau_hat = sum(tau_hat) # MLE of the IUPM
 
   # Fisher information matrix

@@ -13,6 +13,10 @@
 rm(list=ls())
 setwd(here::here())
 
+# Install packages (Run once)
+## install.packages("SLDAssay")
+## devtools::install_github("sarahlotspeich/SLDeepAssay")
+
 ## load packages
 library(ggplot2)
 library(dplyr)

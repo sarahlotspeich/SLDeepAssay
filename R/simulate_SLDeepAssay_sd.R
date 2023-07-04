@@ -41,8 +41,9 @@ simulate_SLDeepAssay_sd <- function(M, tau, q, u = 1, sens_QVOA = 1, spec_QVOA =
   prop_DVL_detected = tryCatch(expr = rowMeans(assay$DVL_specific, na.rm = TRUE),
                                error = function(e) 0)
   ## If so, continue resimulating until no longer true
-  while (any(prop_DVL_detected == 1) | is.null(assay$DVL_specific)) {
-    if (is.null(assay)) {
+  #while (any(prop_DVL_detected == 1) | is.null(assay$DVL_specific)) {
+  while (any(prop_DVL_detected == 1) | all(is.na(assay$DVL_specific))) {
+    if (all(is.na(assay$DVL_specific))) {
       num_redo_none = num_redo_none + 1
     } else {
       num_redo_all = num_redo_all + 1

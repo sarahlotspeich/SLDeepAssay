@@ -48,6 +48,7 @@ one_sim = function(setting_row) {
   u = as.numeric(setting_row["u"])
   q = as.numeric(setting_row["q"])
   constant_Tau = setting_row["constant_Tau"] == 1
+  set.seed(as.numeric(setting_row["sim_id"]))
   if (constant_Tau) {
     tau = rep(x = Tau / n, times = n)
   } else {
@@ -61,7 +62,8 @@ one_sim = function(setting_row) {
                    Method = c("MLE_woUDSA", "BCMLE_woUDSA", "MLE_wUDSA", "BCMLE_wUDSA"),
                    do.call(what = rbind, args = res[grep(pattern = "MLE", x = names(res), value = FALSE)]),
                    Message = res$Message,
-                   Message_Detailed = ifelse(is.null(res$Message_Detailed), "", res$Message_Detailed))
+                   Message_Detailed = ifelse(is.null(res$Message_Detailed), "", res$Message_Detailed),
+                   row.names = NULL)
   return(res_rshp)
 }
 

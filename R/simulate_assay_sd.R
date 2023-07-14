@@ -23,11 +23,13 @@ simulate_assay_sd = function(M, tau, q, u = 1, sens_QVOA = 1, spec_QVOA = 1, sen
   # Create n: a constant for the number of underlying DVLs
   n = length(lambda)
   
-  # Calculate p: probabilitiy of success for Z based on Poisson or NegBin
-  p = ifelse(test = k == Inf,
-             yes = 1 - exp(- rep(x = lambda, each = M)),
-             no = 1 - (k / (lambda + k)) ^ k)
-
+  # Calculate p: probability of success for Z based on Poisson or NegBin
+  if (k == Inf) {
+    p = 1 - exp(- rep(x = lambda, each = M))
+  } else {
+    p = 1 - (k / (lambda + k)) ^ k
+  }
+  
   # Generate Z: true UDSA statuses for all DVL and wells
   Z = rbinom(n = M * n,
              size = 1,

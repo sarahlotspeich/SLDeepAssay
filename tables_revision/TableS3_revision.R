@@ -18,7 +18,7 @@ library(kableExtra)
 library(magick)
 
 # Load data
-tableS3_data = read.csv("https://raw.githubusercontent.com/sarahlotspeich/SLDeepAssay/main/real_data_application_revision/tableS2_data.csv")
+tableS3_data = read.csv("https://raw.githubusercontent.com/sarahlotspeich/SLDeepAssay/main/real_data_application_revision/tableS3_data.csv")
 
 ## create Table S3
 tableS3_data$MP <- paste0(tableS3_data$MP1,

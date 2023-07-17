@@ -16,22 +16,31 @@ negbin_loglik_sd = function(l, k, gamma = NULL, M, MP, m, Y) {
     k = 1 / gamma
   }
   
-  # Save n = # DVL detected
-  n = length(l)
-  
-  # Check for invalid rate parameters (< 0)
-  if (sum(l < 0) > 0) {
-    ll = 0
-  } else { # If parameters are valid, calculate log-likelihood
-    ll = 0
-    for(i in 1:n)
-    {
-      ll = ll + Y[i] * log(1 - (k / (l[i] + k)) ^ k) +
-        (M - MP + m - Y[i]) * k * log(k / (l[i] + k)) # Wells without missing data
+  # if k = Inf (gamma = 0), then return Poisson loglik
+  if (k == Inf) {
+    
+    return(loglik_sd(l = l, M = M, MP = MP, m = m, Y = Y))
+    
+  # Else for k < Inf, compute the NegBin loglik
+  } else {
+    
+    # Save n = # DVL detected
+    n = length(l)
+    
+    # Check for invalid rate parameters (< 0)
+    if (sum(l < 0) > 0) {
+      ll = 0
+    } else { # If parameters are valid, calculate log-likelihood
+      ll = 0
+      for(i in 1:n)
+      {
+        ll = ll + Y[i] * log(1 - (k / (l[i] + k)) ^ k) +
+          (M - MP + m - Y[i]) * k * log(k / (l[i] + k)) # Wells without missing data
+      }
+      ll = ll + (MP - m) * log(1 - prod(k / (l + k)) ^ k) # Wells with missing data
     }
-    ll = ll + (MP - m) * log(1 - prod(k / (l + k)) ^ k) # Wells with missing data
+    return(-ll)
   }
-  return(-ll)
 }
 
 
@@ -80,27 +89,36 @@ negbin_loglik_md = function(tau, k, assay_summary) {
 #'
 negbin_gloglik_sd = function(l, k, M, MP, m, Y) {
   
-  # Save n = # DVL detected
-  n = length(l)
-  
-  # partials w.r.t. lambda_i
-  gradient = numeric(n)
-  for(i in 1:n) 
-  {
-    gradient[i] = (Y[i] * (1 - (k / (l[i] + k)) ^ k) ^ (-1) +
-                     (MP - m) * ((1 - prod((k / (l + k))) ^ k)) ^ (-1) *
-                     prod(k / (l[-i] + k)) ^ k) *
-      (k / (l[i] + k)) ^ (k + 1) -
-      (M - MP + m - Y[i]) * (k / (l[i] + k))
-  }
-  
-  # partial w.r.t. k
-  gradient[n + 1] <- sum((Y * (1 - ((l + k) / k) ^ k) ^ (-1) +
-                            (M - MP + m - Y) +
-                            (MP - m) * (1 - (prod((l + k) / k)) ^ k) ^ (-1)) *
-                           (log(k / (l + k)) + (l / (l + k))))
-  
+  # if k = Inf (gamma = 0), then return Poisson gloglik with NA for entry n+1
+  if (k == Inf) {
+    
+    return(c(gloglik_sd(l = l, M = M, MP = MP, m = m, Y = Y), NA))
+    
+  # Else for k < Inf, compute the NegBin gloglik
+  } else {
+    
+    # Save n = # DVL detected
+    n = length(l)
+    
+    # partials w.r.t. lambda_i
+    gradient = numeric(n)
+    for(i in 1:n) 
+    {
+      gradient[i] = (Y[i] * (1 - (k / (l[i] + k)) ^ k) ^ (-1) +
+                       (MP - m) * ((1 - prod((k / (l + k))) ^ k)) ^ (-1) *
+                       prod(k / (l[-i] + k)) ^ k) *
+        (k / (l[i] + k)) ^ (k + 1) -
+        (M - MP + m - Y[i]) * (k / (l[i] + k))
+    }
+    
+    # partial w.r.t. k
+    gradient[n + 1] <- sum((Y * (1 - ((l + k) / k) ^ k) ^ (-1) +
+                              (M - MP + m - Y) +
+                              (MP - m) * (1 - (prod((l + k) / k)) ^ k) ^ (-1)) *
+                             (log(k / (l + k)) + (l / (l + k))))
+    
   return(-gradient)
+  }
 }
 
 
@@ -165,6 +183,8 @@ lrt_SLDeepAssay_md = function(assay = NULL,
                               assay_summary,
                               corrected = NULL,
                               maxit = 1E6,
+                              lb = 1E-6,
+                              ub = Inf,
                               k0 = 1) {
   
   # For each dilution level, compute summary data
@@ -206,18 +226,20 @@ lrt_SLDeepAssay_md = function(assay = NULL,
   
   # Fit MLE under NegBin model
   opt_negbin = optim(
-    par = log(c(rep(0.1, assay_summary$n[1]), k0)),
+    par = c(rep(0.1, assay_summary$n[1]), k0),
     fn = function(theta, assay_summary) {
-      negbin_loglik_md(tau = exp(head(theta, assay_summary$n[1])),
-                       k = exp(tail(theta, 1)),
-                       assay_summary = assay_summary) },
+      negbin_loglik_md(tau = head(theta, assay_summary$n[1]),
+                          k = tail(theta, 1),
+                          assay_summary = assay_summary) },
     gr = function(theta, assay_summary) {
-      negbin_gloglik_md(tau = exp(head(theta, assay_summary$n[1])),
-                        k = exp(tail(theta, 1)),
-                        assay_summary = assay_summary) },
+      negbin_gloglik_md(tau = head(theta, assay_summary$n[1]),
+                           k = tail(theta, 1),
+                           assay_summary = assay_summary) },
     assay_summary = assay_summary,
-    method = "BFGS",
+    method = "L-BFGS-B",
     control = list(maxit = maxit),
+    lower = lb,
+    upper = ub,
     hessian = T)
   
   # log-likelihood values
@@ -233,9 +255,9 @@ lrt_SLDeepAssay_md = function(assay = NULL,
   
   # negative binomial model parameter estimates
   if (loglik_negbin > loglik_pois) {
-    tau_hat_negbin = exp(head(opt_negbin$par, assay_summary$n[1]))
+    tau_hat_negbin = head(opt_negbin$par, assay_summary$n[1])
     Tau_hat_negbin = sum(tau_hat_negbin)
-    k_hat_negbin = exp(tail(opt_negbin$par, 1))
+    k_hat_negbin = tail(opt_negbin$par, 1)
   } else {
     Tau_hat_negbin = Tau_hat
     k_hat_negbin = Inf
@@ -266,4 +288,7 @@ lrt_SLDeepAssay_md = function(assay = NULL,
               "mle_k" = k_hat_negbin,
               "lrt_stat" = lrt_stat))
 }
+
+
+
 

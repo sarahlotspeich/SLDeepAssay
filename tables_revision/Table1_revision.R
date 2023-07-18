@@ -1,4 +1,4 @@
-## Title: Table 1: Single dilution setting simulations
+## Title: Table 1: Single dilution setting simulations (constant Tau)
 
 ## Date: 2023/07/18
 

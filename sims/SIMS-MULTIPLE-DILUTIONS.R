@@ -27,7 +27,10 @@ library(SLDeepAssay)
 ## Functions for running simulations
 library(tidyr)
 library(dplyr)
-library(pbapply)
+library(progress)
+
+# Set path to folder where you would like to save results
+path_to_sims = here::here() 
 
 # Number of replicates per simulation setting
 num_reps = 1000
@@ -59,7 +62,7 @@ one_sim = function(setting_row) {
   M.scale = as.numeric(setting_row["M.scale"])
   n = as.numeric(setting_row["n"])
   constant_Tau = setting_row["constant_Tau"] == 1
-  set.seed(setting_row["sim_id"])
+  set.seed(as.numeric(setting_row["sim_id"]))
   if (constant_Tau) {
     tau = rep(x = Tau / n, times = n)
   } else {
@@ -77,8 +80,37 @@ one_sim = function(setting_row) {
 }
 
 # run simulations
-sim_out = do.call("rbind", pbapply(Settings, 1,
-                                   function(row) one_sim(setting_row = row)))
+sim_out = as.data.frame(matrix(data = NA,
+                               nrow = 4 * nrow(Settings),
+                               ncol = 7)) |>
+  `colnames<-`(c("method", "Est", "SE", "LB", "UB", "Message", "Message_Detailed"))
+  
+  
+# Initialize the progress bar
+pb <- progress_bar$new(format = "(:spin) [:bar] :percent [Elapsed time: :elapsedfull || Estimated time remaining: :eta]",
+                       total = nrow(Settings),
+                       complete = "=",   # Completion bar character
+                       incomplete = "-", # Incomplete bar character
+                       current = ">",    # Current bar character
+                       clear = FALSE,    # If TRUE, clears the bar when finish
+                       width = 100)      # Width of the progress bar
+
+for (i in 1:nrow(Settings)) {
+  
+  # Updates the current state
+  pb$tick()
+  
+  # simulate and analyze data according to row i of Settings
+  sim_out[(4*i-3) : (4*i), ] = one_sim(setting_row = Settings[i,])
+  
+  # Save intermediate results
+  if (i %% num_reps == 0) {
+    write.csv(sim_out,
+              file = paste0(path_to_sims, "/sim_data/md_sim_partial_data.csv"),
+              row.names = FALSE)
+  }
+  
+}
 
 results = cbind(slice(Settings, rep(1:n(), each = 4)),
                 sim_out) |>
@@ -90,8 +122,7 @@ results = cbind(slice(Settings, rep(1:n(), each = 4)),
 
 
 # save simulations
-path_to_sims = here::here() # Set path to folder where you would like to save results
-
-write.csv(results, file = paste0(path_to_sims, "/sim_data/md_sim_data.csv"),
+write.csv(results,
+          file = paste0(path_to_sims, "/sim_data/md_sim_data.csv"),
           row.names = FALSE)
 

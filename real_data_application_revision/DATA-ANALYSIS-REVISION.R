@@ -104,7 +104,7 @@ for (id in paste0("C", 1:17)) {
                   c(id, "With UDSA (Single Dilution)", unlist(res_SLDeepAssay_sd),
                     NA, NA, NA, NA))
   
-  ### deepIUPM MD results
+  ### SLDeepAssay MD results
   res_SLDeepAssay_md = fit_SLDeepAssay_md(assay = NULL, assay_summary = assay_summary, corrected = T)
   res_lrt_SLDeepAssay_md = lrt_SLDeepAssay_md(assay_summary = assay_summary, corrected = T)
   lrt_sig = ifelse(res_lrt_SLDeepAssay_md$lrt_stat <= cutoff, 0, 1)

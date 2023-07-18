@@ -6,7 +6,7 @@
 
 ## Purpose: produce a table to summarize simulation data from the multiple dilutions setting
 
-## Input: https://raw.githubusercontent.com/sarahlotspeich/SLDeepAssay/main/sims/sim_data/md_sim_data.csv (produced by sims/SIMS-MULTIPLE-DILUTIONS.R)
+## Input: https://raw.githubusercontent.com/sarahlotspeich/SLDeepAssay/main/sim_data/md_sim_data.csv (produced by sims/SIMS-MULTIPLE-DILUTIONS.R)
 
 ## Output: Latex table
 
@@ -17,7 +17,7 @@ library(tidyr)
 
 # load data
 setwd(here::here())
-md_sim_data = read.csv("https://raw.githubusercontent.com/sarahlotspeich/SLDeepAssay/main/sims/sim_data/md_sim_data.csv")
+md_sim_data = read.csv("https://raw.githubusercontent.com/sarahlotspeich/SLDeepAssay/main/sim_data/md_sim_data.csv")
 
 # format numbers (default to 2 decimal places)
 format_nums = function(x, digits = 2) {

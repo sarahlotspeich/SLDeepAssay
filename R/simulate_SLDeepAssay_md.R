@@ -5,6 +5,7 @@
 #' @param q Proportions of p24-positive wells that underwent UDSA at each dilution level (a vector of length D).
 #' @param u Vector of dilution levels in millions of cells per well (a vector of length D).
 #' @param remove_undetected Logical, if \code{remove_undetected = TRUE} (the default), then DVL which were not detected in any of the deep sequenced wells across all dilution levels are deleted.
+#' #' @param optim_method optimization method ("BFGS" or "L-BFGS-B")
 #' @return Named list with the following slots:
 #' \item{assay_summary}{Simulated multiple-dilution assay data (deep sequenced) in summary form.}
 #' \item{MLE_woUDSA}{Point estimate, standard error estimate, and 95\% confidence interval for the MLE (without deep sequencing information).}
@@ -15,7 +16,7 @@
 #' @importFrom SLDAssay get.mle 
 #' @export
 #'
-simulate_SLDeepAssay_md = function(M, tau, q, u, remove_undetected = TRUE) {
+simulate_SLDeepAssay_md = function(M, tau, q, u, remove_undetected = TRUE, optim_method = "BFGS") {
   
   # Create indicators of whether data need to be re-simulated
   num_redo_all = 0 # Due to any DVL being detected in all wells or
@@ -70,7 +71,7 @@ simulate_SLDeepAssay_md = function(M, tau, q, u, remove_undetected = TRUE) {
                             UB = exp(log(woUDSA_res$BC_MLE) + qnorm(1 - 0.05 / 2) * se))
 
   # Methods with UDSA
-  wUDSA_res = fit_SLDeepAssay_md(assay_summary = assay_summary)
+  wUDSA_res = fit_SLDeepAssay_md(assay_summary = assay_summary, optim_method = optim_method)
   
   MLE_wUDSA = data.frame(Est = wUDSA_res$mle, 
                          SE = wUDSA_res$se, 

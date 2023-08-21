@@ -13,7 +13,7 @@ get_EY = function(M, q, lambda) {
                     FUN = function(k) {
                        dbinom(k, M, 1 - exp(-Lambda)) * 
                         #round(q * k) /
-                        floor(0.5 + q * k))
+                        floor(0.5 + q * k)
                         (1 - exp(-Lambda))
                     }
                     )

@@ -60,7 +60,7 @@ fit_SLDeepAssay_md = function(assay = NULL, u = NULL, assay_summary, corrected =
     Tau_hat = sum(tau_hat)
     
   # Fit MLE (BFGS)
-  } else {
+  } else if (optim_method == "BFGS") {
     optimization = optim(par = log(rep(0.1, assay_summary$n[1])),
                          fn = function(theta, assay_summary) {
                            loglik_md(tau = exp(theta),

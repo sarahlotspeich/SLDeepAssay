@@ -48,9 +48,7 @@ simulate_assay_sd = function(M, tau, q, u = 1, sens_QVOA = 1, spec_QVOA = 1, sen
   MP = sum(W == 1)
 
   # Calculate m: the number of p24-positive wells to deep sequence
-  m = ifelse(test = q == 1, 
-             yes = MP, 
-             no = floor(0.5 + q * MP))
+  m = floor(0.5 + q * MP)
   
   # Make Z for any unsequenced, p24-positive wells NA
   p24_pos = which(W == 1) ## ids of p24-positive wells

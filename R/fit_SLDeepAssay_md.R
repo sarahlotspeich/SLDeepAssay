@@ -7,6 +7,7 @@
 #' @param maxit The maximum number of iterations (passed to \code{optim}). Default is \code{maxit = 1E4}.
 #' @param lb Lower-bound on the IUPM (passed to \code{optim}). Default is \code{lb = 1E-6}.
 #' @param ub Upper-bound on the IUPM (passed to \code{optim}). Default is \code{ub = Inf}.
+#' @param optim_method optimization method ("BFGS" or "L-BFGS-B")
 #' @return Named list with the following slots:
 #' \item{mle}{MLE}
 #' \item{se}{Standard error for the MLE}
@@ -16,7 +17,7 @@
 #' @export
 #'
 #'
-fit_SLDeepAssay_md = function(assay = NULL, u = NULL, assay_summary, corrected = NULL, maxit = 1E6, lb = 1E-6, ub = Inf) {
+fit_SLDeepAssay_md = function(assay = NULL, u = NULL, assay_summary, corrected = NULL, maxit = 1E6, lb = 1E-6, ub = Inf, optim_method = "BFGS") {
 
   # For each dilution level, compute summary data
   if (!is.null(assay)) {
@@ -43,32 +44,41 @@ fit_SLDeepAssay_md = function(assay = NULL, u = NULL, assay_summary, corrected =
                      no = corrected)
 
   # Fit MLE (L-BFGS-B)
-  #optimization = optim(par = rep(0, assay_summary$n[1]),
-  #                     fn = loglik_md, 
-  #                     gr = gloglik_md, 
-  #                     assay_summary = assay_summary,
-  #                     method = "L-BFGS-B",
-  #                     control = list(maxit = maxit),
-  #                     lower = rep(lb, assay_summary$n[1]),
-  #                     upper = rep(ub, assay_summary$n[1]),
-  #                     hessian = F)
-
-  optimization = optim(par = log(rep(0.1, assay_summary$n[1])),
-                       fn = function(theta, assay_summary) {
-                         loglik_md(tau = exp(theta),
-                                   assay_summary = assay_summary) },
-                       gr = function(theta, assay_summary) {
-                         gloglik_md(tau = exp(theta),
-                                    assay_summary = assay_summary) }, 
-                       assay_summary = assay_summary,
-                       method = "BFGS",
-                       control = list(maxit = maxit),
-                       hessian = F)
+  if (optim_method == "L-BFGS-B") {
+    optimization = optim(par = rep(0, assay_summary$n[1]),
+                         fn = loglik_md, 
+                         gr = gloglik_md, 
+                         assay_summary = assay_summary,
+                         method = "L-BFGS-B",
+                         control = list(maxit = maxit),
+                         lower = rep(lb, assay_summary$n[1]),
+                         upper = rep(ub, assay_summary$n[1]),
+                         hessian = F)
+    
+    ### parameter estimate
+    tau_hat = optimization$par
+    Tau_hat = sum(tau_hat)
+    
+  # Fit MLE (BFGS)
+  } else {
+    optimization = optim(par = log(rep(0.1, assay_summary$n[1])),
+                         fn = function(theta, assay_summary) {
+                           loglik_md(tau = exp(theta),
+                                     assay_summary = assay_summary) },
+                         gr = function(theta, assay_summary) {
+                           gloglik_md(tau = exp(theta),
+                                      assay_summary = assay_summary) }, 
+                         assay_summary = assay_summary,
+                         method = "BFGS",
+                         control = list(maxit = maxit),
+                         hessian = F)
+    
+    ### parameter estimate
+    tau_hat = exp(optimization$par)
+    Tau_hat = sum(tau_hat)
+    
+  }
   
-  ### parameter estimate
-  tau_hat = exp(optimization$par)
-  Tau_hat = sum(tau_hat) # MLE of the IUPM
-
   # Fisher information matrix
   I = fisher_md(tau = tau_hat,
                  M = assay_summary$M,

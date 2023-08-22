@@ -18,11 +18,19 @@ Each of the "Script (Run Simulations)" files is coded to run 1 replication of ea
 
   - [Script (Run Simulations)](sims/SIMS-MULTIPLE-DILUTIONS.R)
   - [Script (Make Table)](tables_revision/Table2_revision.R)
-  - [Data (Simulation Results)](sim_data/md_sim_data.csv)  
+  - [Data (Simulation Results)](sim_data/md_sim_data.csv)
+
+**Table S1.** Simulation results with a single dilution level and a non-constant rate of infected cells for all distinct viral lineages. The true overall IUPM in all settings was $T = 1$.
+
+  - [Script (Run Simulations)](sims/SIMS-SINGLE-DILUTIONS.R)
+  - [Script (Make Table)](tables_revision/TableS1_revision.R)
+  - [Data (Simulation Results)](sim_data/sd_sim_data.csv)
 
 ## Figures 
 
-**Figure S3.** With Weibull $X$, extrapolating Breslow's estimator $\widehat{S}_0(t)$ beyond the largest uncensored value $\widetilde{X}$ with the Weibull extension offered the lowest bias and best efficiency for $\hat{\beta}$ in conditional mean imputation with adaptive quadrature.
+**Figure 1.** Illustration of the data collection scheme from the QVOA and UDSA at a single dilution level. (No code or data to share.)
+
+**Figure 2.** Estimated infectious units per million (IUPM) with 95\% confidence intervals for 17 people living with HIV in the University of North Carolina HIV Cure Center Study. The IUPM and confidence interval were log transformed for comparisons of precision.
 
   - [Script (Run Simulations)](Sim-Scripts/FigureS3-Extrapolation-Methods-Weibull.R)
   - [Script (Make Figure)](Figure-Scripts/FigureS3-Extrapolation-Methods-Weibull.R)

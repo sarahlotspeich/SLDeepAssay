@@ -1,7 +1,34 @@
-`SLDeepAssay`: A package for maximum likelihood estimation from serial
-dilution assays with partial deep sequencing
-================
-Sarah C. Lotspeich and Brian D. Richardson
+# Quantifying the HIV reservoir with dilution assays and deep viral sequencing
+
+This repository contains `R` code and simulation data to reproduce results from the [manuscript](https://arxiv.org/abs/2209.04716) by Sarah C. Lotspeich, Brian D. Richardson, Pedro L. Baldoni, Kimberly P. Enders, and Michael G. Hudgens (2023+). 
+
+For the `imputeCensRd` package, which implements the conditional mean imputation approaches from the paper, can be found at the end of this README. 
+
+Each of the "Script (Run Simulations)" files is coded to run 1 replication of each setting for demonstration. Per the NOTES at the bottom of the scripts, some more time-intensive simulations were run in parallel.
+
+## Tables 
+
+**Table 1.** Simulation results with a single dilution level, assuming a constant rate of infected cells for all distinct viral lineages. The true IUPM in all settings was $T = 1$.
+
+  - [Script (Run Simulations)](sims/SIMS-SINGLE-DILUTION.R)
+  - [Script (Make Table)](tables_revision/Table1_revision.R)
+  - [Data (Simulation Results)](sim_data/sd_sim_data.csv)
+
+**Table 2.** Simulation results with multiple dilution levels and a constant rate of infected cells for all distinct viral lineages. In all settings, the true IUPM was $T = 1$ and the proportions of positive wells that were deep sequenced at the three dilution levels were $\pmb{q} = (0, 0.5, 1)$.
+
+  - [Script (Run Simulations)](sims/SIMS-MULTIPLE-DILUTIONS.R)
+  - [Script (Make Table)](tables_revision/Table2_revision.R)
+  - [Data (Simulation Results)](sim_data/md_sim_data.csv)  
+
+## Figures 
+
+**Figure S3.** With Weibull $X$, extrapolating Breslow's estimator $\widehat{S}_0(t)$ beyond the largest uncensored value $\widetilde{X}$ with the Weibull extension offered the lowest bias and best efficiency for $\hat{\beta}$ in conditional mean imputation with adaptive quadrature.
+
+  - [Script (Run Simulations)](Sim-Scripts/FigureS3-Extrapolation-Methods-Weibull.R)
+  - [Script (Make Figure)](Figure-Scripts/FigureS3-Extrapolation-Methods-Weibull.R)
+  - [Data (Simulation Results)](Figure-Data/data_FigureS3.csv)  
+
+# `SLDeepAssay`: A package for maximum likelihood estimation from serial dilution assays with partial deep sequencing
 
 ## Installation
 

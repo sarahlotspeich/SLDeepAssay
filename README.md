@@ -4,8 +4,6 @@ This repository contains `R` code and simulation data to reproduce results from 
 
 For the `imputeCensRd` package, which implements the conditional mean imputation approaches from the paper, can be found at the end of this README. 
 
-Each of the "Script (Run Simulations)" files is coded to run 1 replication of each setting for demonstration. Per the NOTES at the bottom of the scripts, some more time-intensive simulations were run in parallel.
-
 ## Tables 
 
 **Table 1.** Simulation results with a single dilution level, assuming a constant rate of infected cells for all distinct viral lineages. The true IUPM in all settings was $T = 1$.

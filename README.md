@@ -45,7 +45,7 @@ For the `imputeCensRd` package, which implements the conditional mean imputation
 
   - [Script (Run Analysis)](real_data_application_revision/DATA-ANALYSIS-REVISION.R)
   - [Script (Make Table)](tables_revision/TableS5_revision.R)
-  - [Data (Analysis Results)](sim_data/tableS5_data.csv)
+  - [Data (Analysis Results)](real_data_application_revision/tableS5_data.csv)
 
 ## Figures 
 

@@ -26,6 +26,12 @@ Each of the "Script (Run Simulations)" files is coded to run 1 replication of ea
   - [Script (Make Table)](tables_revision/TableS1_revision.R)
   - [Data (Simulation Results)](sim_data/sd_sim_data.csv)
 
+**Table S2.** Simulation results with a single dilution level and a constant rate of infected cells for all distinct viral lineages. The true overall IUPM in all settings was $T = 0.5$.
+
+  - [Script (Run Simulations)](sims/SIMS-SINGLE-DILUTION.R)
+  - [Script (Make Table)](tables_revision/TableS2_revision.R)
+  - [Data (Simulation Results)](sim_data/sd_sim_data.csv)
+
 ## Figures 
 
 **Figure 1.** Illustration of the data collection scheme from the QVOA and UDSA at a single dilution level. (No code or data to share.)

@@ -85,6 +85,12 @@ This repository contains R code and simulation data to reproduce results from th
   - [Script (Make Figure)](figures_revision/figS2-boxplot-vary-sens.R)
   - [Data (Simulation Results)](sim_data/sd_imperfect_vary_sensitivity.csv)
 
+**Figure S3.** Empirical distributions of the estimated IUPMs (assuming imperfect and perfect assays) at a single dilution level. QVOA and UDSA specificities varied, but both assays had 90\% sensitivity.
+
+  - [Script (Run Simulations)](sims/SIMS-IMPERFECT-VARY-SPECIFICITY.R)
+  - [Script (Make Figure)](figures_revision/figS2-boxplot-vary-spec.R)
+  - [Data (Simulation Results)](sim_data/sd_imperfect_vary_specificity.csv)
+
 ## Package Installation
 
 Installation of the `SLDeepAssay` from GitHub requires the

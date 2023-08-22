@@ -39,7 +39,13 @@ For the `imputeCensRd` package, which implements the conditional mean imputation
 **Table S4.** Summary of assay data collected from 17 individuals receiving care at the University of North Carolina HIV Cure Center
 
   - [Script (Make Table)](tables_revision/TableS4_revision.R)
-  - [Data](real_data_application_revision/tableS4_data.csv)
+  - [Data (Summarized)](real_data_application_revision/tableS4_data.csv)
+
+**Table S5.** Estimated infectious units per million (IUPM) of HIV (with 95\% confidence intervals) for 17 individuals receiving care at the University of North Carolina HIV Cure Center
+
+  - [Script (Run Analysis)](real_data_application_revision/DATA-ANALYSIS_REVISION.R)
+  - [Script (Make Table)](tables_revision/TableS5_revision.R)
+  - [Data (Analysis Results)](sim_data/tableS5_data.csv)
 
 ## Figures 
 

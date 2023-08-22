@@ -43,7 +43,7 @@ For the `imputeCensRd` package, which implements the conditional mean imputation
 
 **Table S5.** Estimated infectious units per million (IUPM) of HIV (with 95\% confidence intervals) for 17 individuals receiving care at the University of North Carolina HIV Cure Center
 
-  - [Script (Run Analysis)](real_data_application_revision/DATA-ANALYSIS_REVISION.R)
+  - [Script (Run Analysis)](real_data_application_revision/DATA-ANALYSIS-REVISION.R)
   - [Script (Make Table)](tables_revision/TableS5_revision.R)
   - [Data (Analysis Results)](sim_data/tableS5_data.csv)
 

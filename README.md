@@ -79,6 +79,12 @@ This repository contains R code and simulation data to reproduce results from th
   - [Script (Make Figure)](figures_revision/figS1-boxplot-overdispersion.R)
   - [Data (Simulation Results)](sim_data/overdispersion_sim_data.csv)
 
+**Figure S2.** Empirical distributions of the estimated IUPMs (assuming imperfect and perfect assays) at a single dilution level. QVOA and UDSA sensitivities varied, but both assays had 90\% specificity. Two replicates where the MLE (Imperfect Assays) was $> 10$ were excluded from the plot.
+
+  - [Script (Run Simulations)](sims/SIMS-IMPERFECT-VARY-SENSITIVITY.R)
+  - [Script (Make Figure)](figures_revision/figS2-boxplot-vary-sens.R)
+  - [Data (Simulation Results)](sim_data/sd_imperfect_vary_sensitivity.csv)
+
 ## Package Installation
 
 Installation of the `SLDeepAssay` from GitHub requires the

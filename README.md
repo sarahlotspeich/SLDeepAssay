@@ -36,6 +36,11 @@ For the `imputeCensRd` package, which implements the conditional mean imputation
   - [Script (Make Table)](tables_revision/TableS3_revision.R)
   - [Data (Simulation Results)](sim_data/md_sim_data.csv)
 
+**Table S4.** Summary of assay data collected from 17 individuals receiving care at the University of North Carolina HIV Cure Center
+
+  - [Script (Make Table)](tables_revision/TableS4_revision.R)
+  - [Data (Simulation Results)](real_data_application_revision/tableS4_data.csv)
+
 ## Figures 
 
 **Figure 1.** Illustration of the data collection scheme from the QVOA and UDSA at a single dilution level. (No code or data to share.)

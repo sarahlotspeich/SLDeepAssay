@@ -22,7 +22,7 @@ simulate_SLDeepAssay_md = function(M, tau, q, u, remove_undetected = TRUE, optim
   num_redo_all = 0 # Due to any DVL being detected in all wells or
   num_redo_none = 0 # No DVL being detected in any wells
   
-  # Simulate single-dilution assay data
+  # Simulate multiple-dilution assay data
   assay_summary = simulate_assay_md(M = M,
                             tau = tau, 
                             q = q,

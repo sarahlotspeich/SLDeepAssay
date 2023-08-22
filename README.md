@@ -47,7 +47,7 @@ This repository contains `R` code and simulation data to reproduce results from 
 
 **Table S6.** Empirical power of the likelihood ratio test for overdispersion
 
-  - [Script (Run Analysis)](sims/SIMS-OVERDISPERSION.R)
+  - [Script (Run Simulations)](sims/SIMS-OVERDISPERSION.R)
   - [Script (Make Table)](tables_revision/TableS6_revision.R)
   - [Data (Analysis Results)](sim_data/overdispersion_sim_data.csv)
 
@@ -59,7 +59,7 @@ This repository contains `R` code and simulation data to reproduce results from 
 
 **Table S8.** Sensitivity Analysis for Subject C13
 
-  - [Script (Run Test)](real_data_application_revision/DATA-ANALYSIS-REVISION.R)
+  - [Script (Run Sensitivity Analysis)](real_data_application_revision/DATA-ANALYSIS-REVISION.R)
   - [Script (Make Table)](tables_revision/TableS8_revision.R)
   - [Data (Test Results)](real_data_application_revision/tableS8_data.csv)
 
@@ -69,9 +69,9 @@ This repository contains `R` code and simulation data to reproduce results from 
 
 **Figure 2.** Estimated infectious units per million (IUPM) with 95\% confidence intervals for 17 people living with HIV in the University of North Carolina HIV Cure Center Study. The IUPM and confidence interval were log transformed for comparisons of precision.
 
-  - [Script (Run Simulations)](Sim-Scripts/FigureS3-Extrapolation-Methods-Weibull.R)
-  - [Script (Make Figure)](Figure-Scripts/FigureS3-Extrapolation-Methods-Weibull.R)
-  - [Data (Simulation Results)](Figure-Data/data_FigureS3.csv)  
+  - [Script (Run Analysis)](real_data_application_revision/DATA-ANALYSIS-REVISION.R)
+  - [Script (Make Figure)](figures_revision/Figure2.R)
+  - [Data (Analysis Results)](real_data_application_revision/figure2_data.csv)
 
 # `SLDeepAssay`: A package for maximum likelihood estimation from serial dilution assays with partial deep sequencing
 

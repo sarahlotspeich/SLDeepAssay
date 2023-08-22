@@ -4,8 +4,6 @@ This repository contains `R` code and simulation data to reproduce results from 
 
 For the `imputeCensRd` package, which implements the conditional mean imputation approaches from the paper, can be found at the end of this README. 
 
-Each of the "Script (Run Simulations)" files is coded to run 1 replication of each setting for demonstration. Per the NOTES at the bottom of the scripts, some more time-intensive simulations were run in parallel.
-
 ## Tables 
 
 **Table 1.** Simulation results with a single dilution level, assuming a constant rate of infected cells for all distinct viral lineages. The true IUPM in all settings was $T = 1$.
@@ -31,6 +29,12 @@ Each of the "Script (Run Simulations)" files is coded to run 1 replication of ea
   - [Script (Run Simulations)](sims/SIMS-SINGLE-DILUTION.R)
   - [Script (Make Table)](tables_revision/TableS2_revision.R)
   - [Data (Simulation Results)](sim_data/sd_sim_data.csv)
+
+**Table S3.** Simulation results with multiple dilution levels and a non-constant rate of infected cells for all distinct viral lineages. In all settings, the true IUPM was $T = 1$ and the proportions of p24-positive wells that were deep-sequenced at the three dilution levels were $\pmb{q} = (0, 0.5, 1)$.
+
+  - [Script (Run Simulations)](sims/SIMS-MULTIPLE-DILUTIONS.R)
+  - [Script (Make Table)](tables_revision/TableS3_revision.R)
+  - [Data (Simulation Results)](sim_data/md_sim_data.csv)
 
 ## Figures 
 

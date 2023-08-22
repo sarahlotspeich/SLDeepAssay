@@ -5,8 +5,8 @@ num_reps = 50
 ## Note: This code was run in parallel a cluster instead of locally, as it can be slow. 
 
 # Define parameters that vary over simulation settings (same as Section 3.1)
-spec = 0.9 # Sensitivity of assays
-sens = seq(0.8, 1, by = 0.1) # Specificity of assays
+spec = seq(0.8, 1, by = 0.1) # Sensitivity of assays
+sens = 0.9 # Specificity of assays
 M = c(12, 24, 32) # Total number of wells
 n = 6 # Number of existing DVLs
 Tau = 1 ## Overall IUPM (split among n DLVs)
@@ -123,6 +123,6 @@ set.seed(sim_seed)
 Results = data.frame()
 for (i in 1:nrow(Settings)) {
   Results = rbind(Results, one_sim(setting_row = Settings[i, ]))
-  write.csv(Results, "sd_imperfect_vary_sensitivity", row.names = F)
+  write.csv(Results, "sd_imperfect_vary_specificity", row.names = F)
   if (i %% 10 == 0) print(paste0("Sim ", i, " complete (", round(100 * i/nrow(Settings)), "%)"))
 }

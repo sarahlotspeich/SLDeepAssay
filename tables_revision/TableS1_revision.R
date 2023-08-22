@@ -6,7 +6,7 @@
 
 ## Purpose: produce a table to summarize simulation data from the single dilution setting
 
-## Input: https://raw.githubusercontent.com/sarahlotspeich/SLDeepAssay/main/sim_data/sd_sim_data.csv (produced by sims/SIMS-SINGLE-DILUTIONS.R)
+## Input: https://raw.githubusercontent.com/sarahlotspeich/SLDeepAssay/main/sim_data/sd_sim_data.csv (produced by sims/SIMS-SINGLE-DILUTION.R)
 
 ## Output: Latex table
 

@@ -1,46 +1,61 @@
-## Title: Table S3: IUPM real data overdispersion results for subject C13
+## Title: Table S3: Multiple Dilutions Setting Simulations (Non-constant Tau)
 
-## Author:  Brian Richardson
+## Date: 2023/06/20
 
-## Date:  2023/06/20
+## Author: Brian Richardson
 
 ## Purpose: Produce Table S3 in SLDeepAssay paper
 
+## Input: https://raw.githubusercontent.com/sarahlotspeich/SLDeepAssay/main/sim_data/md_sim_data.csv (produced by sims/SIMS-MULTIPLE-DILUTIONS.R)
 
-## Prepare workspace
-rm(list=ls())
-setwd(here::here())
+## Output: Latex table
 
-## load packages
+# load packages
+library(kableExtra)
 library(dplyr)
 library(tidyr)
-library(kableExtra)
-library(magick)
 
-# Load data
-tableS3_data = read.csv("https://raw.githubusercontent.com/sarahlotspeich/SLDeepAssay/main/real_data_application_revision/tableS3_data.csv")
+# load data
+setwd(here::here())
+md_sim_data = read.csv("https://raw.githubusercontent.com/sarahlotspeich/SLDeepAssay/main/sim_data/md_sim_data.csv")
 
-## create Table S3
-tableS3_data$MP <- paste0(tableS3_data$MP1,
-                          tableS3_data$MP2,
-                          tableS3_data$MP3,
-                          tableS3_data$MP4,
-                          sep = ", ")
+# format numbers (default to 2 decimal places)
+format_nums = function(x, digits = 2) {
+  paste0("$", format(round(x, digits = digits), nsmall = digits) , "$")
+}
 
+# check number of sims removed
+md_sim_data |>
+  select(Message) |>
+  sum()
 
-tableS3_data %>% 
-  select(MP, lrt_stat, lrt_pval, mle_negbin) %>% 
-  kable(format = "latex",
-        booktabs = T,
-        escape = F,
-        align = "ccccc",
-        digits = rep(3, 4),
-        col.names = c("MP",
-                      "LRT Statistic",
-                      "LRT P-Value",
-                      "Negative Binomial MLE")) %>%
-  kable_classic_2(full_width = F) %>%
-  kable_styling(font_size = 10) %>% 
-  row_spec(row = 0, bold = TRUE) -> tableS3
+# summarize sim results
+md_sim_summ = md_sim_data |>
+  mutate(M = factor(M, levels = c("6, 12, 18", "9, 18, 27", "12, 24, 36"))) |>
+  group_by(constant_Tau, M, n, assay_type, bc) |>
+  summarise(n_removed = sum(Message),
+            rel_bias = mean(Est - Tau),
+            ase = mean(SE),
+            ese = sd(Est),
+            cp = mean(LB <= Tau & Tau <= UB)) |>
+  pivot_wider(id_cols = c("M", "n", "constant_Tau"),
+              names_from = c("bc", "assay_type"),
+              values_from = c("n_removed", "rel_bias", "ase", "ese", "cp"))
 
-tableS3
+analysis_cols = as.vector(outer(c("rel_bias", "ase", "ese", "cp"),
+                                as.vector(outer(c("_MLE", "_BCMLE"), c("_woUDSA", "_wUDSA"), paste0)), paste0))
+
+col_order = c("M", "n", analysis_cols)
+
+# produce table with simulation summary
+md_sim_summ |> 
+  filter(constant_Tau == 0) |> # Subset to columns with constant Tau
+  dplyr::ungroup() |>
+  dplyr::select(all_of(col_order)) |>
+  dplyr::mutate_at(analysis_cols, format_nums) |>
+  magrittr::set_colnames(c("M", "$\\pmb{n'}$", rep(c("Bias", "ASE", "ESE", "CP"), times = 4))) |>
+  kable(format = "latex", digits = 3, align = c(rep("c", 4), rep("r", 16)),
+        booktabs = TRUE, linesep = c("", "", "\\addlinespace"), escape = FALSE) |>
+  add_header_above(header = c(" " = 2, "MLE" = 4, "Bias-Corrected MLE" = 4, "MLE" = 4, "Bias-Corrected MLE" = 4), bold = TRUE) |>
+  add_header_above(header = c(" " = 2, "Without UDSA" = 8, "With UDSA" = 8), bold = TRUE) |>
+  row_spec(row = 0, bold = TRUE)

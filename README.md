@@ -73,9 +73,13 @@ This repository contains `R` code and simulation data to reproduce results from 
   - [Script (Make Figure)](figures_revision/Figure2.R)
   - [Data (Analysis Results)](real_data_application_revision/figure2_data.csv)
 
-# `SLDeepAssay`: A package for maximum likelihood estimation from serial dilution assays with partial deep sequencing
+**Figure S1.** Empirical distributions of the estimated IUPM with $D=3$ dilution levels (0.5, 1, and 2 million cells per well), proportions of positive wells that were deep sequenced at the three dilution levels of $\pmb{q} =(0, 0.5, 1)$, $n'=12$ DVLs, IUPM of $T=1$, and \num{500} simulations per setting.
 
-## Installation
+  - [Script (Run Simulations)](sims/SIMS-OVERDISPERSION.R)
+  - [Script (Make Figure)](figures_revision/figS1-boxplot-overdispersion.R)
+  - [Data (Simulation Results)](sim_data/overdispersion_sim_data.csv)
+
+## Package Installation
 
 Installation of the `SLDeepAssay` from GitHub requires the
 [`devtools`](https://www.r-project.org/nosvn/pandoc/devtools.html)

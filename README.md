@@ -2,8 +2,6 @@
 
 This repository contains `R` code and simulation data to reproduce results from the [manuscript](https://arxiv.org/abs/2209.04716) by Sarah C. Lotspeich, Brian D. Richardson, Pedro L. Baldoni, Kimberly P. Enders, and Michael G. Hudgens (2023+). 
 
-For the `imputeCensRd` package, which implements the conditional mean imputation approaches from the paper, can be found at the end of this README. 
-
 ## Tables 
 
 **Table 1.** Simulation results with a single dilution level, assuming a constant rate of infected cells for all distinct viral lineages. The true IUPM in all settings was $T = 1$.
@@ -46,6 +44,24 @@ For the `imputeCensRd` package, which implements the conditional mean imputation
   - [Script (Run Analysis)](real_data_application_revision/DATA-ANALYSIS-REVISION.R)
   - [Script (Make Table)](tables_revision/TableS5_revision.R)
   - [Data (Analysis Results)](real_data_application_revision/tableS5_data.csv)
+
+**Table S6.** Empirical power of the likelihood ratio test for overdispersion
+
+  - [Script (Run Analysis)](sims/SIMS-OVERDISPERSION.R)
+  - [Script (Make Table)](tables_revision/TableS6_revision.R)
+  - [Data (Analysis Results)](sim_data/overdispersion_sim_data.csv)
+
+**Table S7.** Overdispersion LRT results for HIV Application
+
+  - [Script (Run Test)](real_data_application_revision/DATA-ANALYSIS-REVISION.R)
+  - [Script (Make Table)](tables_revision/TableS7_revision.R)
+  - [Data (Test Results)](real_data_application_revision/tableS7_data.csv)
+
+**Table S8.** Sensitivity Analysis for Subject C13
+
+  - [Script (Run Test)](real_data_application_revision/DATA-ANALYSIS-REVISION.R)
+  - [Script (Make Table)](tables_revision/TableS8_revision.R)
+  - [Data (Test Results)](real_data_application_revision/tableS8_data.csv)
 
 ## Figures 
 

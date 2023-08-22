@@ -2,6 +2,18 @@
 
 This repository contains R code and simulation data to reproduce results from the [manuscript](https://arxiv.org/abs/2209.04716) by Sarah C. Lotspeich, Brian D. Richardson, Pedro L. Baldoni, Kimberly P. Enders, and Michael G. Hudgens (2023+). 
 
+## Package Installation
+
+Installation of the `SLDeepAssay` from GitHub requires the
+[`devtools`](https://www.r-project.org/nosvn/pandoc/devtools.html)
+package and can be done in the following way.
+
+``` r
+# Install the package
+devtools::install_github(repo = "sarahlotspeich/SLDeepAssay", 
+                         ref = "main")
+```
+
 ## Tables 
 
 **Table 1.** Simulation results with a single dilution level, assuming a constant rate of infected cells for all distinct viral lineages. The true IUPM in all settings was $T = 1$.
@@ -102,16 +114,3 @@ This repository contains R code and simulation data to reproduce results from th
   - [Script (Run Simulations)](sims/SIMS-IMPERFECT-MD.R)
   - [Script (Make Figure)](figures_revision/figS5-boxplot-imperfect-md.R)
   - [Data (Simulation Results)](sim_data/md_imperfect.csv)
-
-
-## Package Installation
-
-Installation of the `SLDeepAssay` from GitHub requires the
-[`devtools`](https://www.r-project.org/nosvn/pandoc/devtools.html)
-package and can be done in the following way.
-
-``` r
-# Install the package
-devtools::install_github(repo = "sarahlotspeich/SLDeepAssay", 
-                         ref = "main")
-```

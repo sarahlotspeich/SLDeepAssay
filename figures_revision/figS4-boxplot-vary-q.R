@@ -1,3 +1,5 @@
+library(ggplot2)
+
 Results = read.csv(file = "https://raw.githubusercontent.com/sarahlotspeich/SLDeepAssay/main/sim_data/sd_imperfect_vary_q.csv") |> 
   dplyr::mutate(
     Lambda = ifelse(conv == 0, ## Make any reps that didn't converge NA 

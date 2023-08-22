@@ -3,14 +3,14 @@ library(dplyr)
 library(tidyr)
 
 # load data
-overdispersion_sim_data = read.csv("https://raw.githubusercontent.com/sarahlotspeich/SLDeepAssay/main/sim_data/overdispersion_sim_data.csv") %>% 
+overdispersion_sim_data = read.csv("https://raw.githubusercontent.com/sarahlotspeich/SLDeepAssay/main/sim_data/overdispersion_sim_data.csv") |> 
   mutate(Gamma = 1/k,
          gamma = ordered(Gamma))
 
 # create long data set
-dat_long <- overdispersion_sim_data %>% 
-  filter(error == 0) %>% 
-  pivot_longer(cols = c(mle_pois, mle_pois_bc, mle_negbin)) %>% 
+dat_long <- overdispersion_sim_data |> 
+  filter(error == 0) |> 
+  pivot_longer(cols = c(mle_pois, mle_pois_bc, mle_negbin)) |> 
   mutate(method.label = ifelse(name == "mle_negbin", "Negative Binomial",
                                ifelse(name == "mle_pois", "Poisson",
                                       "Poisson (BC)")))
@@ -22,9 +22,9 @@ y.max <- 5
 M.labs <- paste0("M = ", levels(overdispersion_sim_data$M.label))
 names(M.labs) <- 1:length(M.labs)
 
-upper.counts <- dat_long %>% 
-  group_by(gamma, M, method.label) %>% 
-  summarise(upper.count = sum(value > y.max)) %>% 
+upper.counts <- dat_long |> 
+  group_by(gamma, M, method.label) |> 
+  summarise(upper.count = sum(value > y.max)) |> 
   mutate(upper.count = ifelse(upper.count > 0,
                               paste0(upper.count, "*"),
                               ""))

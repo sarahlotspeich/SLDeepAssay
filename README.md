@@ -32,6 +32,12 @@ Each of the "Script (Run Simulations)" files is coded to run 1 replication of ea
   - [Script (Make Table)](tables_revision/TableS2_revision.R)
   - [Data (Simulation Results)](sim_data/sd_sim_data.csv)
 
+**Table S3.** Simulation results with multiple dilution levels and a non-constant rate of infected cells for all distinct viral lineages. In all settings, the true IUPM was $T = 1$ and the proportions of p24-positive wells that were deep-sequenced at the three dilution levels were $\pmb{q} = (0, 0.5, 1)$.
+
+  - [Script (Run Simulations)](sims/SIMS-MULTIPLE-DILUTIONS.R)
+  - [Script (Make Table)](tables_revision/TableS3_revision.R)
+  - [Data (Simulation Results)](sim_data/md_sim_data.csv)
+
 ## Figures 
 
 **Figure 1.** Illustration of the data collection scheme from the QVOA and UDSA at a single dilution level. (No code or data to share.)

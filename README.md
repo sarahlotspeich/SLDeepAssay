@@ -10,9 +10,9 @@ Each of the "Script (Run Simulations)" files is coded to run 1 replication of ea
 
 **Table 1.** Simulation results with a single dilution level, assuming a constant rate of infected cells for all distinct viral lineages. The true IUPM in all settings was $T = 1$.
 
-  - [Script (Run Simulations)](Sim-Scripts/Table1-Gold-Standard.R)
-  - [Script (Make Table)](Table-Scripts/Table1-Gold-Standard.R)
-  - [Data (Simulation Results)](Table-Data/data_Table1.csv)  
+  - [Script (Run Simulations)](sims/SIMS-SINGLE-DILUTIONS.R)
+  - [Script (Make Table)](tables_revision/Table1_revision.R)
+  - [Data (Simulation Results)](sim_data/sd_sim_data.csv)  
 
 ## Figures 
 

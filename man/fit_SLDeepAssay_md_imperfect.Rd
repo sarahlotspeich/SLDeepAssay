@@ -11,8 +11,8 @@ fit_SLDeepAssay_md_imperfect(
   spec_QVOA = 1,
   sens_UDSA = 1,
   spec_UDSA = 1,
-  maxit = 10000,
-  lb = 1e-06,
+  maxit = 1e+06,
+  lb = 0,
   ub = Inf
 )
 }
@@ -29,9 +29,9 @@ fit_SLDeepAssay_md_imperfect(
 
 \item{spec_UDSA}{Specificity (i.e., true negative rate) for the UDSA (a scalar between 0 and 1). Default is \code{spec_UDSA = 1}.}
 
-\item{maxit}{The maximum number of iterations (passed to \code{optim}). Default is \code{maxit = 1E4}.}
+\item{maxit}{The maximum number of iterations (passed to \code{optim}). Default is \code{maxit = 1E6}.}
 
-\item{lb}{Parameter lower bound (passed to \code{optim}). Default is \code{lb = 1E-6}.}
+\item{lb}{Parameter lower bound (passed to \code{optim}). Default is \code{lb = 0}.}
 
 \item{ub}{Parameter upper bound (passed to \code{optim}). Default is \code{ub = Inf}.}
 

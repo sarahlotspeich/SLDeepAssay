@@ -17,7 +17,7 @@
 #' @export
 #'
 #'
-fit_SLDeepAssay_md_imperfect = function(assay_md, u, sens_QVOA = 1, spec_QVOA = 1, sens_UDSA = 1, spec_UDSA = 1, maxit = 1E4, lb = 1E-6, ub = Inf) {
+fit_SLDeepAssay_md_imperfect = function(assay_md, u, sens_QVOA = 1, spec_QVOA = 1, sens_UDSA = 1, spec_UDSA = 1, maxit = 1E4, lb = 0, ub = Inf) {
   ########################################################################################
   # Compute constants ####################################################################
   ########################################################################################
@@ -62,7 +62,7 @@ fit_SLDeepAssay_md_imperfect = function(assay_md, u, sens_QVOA = 1, spec_QVOA = 
   ########################################################################################
   # Find MLEs ############################################################################
   ########################################################################################
-  optimization = optim(par = rep(0.1, n[1]),
+  optimization = optim(par = rep(0, n[1]),
                        fn = loglik_md_imperfect, 
                        u = u, 
                        complete_data_md = cd_md,

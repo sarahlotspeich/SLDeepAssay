@@ -74,11 +74,15 @@ assay_summary = as.data.frame(t(assay_summary))
 fit2 = fit_SLDeepAssay_md(assay_summary = assay_summary, 
                           corrected = FALSE)
 
+# Check: fit1 with perfect sens/spec should be approximately equal to fit2
+fit1$mle; fit2$mle
+
 # Try a variety of sensitivity/specificity combinations
+## (same sensitivity/specificity combinations as in Figure S5)
 try_sens_spec = expand.grid(sens_qvoa = seq(0.8, 1, by = 0.1), 
-                            spec_qvoa = seq(0.8, 1, by = 0.1), 
+                            spec_qvoa = 0.9, 
                             sens_udsa = seq(0.8, 1, by = 0.1), 
-                            spec_udsa = seq(0.8, 1, by = 0.1),
+                            spec_udsa = 0.9,
                             mle = NA, 
                             ci_lb = NA, 
                             ci_ub = NA
@@ -98,3 +102,8 @@ for (t in 1:nrow(try_sens_spec)) {
   try_sens_spec$ci_lb[t] = fit1$ci[1]
   try_sens_spec$ci_ub[t] = fit1$ci[2]
 }
+
+# Save results 
+try_sens_spec |> 
+  write.csv("~/Documents/SLDeepAssay/sim_data/subject_c1_imperfect.csv", 
+            row.names = F)

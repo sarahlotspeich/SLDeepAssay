@@ -58,7 +58,8 @@ fit_SLDeepAssay_sd = function(assay, u = 1, M = NULL, n = NULL, MP = NULL, m = N
                                    M = M, MP = MP, m = m, Y = Y) },
                        gr = function(theta, M, MP, m, Y) {
                          gloglik_sd(l = exp(theta),
-                                    M = M, MP = MP, m = m, Y = Y) },
+                                    M = M, MP = MP, m = m, Y = Y) *
+                           exp(theta) },   # chain rule
                        M = M,
                        MP = MP,
                        m = m,

@@ -224,9 +224,14 @@ lrt_SLDeepAssay_md = function(assay = NULL,
                        control = list(maxit = maxit),
                        hessian = F)
   
+  # Poisson model parameter estimates
+  tau_hat = exp(opt_pois$par)
+  Tau_hat = sum(tau_hat)
+  
   # Fit MLE under NegBin model
   opt_negbin = optim(
-    par = c(rep(0.1, assay_summary$n[1]), k0),
+    #par = c(rep(0.1, assay_summary$n[1]), k0),
+    par = c(tau_hat, 0), # initiate NegBin search at Poisson MLE
     fn = function(theta, assay_summary) {
       negbin_loglik_md(tau = head(theta, assay_summary$n[1]),
                           k = tail(theta, 1),
@@ -248,10 +253,6 @@ lrt_SLDeepAssay_md = function(assay = NULL,
   
   # likelihood ratio statistic
   lrt_stat = max(-2 * (loglik_pois - loglik_negbin), 0)
-  
-  # Poisson model parameter estimates
-  tau_hat = exp(opt_pois$par)
-  Tau_hat = sum(tau_hat)
   
   # negative binomial model parameter estimates
   if (loglik_negbin > loglik_pois) {

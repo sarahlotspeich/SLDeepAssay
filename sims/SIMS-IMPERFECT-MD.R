@@ -82,11 +82,11 @@ one_sim = function(setting_row) {
                          FUN = function(d) {
                            M = ncol(temp[[d]]$DVL_specific) # number of wells
                            n = nrow(temp[[d]]$DVL_specific) # number of DVLs detected
-                           MN = sum(colSums(temp[[d]]$DVL_specific) == 0, na.rm = TRUE) # number of p24-negative wells
-                           MP = M - MN # number of p24-positive wells = MP
-                           m = MP - sum(is.na(colSums(temp[[d]]$DVL_specific))) # number of deep-sequenced wells = m
+                           MP = sum(temp[[d]]$any_DVL) # number of p24-positive wells
+                           MN = M - MP # number of p24-negative wells
+                           m = sum(!is.na(colSums(temp[[d]]$DVL_specific))) # number of deep-sequenced wells
                            q = ifelse(MP == 0, 0, m / MP) # proportion of p24-positive wells deep sequenced
-                           Y = rowSums(temp[[d]]$DVL_specific, na.rm = TRUE) # number of infected wells per DVL = Y
+                           Y = rowSums(temp[[d]]$DVL_specific, na.rm = TRUE) # number of infected wells per DVL
                            return((c("u" = u[d], "M"=M, "n"=n,
                                      "MN"=MN, "MP"=MP, "m"=m, "q"=q, "Y"=Y)))
                          })

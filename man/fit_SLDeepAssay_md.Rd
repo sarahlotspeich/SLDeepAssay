@@ -11,7 +11,8 @@ fit_SLDeepAssay_md(
   corrected = NULL,
   maxit = 1e+06,
   lb = 1e-06,
-  ub = Inf
+  ub = Inf,
+  optim_method = "BFGS"
 )
 }
 \arguments{
@@ -28,6 +29,8 @@ fit_SLDeepAssay_md(
 \item{lb}{Lower-bound on the IUPM (passed to \code{optim}). Default is \code{lb = 1E-6}.}
 
 \item{ub}{Upper-bound on the IUPM (passed to \code{optim}). Default is \code{ub = Inf}.}
+
+\item{optim_method}{optimization method ("BFGS" or "L-BFGS-B")}
 }
 \value{
 Named list with the following slots:

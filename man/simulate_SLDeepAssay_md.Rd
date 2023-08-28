@@ -4,7 +4,14 @@
 \alias{simulate_SLDeepAssay_md}
 \title{Simulate multiple-dilution assay data and fit new and existing methods to it.}
 \usage{
-simulate_SLDeepAssay_md(M, tau, q, u, remove_undetected = TRUE)
+simulate_SLDeepAssay_md(
+  M,
+  tau,
+  q,
+  u,
+  remove_undetected = TRUE,
+  optim_method = "BFGS"
+)
 }
 \arguments{
 \item{M}{Total number of wells at each dilution level (a vector of length D).}
@@ -15,7 +22,8 @@ simulate_SLDeepAssay_md(M, tau, q, u, remove_undetected = TRUE)
 
 \item{u}{Vector of dilution levels in millions of cells per well (a vector of length D).}
 
-\item{remove_undetected}{Logical, if \code{remove_undetected = TRUE} (the default), then DVL which were not detected in any of the deep sequenced wells across all dilution levels are deleted.}
+\item{remove_undetected}{Logical, if \code{remove_undetected = TRUE} (the default), then DVL which were not detected in any of the deep sequenced wells across all dilution levels are deleted.
+#' @param optim_method optimization method ("BFGS" or "L-BFGS-B")}
 }
 \value{
 Named list with the following slots:

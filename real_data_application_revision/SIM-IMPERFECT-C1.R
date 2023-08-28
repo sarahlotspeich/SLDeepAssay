@@ -85,7 +85,9 @@ try_sens_spec = expand.grid(sens_qvoa = seq(0.8, 1, by = 0.1),
                             spec_udsa = 0.9,
                             mle = NA, 
                             ci_lb = NA, 
-                            ci_ub = NA
+                            ci_ub = NA,
+                            code = NA,
+                            msg = NA
                             )
 
 for (t in 1:nrow(try_sens_spec)) {
@@ -101,6 +103,8 @@ for (t in 1:nrow(try_sens_spec)) {
   try_sens_spec$mle[t] = fit1$mle
   try_sens_spec$ci_lb[t] = fit1$ci[1]
   try_sens_spec$ci_ub[t] = fit1$ci[2]
+  try_sens_spec$code[t] = fit1$convergence
+  try_sens_spec$msg[t] = fit1$message
 }
 
 # Save results 

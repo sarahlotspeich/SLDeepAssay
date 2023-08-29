@@ -7,8 +7,8 @@
 #' @param sens_UDSA Sensitivity (i.e., true positive rate) for the UDSA (a scalar between 0 and 1). Default is \code{sens_UDSA = 1}. 
 #' @param spec_UDSA Specificity (i.e., true negative rate) for the UDSA (a scalar between 0 and 1). Default is \code{spec_UDSA = 1}.
 #' @param corrected Logical, if \code{corrected = TRUE} the bias-corrected MLE will be returned. If \code{corrected = FALSE} the bias-corrected MLE will be not be returned. If \code{corrected = NULL}, the bias correction will be computed if here are <= 40 DVLs in \code{assay}. Default is \code{corrected = NULL}.
-#' @param maxit The maximum number of iterations (passed to \code{optim}). Default is \code{maxit = 1E4}.
-#' @param lb Parameter lower bound (passed to \code{optim}). Default is \code{lb = 1E-6}.
+#' @param maxit The maximum number of iterations (passed to \code{optim}). Default is \code{maxit = 1E6}.
+#' @param lb Parameter lower bound (passed to \code{optim}). Default is \code{lb = 0}.
 #' @param ub Parameter upper bound (passed to \code{optim}). Default is \code{ub = Inf}.
 #' @return A named list with the following slots:
 #' \item{mle}{MLE}
@@ -17,7 +17,15 @@
 #' @export
 #'
 #'
-fit_SLDeepAssay_md_imperfect = function(assay_md, u, sens_QVOA = 1, spec_QVOA = 1, sens_UDSA = 1, spec_UDSA = 1, maxit = 1E4, lb = 1E-6, ub = Inf) {
+fit_SLDeepAssay_md_imperfect = function(assay_md, u, sens_QVOA = 1, spec_QVOA = 1, sens_UDSA = 1, spec_UDSA = 1, maxit = 1E6, lb = 0, ub = Inf) {
+  ########################################################################################
+  # Check for perfect sensitivity/specificity ############################################
+  ########################################################################################
+  if (sens_QVOA == 1 & sens_UDSA == 1 & spec_QVOA == 1 & spec_UDSA == 1) {
+    fit_SLDeepAssay_md(assay = assay_md, 
+                       u = u, 
+                       maxit = maxit) 
+  }
   ########################################################################################
   # Compute constants ####################################################################
   ########################################################################################
@@ -62,7 +70,7 @@ fit_SLDeepAssay_md_imperfect = function(assay_md, u, sens_QVOA = 1, spec_QVOA = 
   ########################################################################################
   # Find MLEs ############################################################################
   ########################################################################################
-  optimization = optim(par = rep(0.1, n[1]),
+  optimization = optim(par = rep(1E-4, n[1]),
                        fn = loglik_md_imperfect, 
                        u = u, 
                        complete_data_md = cd_md,

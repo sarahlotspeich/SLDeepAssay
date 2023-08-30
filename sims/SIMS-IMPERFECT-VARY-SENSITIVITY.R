@@ -44,31 +44,23 @@ Settings = apply(X = expand.grid("M" = M,
 
 # Function one_sim() simulates one assay and returns the output (reshaped)
 one_sim = function(setting_row) {
-  # Save parameter values from setting_row
-  M = as.numeric(setting_row["M"])
-  n = as.numeric(setting_row["n"])
-  Tau = as.numeric(setting_row["Tau"])
-  u = as.numeric(setting_row["u"])
-  q = as.numeric(setting_row["q"])
-  constant_Tau = setting_row["constant_Tau"] == 1
-  sensQVOA = as.numeric(setting_row["sensQVOA"])
-  specQVOA = as.numeric(setting_row["specQVOA"])
-  sensUDSA = as.numeric(setting_row["sensUDSA"])
-  specUDSA = as.numeric(setting_row["specUDSA"])
-  
-  if (constant_Tau) {
-    tau = rep(x = Tau / n, times = n)
+  if (setting_row["constant_Tau"] == 1) {
+    tau = rep(x = as.numeric(setting_row["Tau"]) / as.numeric(setting_row["n"]), 
+              times = as.numeric(setting_row["n"]))
   } else {
-    tau = c(rep(Tau / (2 * n), n / 2), rep(3 * Tau / (2 * n), n / 2))
+    tau = c(rep(as.numeric(setting_row["Tau"]) / (2 * as.numeric(setting_row["n"])), 
+                as.numeric(setting_row["n"]) / 2), 
+            rep(3 * as.numeric(setting_row["Tau"]) / (2 * as.numeric(setting_row["n"])), 
+                as.numeric(setting_row["n"]) / 2))
   }
-  temp = simulate_assay_sd(M = M,
-                           tau = tau,
-                           q = q,
-                           u = u,
-                           sens_QVOA = sensQVOA, 
-                           spec_QVOA = specQVOA, 
-                           sens_UDSA = sensUDSA, 
-                           spec_UDSA = specUDSA) 
+  temp = simulate_assay_sd(M = as.numeric(setting_row["M"]),
+                           tau = as.numeric(setting_row["Tau"]),
+                           q = as.numeric(setting_row["q"]),
+                           u = as.numeric(setting_row["u"]),
+                           sens_QVOA = as.numeric(setting_row["sensQVOA"]), 
+                           spec_QVOA = as.numeric(setting_row["specQVOA"]), 
+                           sens_UDSA = as.numeric(setting_row["sensUDSA"]), 
+                           spec_UDSA = as.numeric(setting_row["specUDSA"])) 
   
   if (is.null(nrow(temp$DVL_specific))) {
     prevDVL = mean(temp$DVL_specific, na.rm = TRUE)
@@ -79,14 +71,14 @@ one_sim = function(setting_row) {
   assay_count = 1
   while(sum(temp$any_DVL) == 0 | is.null(dim(temp$DVL_specific)) | any(prevDVL == 1)) {
     assay_count = assay_count + 1
-    temp = simulate_assay_sd(M = M,
-                             tau = tau,
-                             q = q,
-                             u = u,
-                             sens_QVOA = sensQVOA, 
-                             spec_QVOA = specQVOA, 
-                             sens_UDSA = sensUDSA, 
-                             spec_UDSA = specUDSA) 
+    temp = simulate_assay_sd(M = as.numeric(setting_row["M"]),
+                             tau = as.numeric(setting_row["Tau"]),
+                             q = as.numeric(setting_row["q"]),
+                             u = as.numeric(setting_row["u"]),
+                             sens_QVOA = as.numeric(setting_row["sensQVOA"]), 
+                             spec_QVOA = as.numeric(setting_row["specQVOA"]), 
+                             sens_UDSA = as.numeric(setting_row["sensUDSA"]), 
+                             spec_UDSA = as.numeric(setting_row["specUDSA"])) 
     if (is.null(nrow(temp$DVL_specific))) {
       prevDVL = mean(temp$DVL_specific, na.rm = TRUE)
     } else {
@@ -95,16 +87,18 @@ one_sim = function(setting_row) {
   }  
   setting_row["assay_resampled"] = assay_count > 1
   
+  saveRDS(temp, "~/Downloads/temp-assay")
+  
   ########################################################################################
   # Find MLEs ############################################################################
   ########################################################################################
   # New likelihood (corrected IUPM estimator)
   fit1 = fit_SLDeepAssay_sd_imperfect(assay_QVOA = temp$any_DVL, 
                                       assay_UDSA = temp$DVL_specific,
-                                      sens_QVOA = sensQVOA, 
-                                      spec_QVOA = specQVOA, 
-                                      sens_UDSA = sensUDSA, 
-                                      spec_UDSA = specUDSA)
+                                      sens_QVOA = as.numeric(setting_row["sensQVOA"]), 
+                                      spec_QVOA = as.numeric(setting_row["specQVOA"]), 
+                                      sens_UDSA = as.numeric(setting_row["sensUDSA"]), 
+                                      spec_UDSA = as.numeric(setting_row["specUDSA"]))
   setting_row[c("Lambda", "conv", "msg")] = with(fit1, c(mle, convergence, message))
   
   # Original likelihood (naive IUPM estimator)
@@ -120,6 +114,7 @@ one_sim = function(setting_row) {
 sim_seed = 11422
 set.seed(sim_seed)
 
+options(warn = 2) 
 Results = data.frame()
 for (i in 1:nrow(Settings)) {
   Results = rbind(Results, one_sim(setting_row = Settings[i, ]))

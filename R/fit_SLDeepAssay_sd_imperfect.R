@@ -65,13 +65,14 @@ fit_SLDeepAssay_sd_imperfect = function(assay_QVOA, assay_UDSA, u = 1, sens_QVOA
   ########################################################################################
   optimization = optim(par = - log(1 - Y / M),
                        fn = loglik_sd_imperfect,
+                       gr = gloglik_sd_imperfect,
                        complete_data = cd, 
                        method = "L-BFGS-B",
                        control = list(maxit = maxit),
                        lower = rep(lb, n),
                        upper = rep(ub, n),
                        hessian = T)
-  
+ 
   lambda_hat = optimization$par
   Lambda_hat = sum(lambda_hat) # MLE of the IUPM
   

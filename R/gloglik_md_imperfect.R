@@ -16,7 +16,7 @@ gloglik_md_imperfect = function(tau, u, complete_data_md) {
   )
   
   # Return the sum of gradients 
-  gradient = rowSums(glogliks_byDilution)
+  gradient = rowSums(glogliks_by_dilution)
   
   return(gradient)
 }

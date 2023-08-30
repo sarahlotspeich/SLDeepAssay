@@ -114,7 +114,6 @@ one_sim = function(setting_row) {
 sim_seed = 11422
 set.seed(sim_seed)
 
-options(warn = 2) 
 Results = data.frame()
 for (i in 1:nrow(Settings)) {
   Results = rbind(Results, one_sim(setting_row = Settings[i, ]))

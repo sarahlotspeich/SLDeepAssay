@@ -254,6 +254,11 @@ lrt_SLDeepAssay_md = function(assay = NULL,
                        gamma = tail(theta, 1),
                        assay_summary = assay_summary)
     },
+    gr = function(theta, assay_summary) {
+      negbin_gloglik_md(tau = head(theta, assay_summary$n[1]),
+                        gamma = tail(theta, 1),
+                        assay_summary = assay_summary)
+    },
     assay_summary = assay_summary,
     method = "L-BFGS-B",
     control = list(maxit = maxit),

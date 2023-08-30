@@ -51,7 +51,12 @@ negbin_loglik_sd = function(l, k, gamma = NULL, M, MP, m, Y) {
 #' @param assay_summary Summary of assay data from multiple dilutions
 #' @return A scalar value of the negative log-likelihood
 #'
-negbin_loglik_md = function(tau, k, assay_summary) {
+negbin_loglik_md = function(tau, k, gamma = NULL, assay_summary) {
+  
+  # transform gamma to k if gamma supplied
+  if (!is.null(gamma)) {
+    k = 1 / gamma
+  }
   
   # Total number of dilutions
   D = nrow(assay_summary)
@@ -184,8 +189,7 @@ lrt_SLDeepAssay_md = function(assay = NULL,
                               corrected = NULL,
                               maxit = 1E6,
                               lb = 1E-6,
-                              ub = Inf,
-                              k0 = 1) {
+                              ub = Inf) {
   
   # For each dilution level, compute summary data
   if (!is.null(assay)) {
@@ -230,39 +234,41 @@ lrt_SLDeepAssay_md = function(assay = NULL,
   
   # Fit MLE under NegBin model
   opt_negbin = optim(
-    #par = c(rep(0.1, assay_summary$n[1]), k0),
-    par = c(tau_hat, 0), # initiate NegBin search at Poisson MLE
+    par = c(tau_hat, 0), # initiate NegBin search at Poisson MLE (gamma = 0)
     fn = function(theta, assay_summary) {
       negbin_loglik_md(tau = head(theta, assay_summary$n[1]),
-                          k = tail(theta, 1),
-                          assay_summary = assay_summary) },
-    gr = function(theta, assay_summary) {
-      negbin_gloglik_md(tau = head(theta, assay_summary$n[1]),
-                           k = tail(theta, 1),
-                           assay_summary = assay_summary) },
+                       gamma = tail(theta, 1),
+                       assay_summary = assay_summary)
+    },
     assay_summary = assay_summary,
     method = "L-BFGS-B",
     control = list(maxit = maxit),
-    lower = lb,
+    lower = c(rep(lb, assay_summary$n[1]), 0),
     upper = ub,
     hessian = T)
+  
+  # NegBin model parameter estimates
+  tau_hat_negbin = head(opt_negbin$par, assay_summary$n[1])
+  Tau_hat_negbin = sum(tau_hat_negbin)
+  gamma_hat_negbin = tail(opt_negbin$par, 1)
   
   # log-likelihood values
   loglik_pois = -1 * opt_pois$value
   loglik_negbin = -1 * opt_negbin$value
   
   # likelihood ratio statistic
-  lrt_stat = max(-2 * (loglik_pois - loglik_negbin), 0)
+  #lrt_stat = max(-2 * (loglik_pois - loglik_negbin), 0)
+  lrt_stat = -2 * (loglik_pois - loglik_negbin)
   
   # negative binomial model parameter estimates
-  if (loglik_negbin > loglik_pois) {
-    tau_hat_negbin = head(opt_negbin$par, assay_summary$n[1])
-    Tau_hat_negbin = sum(tau_hat_negbin)
-    k_hat_negbin = tail(opt_negbin$par, 1)
-  } else {
-    Tau_hat_negbin = Tau_hat
-    k_hat_negbin = Inf
-  }
+  #if (loglik_negbin > loglik_pois) {
+    #tau_hat_negbin = head(opt_negbin$par, assay_summary$n[1])
+    #Tau_hat_negbin = sum(tau_hat_negbin)
+    #k_hat_negbin = tail(opt_negbin$par, 1)
+  #} else {
+    #Tau_hat_negbin = Tau_hat
+    #k_hat_negbin = Inf
+  #}
   
   # For large n, do not compute bias correction unless user overrides
   if (corrected == F) {
@@ -286,7 +292,7 @@ lrt_SLDeepAssay_md = function(assay = NULL,
   return(list("mle" = Tau_hat,
               "mle_bc" = Tau_hat_bc,
               "mle_negbin" = Tau_hat_negbin,
-              "mle_k" = k_hat_negbin,
+              "mle_gamma" = gamma_hat_negbin,
               "lrt_stat" = lrt_stat))
 }
 

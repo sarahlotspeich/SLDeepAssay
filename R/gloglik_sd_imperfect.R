@@ -35,8 +35,8 @@ gloglik_sd_imperfect = function(l, complete_data) {
   complete_data$complete_seq$pZ = get_pZ(complete_data = complete_data$complete_seq, 
                               l = l)
   
-  ## Multiply P(W*|W)P(Z*|Z)P(Z) outside, since it's inside the sum for all derivatives
-  complete_data$complete_seq$prod_probs = complete_data$complete_seq$pWstarGivW * complete_data$complete_seq$pZstarGivZ * complete_data$complete_seq$pZ
+  ## Multiply P(W*|W)P(Z*|Z) outside, since it's inside the sum for all derivatives
+  complete_data$complete_seq$prod_probs = complete_data$complete_seq$pWstarGivW * complete_data$complete_seq$pZstarGivZ 
   
   # Add derivatives of the sum over sequenced wells 
   for(i in 1:n)

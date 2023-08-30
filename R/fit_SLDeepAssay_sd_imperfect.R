@@ -38,7 +38,7 @@ fit_SLDeepAssay_sd_imperfect = function(assay_QVOA, assay_UDSA, u = 1, sens_QVOA
   ########################################################################################
   # Contributions of sequenced wells #####################################################
   ########################################################################################
-  # Add columns of P(W*|W) to complete data for all wells
+  # Add columns of P(W*|W) to complete data for sequenced wells
   ## < this won't change with lambda, so calculate once >
   cd$complete_seq$pWstarGivW = get_pWstarGivW(complete_data = cd$complete_seq,
                                               sens = sens_QVOA, 
@@ -54,6 +54,8 @@ fit_SLDeepAssay_sd_imperfect = function(assay_QVOA, assay_UDSA, u = 1, sens_QVOA
   ########################################################################################
   # Contributions of unsequenced wells ###################################################
   ########################################################################################
+  # Add columns of P(W*|W) to complete data for unsequenced wells
+  ## < this won't change with lambda, so calculate once >
   cd$complete_unseq$pWstarGivW = get_pWstarGivW(complete_data = cd$complete_unseq,
                                                 sens = sens_QVOA, 
                                                 spec = spec_QVOA)
@@ -63,13 +65,14 @@ fit_SLDeepAssay_sd_imperfect = function(assay_QVOA, assay_UDSA, u = 1, sens_QVOA
   ########################################################################################
   optimization = optim(par = - log(1 - Y / M),
                        fn = loglik_sd_imperfect,
+                       gr = gloglik_sd_imperfect,
                        complete_data = cd, 
                        method = "L-BFGS-B",
                        control = list(maxit = maxit),
                        lower = rep(lb, n),
                        upper = rep(ub, n),
                        hessian = T)
-  
+ 
   lambda_hat = optimization$par
   Lambda_hat = sum(lambda_hat) # MLE of the IUPM
   

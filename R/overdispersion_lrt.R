@@ -266,19 +266,21 @@ lrt_SLDeepAssay_md = function(assay = NULL,
     upper = ub,
     hessian = T)
   
+  # MLE for gamma
+  gamma_hat_negbin = tail(opt_negbin$par, 1)
+  
   # log-likelihood values
   loglik_pois = -1 * opt_pois$value
   loglik_negbin = -1 * opt_negbin$value
   
-  # likelihood ratio statistic
-  lrt_stat = max(-2 * (loglik_pois - loglik_negbin), 0)
-  
   # negative binomial model parameter estimates
-  if (loglik_negbin > loglik_pois) {
+  if (gamma_hat_negbin > 0) {
+    # likelihood ratio statistic
+    lrt_stat = max(-2 * (loglik_pois - loglik_negbin), 0)
     tau_hat_negbin = head(opt_negbin$par, assay_summary$n[1])
     Tau_hat_negbin = sum(tau_hat_negbin)
-    gamma_hat_negbin = tail(opt_negbin$par, 1)
   } else {
+    lrt_stat = 0
     Tau_hat_negbin = Tau_hat
     gamma_hat_negbin = 0
   }

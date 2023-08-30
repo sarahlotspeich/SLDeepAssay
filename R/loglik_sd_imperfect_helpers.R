@@ -53,9 +53,13 @@ get_pZi = function(z_i, lambda_i) {
 
 # Get joint probability of Z1,...,Zn
 ## P(Z_1, ..., Z_n) = P(Z_1)...P(Z_n)
-get_pZ = function(complete_data, l) {
+get_pZ = function(complete_data, l, exclude_DVL = NA) {
   pZ = 1
-  for (i in 1:length(l)) {
+  prod_over_DVLs = 1:length(l)
+  if (!is.na(exclude_DVL)) {
+    prod_over_DVLs = prod_over_DVLs[-exclude_DVL]
+  } 
+  for (i in prod_over_DVLs) {
     pZ = pZ * 
       get_pZi(z_i = complete_data[, paste0("z", i)], 
               lambda_i = l[i])

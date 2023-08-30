@@ -1,18 +1,18 @@
 #' Negative binomial log-likelihood for IUPM from single-dilution assay data
 #' @name negbin_loglik_sd
 #' @param l Vector of DVL-specific parameters.
-#' @param k Overdispersion parameter (a positive number)
-#' @param gamma alternative overdispersion parameter, `gamma = 1/k` (a non-negative number)
+#' @param gamma Dispersion parameter (a non-negative number)
+#' @param k Alternative dispersion parameter, `k = 1/gamma` (a positive number)
 #' @param M Total number of wells originally sequenced with the QVOA.
 #' @param MP Number of p24-positive wells.
 #' @param m Number of p24-positive wells that underwent the UDSA.
 #' @param y A vector of DVL-specific infection counts.
 #' @return A scalar
 #'
-negbin_loglik_sd = function(l, k, gamma = NULL, M, MP, m, Y) {
+negbin_loglik_sd = function(l, gamma, k = NULL, M, MP, m, Y) {
   
   # transform gamma to k if gamma supplied
-  if (!is.null(gamma)) {
+  if (is.null(k)) {
     k = 1 / gamma
   }
   
@@ -47,14 +47,15 @@ negbin_loglik_sd = function(l, k, gamma = NULL, M, MP, m, Y) {
 #' Negative Binomial log-likelihood for IUPM from multiple-dilution assay data
 #' @name negbin_loglik_md
 #' @param tau Vector of DVL-specific IUPM parameters
-#' @param k Overdispersion parameter (a positive number)
+#' @param gamma Dispersion parameter (a non-negative number)
+#' @param k Alternative dispersion parameter, `k = 1/gamma` (a positive number)
 #' @param assay_summary Summary of assay data from multiple dilutions
 #' @return A scalar value of the negative log-likelihood
 #'
-negbin_loglik_md = function(tau, k, gamma = NULL, assay_summary) {
+negbin_loglik_md = function(tau, gamma, k = NULL, assay_summary) {
   
   # transform gamma to k if gamma supplied
-  if (!is.null(gamma)) {
+  if (is.null(k)) {
     k = 1 / gamma
   }
   
@@ -82,25 +83,35 @@ negbin_loglik_md = function(tau, k, gamma = NULL, assay_summary) {
 }
 
 
-#' Gradient of the negative binomial log-likelihood for IUPM from single-dilution assay data
+#' Gradient of the negative binomial log-likelihood for IUPM from single-dilution assay data (with respect to tau and gamma)
 #' @name negbin_gloglik_sd
 #' @param l Vector of DVL-specific parameters.
-#' @param k Overdispersion parameter (a positive number)
+#' @param gamma Dispersion parameter (a non-negative number)
 #' @param M Total number of wells originally sequenced with the QVOA.
 #' @param MP Number of p24-positive wells.
 #' @param m Number of p24-positive wells that underwent the UDSA.
 #' @param y A vector of  DVL-specific infection counts.
 #' @return A vector
 #'
-negbin_gloglik_sd = function(l, k, M, MP, m, Y) {
+negbin_gloglik_sd = function(l, gamma, M, MP, m, Y) {
   
-  # if k = Inf (gamma = 0), then return Poisson gloglik with NA for entry n+1
-  if (k == Inf) {
+  # if gamma = 0 (k = Inf), then return Poisson gloglik with NA (?) for entry n+1
+  if (gamma == 0) {
+
+    # compute this derivative numerically when needed
+    d.gamma = numDeriv::grad(
+      func = function(gamma) {
+        negbin_loglik_sd(l = l, gamma = gamma, M = M, MP = MP, m = m, Y = Y)
+      },
+      x = 0
+    )
     
-    return(c(gloglik_sd(l = l, M = M, MP = MP, m = m, Y = Y), NA))
+    return(c(gloglik_sd(l = l, M = M, MP = MP, m = m, Y = Y), d.gamma))
     
-  # Else for k < Inf, compute the NegBin gloglik
+  # Else for gamma > 0, compute the NegBin gloglik
   } else {
+    
+    k = 1 / gamma
     
     # Save n = # DVL detected
     n = length(l)
@@ -108,7 +119,7 @@ negbin_gloglik_sd = function(l, k, M, MP, m, Y) {
     # partials w.r.t. lambda_i
     gradient = numeric(n)
     for(i in 1:n) 
-    {
+    { 
       gradient[i] = (Y[i] * (1 - (k / (l[i] + k)) ^ k) ^ (-1) +
                        (MP - m) * ((1 - prod((k / (l + k))) ^ k)) ^ (-1) *
                        prod(k / (l[-i] + k)) ^ k) *
@@ -117,10 +128,13 @@ negbin_gloglik_sd = function(l, k, M, MP, m, Y) {
     }
     
     # partial w.r.t. k
-    gradient[n + 1] <- sum((Y * (1 - ((l + k) / k) ^ k) ^ (-1) +
+    grad.k = sum((Y * (1 - ((l + k) / k) ^ k) ^ (-1) +
                               (M - MP + m - Y) +
                               (MP - m) * (1 - (prod((l + k) / k)) ^ k) ^ (-1)) *
                              (log(k / (l + k)) + (l / (l + k))))
+    
+    # partial w.r.t. gamma (using chain rule)
+    gradient[n + 1] = - grad.k / gamma ^ 2
     
   return(-gradient)
   }
@@ -130,11 +144,11 @@ negbin_gloglik_sd = function(l, k, M, MP, m, Y) {
 #' Gradient of the log-likelihood for IUPM from multiple-dilution assay data
 #' @name negbin_gloglik_md
 #' @param tau Vector of DVL-specific IUPM parameters
-#' @param k Overdispersion parameter (a positive number)
+#' @param gamma Dispersion parameter (a non-negative number)
 #' @param assay_summary Summary of assay data from multiple dilutions
 #' @return A vector (of length \code{n})
 #'
-negbin_gloglik_md = function(tau, k, assay_summary) {
+negbin_gloglik_md = function(tau, gamma, assay_summary) {
   
   D = nrow(assay_summary)
   n = length(tau)
@@ -146,7 +160,7 @@ negbin_gloglik_md = function(tau, k, assay_summary) {
     FUN = function(d) {
       as.numeric(negbin_gloglik_sd(
         l = assay_summary$u[d] * tau,
-        k = k,
+        gamma = gamma,
         M = assay_summary$M[d],
         MP = assay_summary$MP[d],
         m = assay_summary$m[d],
@@ -247,28 +261,22 @@ lrt_SLDeepAssay_md = function(assay = NULL,
     upper = ub,
     hessian = T)
   
-  # NegBin model parameter estimates
-  tau_hat_negbin = head(opt_negbin$par, assay_summary$n[1])
-  Tau_hat_negbin = sum(tau_hat_negbin)
-  gamma_hat_negbin = tail(opt_negbin$par, 1)
-  
   # log-likelihood values
   loglik_pois = -1 * opt_pois$value
   loglik_negbin = -1 * opt_negbin$value
   
   # likelihood ratio statistic
-  #lrt_stat = max(-2 * (loglik_pois - loglik_negbin), 0)
-  lrt_stat = -2 * (loglik_pois - loglik_negbin)
+  lrt_stat = max(-2 * (loglik_pois - loglik_negbin), 0)
   
   # negative binomial model parameter estimates
-  #if (loglik_negbin > loglik_pois) {
-    #tau_hat_negbin = head(opt_negbin$par, assay_summary$n[1])
-    #Tau_hat_negbin = sum(tau_hat_negbin)
-    #k_hat_negbin = tail(opt_negbin$par, 1)
-  #} else {
-    #Tau_hat_negbin = Tau_hat
-    #k_hat_negbin = Inf
-  #}
+  if (loglik_negbin > loglik_pois) {
+    tau_hat_negbin = head(opt_negbin$par, assay_summary$n[1])
+    Tau_hat_negbin = sum(tau_hat_negbin)
+    gamma_hat_negbin = tail(opt_negbin$par, 1)
+  } else {
+    Tau_hat_negbin = Tau_hat
+    gamma_hat_negbin = 0
+  }
   
   # For large n, do not compute bias correction unless user overrides
   if (corrected == F) {

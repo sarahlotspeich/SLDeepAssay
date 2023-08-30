@@ -45,7 +45,7 @@ fit_SLDeepAssay_md = function(assay = NULL, u = NULL, assay_summary, corrected =
 
   # Fit MLE (L-BFGS-B)
   if (optim_method == "L-BFGS-B") {
-    optimization = optim(par = rep(0, assay_summary$n[1]),
+    optimization = optim(par = rep(0.1, assay_summary$n[1]),
                          fn = loglik_md, 
                          gr = gloglik_md, 
                          assay_summary = assay_summary,
@@ -67,7 +67,8 @@ fit_SLDeepAssay_md = function(assay = NULL, u = NULL, assay_summary, corrected =
                                      assay_summary = assay_summary) },
                          gr = function(theta, assay_summary) {
                            gloglik_md(tau = exp(theta),
-                                      assay_summary = assay_summary) }, 
+                                      assay_summary = assay_summary) *
+                             exp(theta) },   # chain rule 
                          assay_summary = assay_summary,
                          method = "BFGS",
                          control = list(maxit = maxit),

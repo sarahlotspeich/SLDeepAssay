@@ -21,11 +21,11 @@ fit_SLDeepAssay_md_imperfect = function(assay_md, u, sens_QVOA = 1, spec_QVOA = 
   ########################################################################################
   # Check for perfect sensitivity/specificity ############################################
   ########################################################################################
-  if (sens_QVOA == 1 & sens_UDSA == 1 & spec_QVOA == 1 & spec_UDSA == 1) {
-    fit_SLDeepAssay_md(assay = assay_md, 
-                       u = u, 
-                       maxit = maxit) 
-  }
+  # if (sens_QVOA == 1 & sens_UDSA == 1 & spec_QVOA == 1 & spec_UDSA == 1) {
+  #   fit_SLDeepAssay_md(assay = assay_md, 
+  #                      u = u, 
+  #                      maxit = maxit) 
+  # }
   ########################################################################################
   # Compute constants ####################################################################
   ########################################################################################

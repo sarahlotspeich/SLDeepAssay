@@ -3,9 +3,7 @@ library(dplyr)
 library(tidyr)
 
 # load data
-overdispersion_sim_data = read.csv("https://raw.githubusercontent.com/sarahlotspeich/SLDeepAssay/main/sim_data/overdispersion_sim_data.csv") |> 
-  mutate(Gamma = 1/k,
-         gamma = ordered(Gamma))
+overdispersion_sim_data = read.csv("https://raw.githubusercontent.com/sarahlotspeich/SLDeepAssay/main/sim_data/overdispersion_sim_data.csv")
 
 # create long data set
 dat_long <- overdispersion_sim_data |> 
@@ -13,13 +11,15 @@ dat_long <- overdispersion_sim_data |>
   pivot_longer(cols = c(mle_pois, mle_pois_bc, mle_negbin)) |> 
   mutate(method.label = ifelse(name == "mle_negbin", "Negative Binomial",
                                ifelse(name == "mle_pois", "Poisson",
-                                      "Poisson (BC)")))
+                                      "Poisson (BC)")),
+         gamma = factor(gamma),
+         M.label = as.factor(M.label))
 
 # label number of points beyond range of plot
 y.max <- 5
 
 # facet labels
-M.labs <- paste0("M = ", levels(overdispersion_sim_data$M.label))
+M.labs <- paste0("M = ", levels(dat_long$M.label))
 names(M.labs) <- 1:length(M.labs)
 
 upper.counts <- dat_long |> 
@@ -63,7 +63,7 @@ negbin_mle_boxplot +
   ggtitle("Distribution of Estimated IUPM",
           subtitle = "Compared to True IUPM (Blue)")
 
-ggsave("figS1-boxplot-overdispersion.png",
+ggsave("figures_revision/figS1-boxplot-overdispersion.png",
        plot = negbin_mle_boxplot, 
        dpi = 300,
        width = 8, height = 5)

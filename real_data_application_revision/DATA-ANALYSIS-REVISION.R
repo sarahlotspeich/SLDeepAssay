@@ -2,7 +2,7 @@
 
 ## Author:  Brian Richardson
 
-## Date:  05/23/2023
+## Date:  2023/08/30
 
 ## Purpose: Analyze real data for SLDeepAssay paper with Biometrics revisions
 
@@ -112,13 +112,13 @@ for (id in paste0("C", 1:17)) {
   results = rbind(results,
                   c(id, "With UDSA (Multiple Dilutions)",
                     as.character(unlist(res_SLDeepAssay_md)),
-                    as.character(unlist(res_lrt_SLDeepAssay_md[c("mle_negbin", "mle_k", "lrt_stat")])),
+                    as.character(unlist(res_lrt_SLDeepAssay_md[c("mle_negbin", "mle_gamma", "lrt_stat")])),
                     lrt_sig))
   
 }
 
 colnames(results)[c(1:2, 10:13)] = c("id", "method", "mle_negbin", 
-                                     "mle_k", "lrt_stat", "lrt_sig")
+                                     "mle_gamma", "lrt_stat", "lrt_sig")
 
 ## create plot data for Figure 2
 figure2_data = rbind(results[, c("id", "method", "mle", "se", "ci1", "ci2")],
@@ -129,6 +129,7 @@ figure2_data = rbind(results[, c("id", "method", "mle", "se", "ci1", "ci2")],
   mutate_at(c("mle", "se", "ci.lower", "ci.upper"), as.numeric) %>% 
   mutate(bias.correction = factor(rep(c("MLE", "BC-MLE"),
                                       each = nrow(results))))
+
 
 ## data for Table S7
 tableS7_data = as.data.frame(exp_setup)

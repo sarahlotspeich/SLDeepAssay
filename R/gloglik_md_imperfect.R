@@ -1,4 +1,7 @@
 gloglik_md_imperfect = function(tau, u, complete_data_md) {
+  # Number of DVLs
+  n = length(tau)
+  
   # Total number of dilutions
   D = length(complete_data_md)
   

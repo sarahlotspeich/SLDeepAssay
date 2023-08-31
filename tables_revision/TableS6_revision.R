@@ -18,9 +18,9 @@ library(magick)
 library(emdbook)
 
 ## Load data
-overdispersion_sim_data = read.csv("https://raw.githubusercontent.com/sarahlotspeich/SLDeepAssay/main/sim_data/overdispersion_sim_data.csv") |> 
-  mutate(Gamma = 1/k,
-         gamma = ordered(Gamma))
+overdispersion_sim_data = read.csv("https://raw.githubusercontent.com/sarahlotspeich/SLDeepAssay/main/sim_data/overdispersion_sim_data.csv")
+
+#overdispersion_sim_data = read.csv("sim_data/overdispersion_sim_data.csv")
 
 ## check for re-run sims
 overdispersion_sim_data |> 

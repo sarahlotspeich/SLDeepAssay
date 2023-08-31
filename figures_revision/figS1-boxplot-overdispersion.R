@@ -63,7 +63,7 @@ negbin_mle_boxplot +
   ggtitle("Distribution of Estimated IUPM",
           subtitle = "Compared to True IUPM (Blue)")
 
-ggsave("figS1-boxplot-overdispersion.png",
+ggsave("figures_revision/figS1-boxplot-overdispersion.png",
        plot = negbin_mle_boxplot, 
        dpi = 300,
        width = 8, height = 5)

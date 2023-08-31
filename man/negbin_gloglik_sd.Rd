@@ -2,14 +2,14 @@
 % Please edit documentation in R/overdispersion_lrt.R
 \name{negbin_gloglik_sd}
 \alias{negbin_gloglik_sd}
-\title{Gradient of the negative binomial log-likelihood for IUPM from single-dilution assay data}
+\title{Gradient of the negative binomial log-likelihood for IUPM from single-dilution assay data (with respect to tau and gamma)}
 \usage{
-negbin_gloglik_sd(l, k, M, MP, m, Y)
+negbin_gloglik_sd(l, gamma, M, MP, m, Y)
 }
 \arguments{
 \item{l}{Vector of DVL-specific parameters.}
 
-\item{k}{Overdispersion parameter (a positive number)}
+\item{gamma}{Dispersion parameter (a non-negative number)}
 
 \item{M}{Total number of wells originally sequenced with the QVOA.}
 
@@ -23,5 +23,5 @@ negbin_gloglik_sd(l, k, M, MP, m, Y)
 A vector
 }
 \description{
-Gradient of the negative binomial log-likelihood for IUPM from single-dilution assay data
+Gradient of the negative binomial log-likelihood for IUPM from single-dilution assay data (with respect to tau and gamma)
 }

@@ -4,12 +4,12 @@
 \alias{negbin_gloglik_md}
 \title{Gradient of the log-likelihood for IUPM from multiple-dilution assay data}
 \usage{
-negbin_gloglik_md(tau, k, assay_summary)
+negbin_gloglik_md(tau, gamma, assay_summary)
 }
 \arguments{
 \item{tau}{Vector of DVL-specific IUPM parameters}
 
-\item{k}{Overdispersion parameter (a positive number)}
+\item{gamma}{Dispersion parameter (a non-negative number)}
 
 \item{assay_summary}{Summary of assay data from multiple dilutions}
 }

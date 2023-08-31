@@ -11,8 +11,7 @@ lrt_SLDeepAssay_md(
   corrected = NULL,
   maxit = 1e+06,
   lb = 1e-06,
-  ub = Inf,
-  k0 = 1
+  ub = Inf
 )
 }
 \arguments{

@@ -4,14 +4,14 @@
 \alias{negbin_loglik_sd}
 \title{Negative binomial log-likelihood for IUPM from single-dilution assay data}
 \usage{
-negbin_loglik_sd(l, k, gamma = NULL, M, MP, m, Y)
+negbin_loglik_sd(l, gamma, k = NULL, M, MP, m, Y)
 }
 \arguments{
 \item{l}{Vector of DVL-specific parameters.}
 
-\item{k}{Overdispersion parameter (a positive number)}
+\item{gamma}{Dispersion parameter (a non-negative number)}
 
-\item{gamma}{alternative overdispersion parameter, `gamma = 1/k` (a non-negative number)}
+\item{k}{Alternative dispersion parameter, `k = 1/gamma` (a positive number)}
 
 \item{M}{Total number of wells originally sequenced with the QVOA.}
 

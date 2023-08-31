@@ -4,12 +4,14 @@
 \alias{negbin_loglik_md}
 \title{Negative Binomial log-likelihood for IUPM from multiple-dilution assay data}
 \usage{
-negbin_loglik_md(tau, k, assay_summary)
+negbin_loglik_md(tau, gamma, k = NULL, assay_summary)
 }
 \arguments{
 \item{tau}{Vector of DVL-specific IUPM parameters}
 
-\item{k}{Overdispersion parameter (a positive number)}
+\item{gamma}{Dispersion parameter (a non-negative number)}
+
+\item{k}{Alternative dispersion parameter, `k = 1/gamma` (a positive number)}
 
 \item{assay_summary}{Summary of assay data from multiple dilutions}
 }

@@ -31,7 +31,7 @@ library(pbapply)
 library(here)
 
 # Number of replicates per simulation setting
-num_reps = 2
+num_reps = 500
 # Define parameters that remain constant across all settings
 u. <- c(0.5, 1, 2)               # dilution levels
 D. <- length(u.)                 # number of dilution levels
@@ -44,11 +44,11 @@ M. <- matrix(nrow = 2, byrow = TRUE,         # number of replicate wells
              data = c(6, 12, 18,             # small sample size
                       30, 60, 90))           # large sample
 
-k. <- c(Inf, 5, 1, 0.25)                    # overdispersion parameters
+gamma. <- c(0, 1/5, 1, 4)                    # dispersion parameters
 # Number of simulation settings
-num_sett = length(M.) * length(k.)
+num_sett = length(M.) * length(gamma.)
 # Create dataframe of different simulation settings
-Settings = expand.grid("k" = k.,
+Settings = expand.grid("gamma" = gamma.,
                         "M" = 1:2,
                         "seed" = 1:num_reps) |> 
   as.data.frame() |> 
@@ -61,7 +61,7 @@ Settings = expand.grid("k" = k.,
                                             paste0(unique(M.[2,]), collapse = ", ")),
                                           ")")))
 # Function lrt_one_sim() simulates one assay and returns the output (reshaped)
-lrt_one_sim = function(M, tau, q, u, k, seed = NULL, remove_undetected = TRUE) {
+lrt_one_sim = function(M, tau, q, u, gamma, seed = NULL, remove_undetected = TRUE) {
   
   # set seed
   if (!is.null(seed)) {
@@ -78,7 +78,7 @@ lrt_one_sim = function(M, tau, q, u, k, seed = NULL, remove_undetected = TRUE) {
     tau = tau,
     q = q,
     u = u,
-    k = k,
+    k = 1 / gamma,
     remove_undetected = remove_undetected)
   
   # Check for need to re-simulate
@@ -101,7 +101,7 @@ lrt_one_sim = function(M, tau, q, u, k, seed = NULL, remove_undetected = TRUE) {
       tau = tau,
       q = q,
       u = u,
-      k = k,
+      gamma = gamma,
       remove_undetected = remove_undetected)
     
     max_p24_neg = tryCatch(expr = max(assay_summary$M - assay_summary$MP), 
@@ -120,7 +120,7 @@ lrt_one_sim = function(M, tau, q, u, k, seed = NULL, remove_undetected = TRUE) {
            "mle_pois" = res$mle,
            "mle_pois_bc" = res$mle_bc,
            "mle_negbin" = res$mle_negbin,
-           "mle_k" = res$mle_k,
+           "mle_gamma" = res$mle_gamma,
            "lrt_stat" = res$lrt_stat))
 }
 
@@ -131,7 +131,7 @@ sim.out <- pbvapply(
     tryCatch(expr = c("error" = 0,
                       lrt_one_sim(tau = tau., q = q., u = u.,
                                   M = M.[Settings$M[i], ],
-                                  k = Settings$k[i],
+                                  gamma = Settings$gamma[i],
                                   seed = Settings$sim_id[i])),
              error = function(e) c(1, rep(NA, 7)))
   },

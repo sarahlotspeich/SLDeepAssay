@@ -71,7 +71,8 @@ one_sim = function(setting_row) {
   res = simulate_SLDeepAssay_md(M = M.scale * M.ratio,
                                 tau = tau,
                                 q = q,
-                                u = u)
+                                u = u,
+                                optim_method = "BFGS")
   res_rshp = cbind(method = c("MLE_woUDSA", "BCMLE_woUDSA", "MLE_wUDSA", "BCMLE_wUDSA"),
                    do.call(what = rbind, args = res[grep(pattern = "MLE", x = names(res), value = FALSE)]),
                    Message = res$Message,

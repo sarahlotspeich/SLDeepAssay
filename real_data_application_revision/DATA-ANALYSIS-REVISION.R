@@ -177,7 +177,6 @@ for (i in 1:nrow(TableS8_realDataLRTC13_data)) {
   
 }
 
-
 # Save data
 write.csv(figure2_data,
           "real_data_application_revision/figure2_data.csv",

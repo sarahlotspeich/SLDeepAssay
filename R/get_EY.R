@@ -12,8 +12,8 @@ get_EY = function(M, q, lambda) {
   EY_terms = sapply(X = 1:M,
                     FUN = function(k) {
                        dbinom(k, M, 1 - exp(-Lambda)) * 
-                        #round(q * k) /
-                        floor(0.5 + q * k)
+                        round(q * k) /
+                        #floor(0.5 + q * k)
                         (1 - exp(-Lambda))
                     }
                     )

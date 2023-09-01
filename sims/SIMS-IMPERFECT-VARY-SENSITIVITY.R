@@ -2,7 +2,7 @@ library(SLDeepAssay)
 
 # Number of replicates per simulation setting
 num_reps = 1000
-## Note: This code was run in parallel a cluster instead of locally, as it can be slow. 
+## Note: You may want to run this code was run in parallel a cluster instead of locally, as it can be slow. 
 
 # Define parameters that vary over simulation settings (same as Section 3.1)
 spec = 0.9 # Sensitivity of assays

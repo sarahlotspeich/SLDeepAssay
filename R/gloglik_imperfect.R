@@ -93,7 +93,7 @@ gloglik_md_imperfect = function(tau, u, complete_data_md) {
                                       l = u[d] * tau,
                                       complete_data = complete_data_md[[d]]
                                     )
-                                  )
+                                  ) * u[d]
                                 }
   )
   

@@ -22,7 +22,7 @@ library(kableExtra)
 library(magick)
 
 # Load data
-tab_dat = read.csv("https://raw.githubusercontent.com/sarahlotspeich/SLDeepAssay/main/real_data_application_revision/tableS4_realDataSummary_data.csv")
+tab_dat = read.csv("https://raw.githubusercontent.com/sarahlotspeich/SLDeepAssay/main/real_data_application_revision/TableS4_realDataSummary_data.csv")
 
 ## create Table S7 with experimental setup
 tab_dat |> 
@@ -38,6 +38,6 @@ tab_dat |>
                               align = "c")) |>
   kable_classic_2(full_width = F) |>
   kable_styling(font_size = 10) |> 
-  row_spec(row = 0, bold = TRUE) -> tableS7
+  row_spec(row = 0, bold = TRUE) -> tableS4
 
-tableS7
+tableS4

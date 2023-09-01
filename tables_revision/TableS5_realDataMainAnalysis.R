@@ -6,7 +6,7 @@
 
 ## Purpose: Produce Table S5 in SLDeepAssay paper
 
-## Input: https://raw.githubusercontent.com/sarahlotspeich/SLDeepAssay/main/real_data_application_revision/tableS5_realDataMainAnalysis_data.csv
+## Input: https://raw.githubusercontent.com/sarahlotspeich/SLDeepAssay/main/real_data_application_revision/TableS5_realDataMainAnalysis_data.csv
 
 ## Output: Latex table
 
@@ -21,10 +21,10 @@ library(kableExtra)
 library(magick)
 
 # Load data
-tableS8_data = read.csv("https://raw.githubusercontent.com/sarahlotspeich/SLDeepAssay/main/real_data_application_revision/tableS5_realDataMainAnalysis_data.csv")
+tableS5_data = read.csv("https://raw.githubusercontent.com/sarahlotspeich/SLDeepAssay/main/real_data_application_revision/TableS5_realDataMainAnalysis_data.csv")
 
-## create Table S8
-tableS8_data |> 
+## create Table S5
+tableS5_data |> 
   kable(format = "latex",
         booktabs = T,
         escape = F,
@@ -38,7 +38,7 @@ tableS8_data |>
   kable_classic_2(full_width = F) |>
   kable_styling(font_size = 10) |> 
   add_header_above(c(" " = 2, "MLE (95% Confidence Interval)" = 3), bold = T) |> 
-  row_spec(row = 0, bold = TRUE) |> 
-  collapse_rows(columns = 1, latex_hline = "major", valign = "middle") -> tableS8
+  row_spec(row = 0, bold = TRUE) -> tableS5 
+  #collapse_rows(columns = 1, latex_hline = "major", valign = "middle") -> tableS5
 
-tableS8
+tableS5

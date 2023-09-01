@@ -17,7 +17,7 @@ library(dplyr)
 library(tidyr)
 
 # Load data
-figure2_data = read.csv("https://raw.githubusercontent.com/sarahlotspeich/SLDeepAssay/main/real_data_application/figure2_data.csv")
+figure2_data = read.csv("https://raw.githubusercontent.com/sarahlotspeich/SLDeepAssay/main/real_data_application_revision/figure2_data.csv")
 
 ## create Figure 2
 figure2_data |>

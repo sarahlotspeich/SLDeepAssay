@@ -63,7 +63,7 @@ one_sim = function(setting_row) {
                                      spec_QVOA = specQVOA, 
                                      sens_UDSA = sensUDSA, 
                                      spec_UDSA = specUDSA) 
-
+  saveRDS(temp, "~/Downloads/temp")
   ########################################################################################
   # Find MLEs ############################################################################
   ########################################################################################
@@ -73,7 +73,8 @@ one_sim = function(setting_row) {
                                       sens_QVOA = sensQVOA, 
                                       spec_QVOA = specQVOA, 
                                       sens_UDSA = sensUDSA, 
-                                      spec_UDSA = specUDSA)
+                                      spec_UDSA = specUDSA,
+                                      lb = 1E-6)
   setting_row[c("Lambda", "conv", "msg")] = with(fit1, c(as.numeric(mle), convergence, message))
   
   # Original likelihood (naive IUPM estimator)

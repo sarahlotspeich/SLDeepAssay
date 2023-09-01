@@ -6,6 +6,10 @@
 
 ## Purpose: Produce Table S6 in SLDeepAssay paper
 
+## Input: https://raw.githubusercontent.com/sarahlotspeich/SLDeepAssay/main/sim_data/overdispersion_sim_data.csv
+
+## Output: Latex table
+
 ## Prepare workspace
 rm(list=ls())
 setwd(here::here())

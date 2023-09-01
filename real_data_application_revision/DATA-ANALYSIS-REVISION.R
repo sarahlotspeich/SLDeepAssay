@@ -6,8 +6,6 @@
 
 ## Purpose: Analyze real data for SLDeepAssay paper with Biometrics revisions
 
-
-
 # prepare workspace -------------------------------------------------------
 
 rm(list=ls())
@@ -131,11 +129,11 @@ figure2_data = rbind(results[, c("id", "method", "mle", "se", "ci1", "ci2")],
                                       each = nrow(results))))
 
 
-## data for Table S7
-tableS7_data = as.data.frame(exp_setup)
+## data for Table S4 (real data assay summaries)
+TableS4_realDataSummary_data = as.data.frame(exp_setup)
 
-## Data for Table S8
-tableS8_data = figure2_data %>%
+## Data for Table S5: real data main analysis
+TableS5_realDataMainAnalysis_data = figure2_data %>%
   mutate(mle.ci = paste0("$", format(round(mle, 2), nsmall = 2), "$ $(",
                          format(round(ci.lower, 2), nsmall = 2), ", ",
                          format(round(ci.upper, 2), nsmall = 2), ")$"),
@@ -145,8 +143,8 @@ tableS8_data = figure2_data %>%
               values_from = "mle.ci") %>% 
   arrange(id)
 
-# Data for Table S2
-tableS2_data = results %>% 
+# Data for Table S7: real data overdispersion results
+TableS7_realDataLRT_data = results %>% 
   as.data.frame() %>% 
   filter(method == "With UDSA (Multiple Dilutions)") %>% 
   mutate(lrt_pval = 0.5 * pchisq(as.numeric(lrt_stat), df = 1, lower.tail = F) +
@@ -156,8 +154,8 @@ tableS2_data = results %>%
 
 # LRT sensitivity analysis for C13 ----------------------------------------
 
-# create data frame to store sensitivity analysis results
-tableS3_data <- data.frame(MP1 = c(16, 17, 18, 16, 16),
+# Table S8 data, subject C13 sensitivity analysis
+TableS8_realDataLRTC13_data <- data.frame(MP1 = c(16, 17, 18, 16, 16),
                            MP2 = c(4,  4,  4,  4,  4),
                            MP3 = c(3,  3,  3,  2,  1),
                            MP4 = c(0,  0,  0,  0,  0),
@@ -166,14 +164,14 @@ tableS3_data <- data.frame(MP1 = c(16, 17, 18, 16, 16),
                            mle_negbin = rep(NA, 5))
 
 # change MP and record new LRT stat and negative binomial MLE
-for (i in 1:nrow(tableS3_data)) {
+for (i in 1:nrow(TableS8_realDataLRTC13_data)) {
   
   dat_sens_C13 <- dat_md_C13 %>% 
-    mutate(MP = as.numeric(tableS3_data[i, 1:4]))
+    mutate(MP = as.numeric(TableS8_realDataLRTC13_data[i, 1:4]))
   
   sens_res <- lrt_SLDeepAssay_md(assay_summary = dat_sens_C13, corrected = T)
   
-  tableS3_data[i, 5:7] <- c(sens_res$lrt_stat,
+  TableS8_realDataLRTC13_data[i, 5:7] <- c(sens_res$lrt_stat,
                             0.5 * pchisq(as.numeric(sens_res$lrt_stat), df = 1, lower.tail = F),
                             sens_res$mle_negbin)
   
@@ -181,11 +179,25 @@ for (i in 1:nrow(tableS3_data)) {
 
 
 # Save data
-write.csv(figure2_data, "real_data_application_revision/figure2_data.csv", row.names = F)
-write.csv(tableS2_data, "real_data_application_revision/tableS2_data.csv", row.names = F)
-write.csv(tableS3_data, "real_data_application_revision/tableS3_data.csv", row.names = F)
-write.csv(tableS7_data, "real_data_application_revision/tableS7_data.csv", row.names = F)
-write.csv(tableS8_data, "real_data_application_revision/tableS8_data.csv", row.names = F)
+write.csv(figure2_data,
+          "real_data_application_revision/figure2_data.csv",
+          row.names = F)
+
+write.csv(TableS4_realDataSummary_data,
+          "real_data_application_revision/TableS4_realDataSummary_data.csv",
+          row.names = F)
+
+write.csv(TableS5_realDataMainAnalysis_data,
+          "real_data_application_revision/TableS5_realDataMainAnalysis_data.csv",
+          row.names = F)
+
+write.csv(TableS7_realDataLRT_data,
+          "real_data_application_revision/TableS7_realDataLRT_data.csv",
+          row.names = F)
+
+write.csv(TableS8_realDataLRTC13_data,
+          "real_data_application_revision/TableS8_realDataLRTC13_data.csv", 
+        row.names = F)
 
 # Compare CI widths (on log scale) for selected subjects
 ci.widths = figure2_data %>% 

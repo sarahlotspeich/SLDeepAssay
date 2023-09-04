@@ -1,7 +1,7 @@
 library(SLDeepAssay)
 
 # Number of replicates per simulation setting
-num_reps = 100
+num_reps = 250
 
 # Define parameters that vary over simulation settings (same as Section 3.1)
 M = c(6, 12, 18) # Total number of wells
@@ -55,7 +55,8 @@ one_sim = function(setting_row) {
                                       spec_QVOA = 1, 
                                       sens_UDSA = 1, 
                                       spec_UDSA = 1,
-                                      lb = 0) #lb = 1E-6)
+                                      #lb = 0) 
+                                      lb = 1E-6)
   setting_row[c("Lambda", "conv", "msg")] = with(fit1, c(as.numeric(mle), convergence, message))
   
   # Original likelihood (naive IUPM estimator)

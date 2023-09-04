@@ -8,7 +8,7 @@ num_reps = 1000
 spec = 0.9 # Sensitivity of assays
 sens = seq(0.8, 1, by = 0.1) # Specificity of assays
 M = c(12, 24, 32) # Total number of wells
-n = 6 # Number of existing DVLs
+n = 12 # Number of existing DVLs
 Tau = 1 ## Overall IUPM (split among n DLVs)
 u = 1 # Dilution in millions of cells per well
 q = 1 # Proportion of p24-positive wells to undergo UDSA
@@ -98,7 +98,8 @@ one_sim = function(setting_row) {
                                       spec_QVOA = as.numeric(setting_row["specQVOA"]),
                                       sens_UDSA = as.numeric(setting_row["sensUDSA"]),
                                       spec_UDSA = as.numeric(setting_row["specUDSA"]))
-  setting_row[c("Lambda", "conv", "msg")] = with(fit1, c(mle, convergence, message))
+  setting_row["Lambda"] = fit1$mle
+  setting_row[c("conv", "msg")] = with(fit1, c(convergence, message))
 
   # Original likelihood (naive IUPM estimator)
   # fit2 = fit_SLDeepAssay_sd(assay = temp$DVL_specific,
@@ -110,9 +111,11 @@ one_sim = function(setting_row) {
                                       spec_QVOA = 1,
                                       sens_UDSA = 1,
                                       spec_UDSA = 1)
-  setting_row[c("Lambda_naive", "conv_naive", "msg_naive")] = with(fit2, c(mle, convergence, message))
+  setting_row["Lambda_naive"] = fit2$mle
+  setting_row[c("conv_naive", "msg_naive")] = with(fit2, c(convergence, message))
 
-  return(setting_row)
+  return(list(assay = temp$DVL_specific, 
+              result = setting_row))
 }
 
 # Be reproducible
@@ -120,8 +123,26 @@ sim_seed = 11422
 set.seed(sim_seed)
 
 Results = data.frame()
+Assays = list()
 for (i in 1:nrow(Settings)) {
-  Results = rbind(Results, one_sim(setting_row = Settings[i, ]))
+  new_sim = one_sim(setting_row = Settings[i, ])
+  Assays[[length(Assays) + 1]] = new_sim$assay
+  Results = rbind(Results, new_sim$result)
   write.csv(Results, "sd_imperfect_vary_sensitivity.csv", row.names = F)
   if (i %% 10 == 0) print(paste0("Sim ", i, " complete (", round(100 * i/nrow(Settings)), "%)"))
 }
+
+# Count the number of unique assays 
+length(unique(lapply(X = Assays, FUN = colSums))) ## 1812 / 27000
+
+# Count the number of unique MLEs
+length(unique(Results$Lambda)) ## 857 / 27000
+length(unique(Results$Lambda_naive)) ## 226 / 27000
+
+# Frequency of convergence messages
+table(Results$msg)
+table(Results$msg_naive)
+
+# Check for extreme values (MLE > 10)
+table(as.numeric(Results$Lambda) > 10, Results$M)
+table(as.numeric(Results$Lambda_naive) > 10, Results$M)

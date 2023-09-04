@@ -1,7 +1,7 @@
 library(SLDeepAssay)
 
 # Number of replicates per simulation setting
-num_reps = 50 
+num_reps = 1000
 ## Note: This code was run in parallel a cluster instead of locally, as it can be slow. 
 
 # Define parameters that vary over simulation settings (same as Section 3.1)
@@ -105,13 +105,18 @@ one_sim = function(setting_row) {
                                       spec_QVOA = specQVOA, 
                                       sens_UDSA = sensUDSA, 
                                       spec_UDSA = specUDSA)
-  setting_row[c("Lambda", "conv", "msg")] = with(fit1, c(mle, convergence, message))
+  setting_row["Lambda"] = fit1$mle
+  setting_row[c("conv", "msg")] = with(fit1, c(convergence, message))
   
   # Original likelihood (naive IUPM estimator)
-  fit2 = fit_SLDeepAssay_sd(assay = temp$DVL_specific,
-                            u = u,
-                            corrected = FALSE)
-  setting_row["Lambda_naive"] = sum(fit2$mle)
+  fit2 = fit_SLDeepAssay_sd_imperfect(assay_QVOA = temp$any_DVL,
+                                      assay_UDSA = temp$DVL_specific,
+                                      sens_QVOA = 1,
+                                      spec_QVOA = 1,
+                                      sens_UDSA = 1,
+                                      spec_UDSA = 1)
+  setting_row["Lambda_naive"] = fit2$mle
+  setting_row[c("conv_naive", "msg_naive")] = with(fit2, c(convergence, message))
   
   return(setting_row)
 }

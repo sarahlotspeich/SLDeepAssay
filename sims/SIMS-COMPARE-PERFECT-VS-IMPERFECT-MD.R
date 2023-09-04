@@ -1,30 +1,21 @@
 library(SLDeepAssay)
 
 # Number of replicates per simulation setting
-num_reps = 100 
-## Note: This code was run in parallel a cluster instead of locally, as it can be slow. 
+num_reps = 100
 
 # Define parameters that vary over simulation settings (same as Section 3.1)
-spec = 1 # Sensitivity of assays
-sens = 1 # Specificity of assays
 M = c(6, 12, 18) # Total number of wells
 n = 6 # Number of existing DVLs
 Tau = 1 # Overall IUPM (split among n DLVs)
 u = c(0.5, 1, 2) # Dilutions in millions of cells per well
 q = c(0, 0.5, 1) # Proportion of p24-positive wells to undergo UDSA
-constant_Tau = TRUE # Indicator of constant IUPM across n DVLs
 
 # Number of simulation settings
-num_sett = length(sens) ^ 2 * length(spec) ^ 2 * length(n) * length(Tau) * length(constant_Tau) 
+num_sett = length(n) * length(Tau)
 
 # Create dataframe of different simulation settings
-Settings = apply(X = expand.grid("sensQVOA" = sens,
-                                 "specQVOA" = spec,
-                                 "sensUDSA" = sens,
-                                 "specUDSA" = spec,
-                                 "n" = n,
-                                 "Tau" = Tau,
-                                 "constant_Tau" = constant_Tau),
+Settings = apply(X = expand.grid("n" = n,
+                                 "Tau" = Tau),
                  MARGIN = 2,
                  FUN = function(x) {
                    rep(x, each = num_reps)
@@ -44,25 +35,15 @@ one_sim = function(setting_row) {
   # Save parameter values from setting_row
   n = as.numeric(setting_row["n"])
   Tau = as.numeric(setting_row["Tau"])
-  constant_Tau = setting_row["constant_Tau"] == 1
-  sensQVOA = as.numeric(setting_row["sensQVOA"])
-  specQVOA = as.numeric(setting_row["specQVOA"])
-  sensUDSA = as.numeric(setting_row["sensUDSA"])
-  specUDSA = as.numeric(setting_row["specUDSA"])
-  
-  if (constant_Tau) {
-    tau = rep(x = Tau / n, times = n)
-  } else {
-    tau = c(rep(Tau / (2 * n), n / 2), rep(3 * Tau / (2 * n), n / 2))
-  }
+  tau = rep(x = Tau / n, times = n)
   temp = simulate_assay_md_imperfect(M = M,
                                      tau = tau,
                                      q = q,
                                      u = u,
-                                     sens_QVOA = sensQVOA, 
-                                     spec_QVOA = specQVOA, 
-                                     sens_UDSA = sensUDSA, 
-                                     spec_UDSA = specUDSA) 
+                                     sens_QVOA = 1, 
+                                     spec_QVOA = 1, 
+                                     sens_UDSA = 1, 
+                                     spec_UDSA = 1) 
   saveRDS(temp, "~/Downloads/temp")
   ########################################################################################
   # Find MLEs ############################################################################
@@ -70,31 +51,16 @@ one_sim = function(setting_row) {
   # New likelihood (corrected IUPM estimator)
   fit1 = fit_SLDeepAssay_md_imperfect(assay_md = temp,
                                       u = u, 
-                                      sens_QVOA = sensQVOA, 
-                                      spec_QVOA = specQVOA, 
-                                      sens_UDSA = sensUDSA, 
-                                      spec_UDSA = specUDSA,
-                                      lb = 1E-6)
+                                      sens_QVOA = 1, 
+                                      spec_QVOA = 1, 
+                                      sens_UDSA = 1, 
+                                      spec_UDSA = 1,
+                                      lb = 0) #lb = 1E-6)
   setting_row[c("Lambda", "conv", "msg")] = with(fit1, c(as.numeric(mle), convergence, message))
   
   # Original likelihood (naive IUPM estimator)
-  assay_summary = vapply(X = 1:length(u),
-                         FUN.VALUE = numeric(7 + n),
-                         FUN = function(d) {
-                           M = ncol(temp[[d]]$DVL_specific) # number of wells
-                           n = nrow(temp[[d]]$DVL_specific) # number of DVLs detected
-                           MP = sum(temp[[d]]$any_DVL) # number of p24-positive wells
-                           MN = M - MP # number of p24-negative wells
-                           q = q[d] # proportion of p24-positive wells deep sequenced
-                           m = ifelse(test = q == 1, 
-                                      yes = MP, 
-                                      no = floor(0.5 + q * MP)) # number of deep-sequenced wells
-                           Y = rowSums(temp[[d]]$DVL_specific, na.rm = TRUE) # number of infected wells per DVL
-                           return((c("u" = u[d], "M"=M, "n"=n,
-                                     "MN"=MN, "MP"=MP, "m"=m, "q"=q, "Y"=Y)))
-                         })
-  assay_summary = as.data.frame(t(assay_summary))
-  fit2 = fit_SLDeepAssay_md(assay_summary = assay_summary, 
+  fit2 = fit_SLDeepAssay_md(assay = temp, 
+                            u = u, 
                             corrected = FALSE)
   setting_row["Lambda_naive"] = sum(fit2$mle)
   return(setting_row)
@@ -107,8 +73,13 @@ set.seed(sim_seed)
 Results = data.frame()
 for (i in 1:nrow(Settings)) {
   Results = rbind(Results, one_sim(setting_row = Settings[i, ]))
-  write.csv(Results, "~/Downloads/md_imperfect.csv", row.names = F)
+  write.csv(Results, "~/Downloads/md_compare_perfect_imperfect.csv", row.names = F)
   if (i %% 10 == 0) print(paste0("Sim ", i, " complete (", round(100 * i/nrow(Settings)), "%)"))
 }
 
-with(Results, mean(as.numeric(Lambda) - Lambda_naive))
+# Check average difference between perfect/imperfect MLE code
+with(Results, mean(as.numeric(Lambda) - Lambda_naive)) ## 1.366463e-05
+
+# Check whether each replicate has a unique estimate
+length(unique(Results$Lambda)) ## 100
+length(unique(Results$Lambda_naive)) ## 100 

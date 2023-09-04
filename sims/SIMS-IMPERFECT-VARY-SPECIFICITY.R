@@ -128,6 +128,6 @@ set.seed(sim_seed)
 Results = data.frame()
 for (i in 1:nrow(Settings)) {
   Results = rbind(Results, one_sim(setting_row = Settings[i, ]))
-  write.csv(Results, "sd_imperfect_vary_specificity", row.names = F)
+  write.csv(Results, "sd_imperfect_vary_specificity.csv", row.names = F)
   if (i %% 10 == 0) print(paste0("Sim ", i, " complete (", round(100 * i/nrow(Settings)), "%)"))
 }

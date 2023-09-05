@@ -91,7 +91,7 @@ one_sim = function(setting_row) {
   ########################################################################################
   # Find MLEs ############################################################################
   ########################################################################################
-  # New likelihood (corrected IUPM estimator)
+  # New likelihood (accommodates imperfect assays)
   fit1 = fit_SLDeepAssay_sd_imperfect(assay_QVOA = temp$any_DVL,
                                       assay_UDSA = temp$DVL_specific,
                                       sens_QVOA = as.numeric(setting_row["sensQVOA"]),
@@ -101,10 +101,7 @@ one_sim = function(setting_row) {
   setting_row["Lambda"] = fit1$mle
   setting_row[c("conv", "msg")] = with(fit1, c(convergence, message))
 
-  # Original likelihood (naive IUPM estimator)
-  # fit2 = fit_SLDeepAssay_sd(assay = temp$DVL_specific,
-  #                           u = u,
-  #                           corrected = FALSE)
+  # Original likelihood (naive IUPM estimator, assuming perfect assays)
   fit2 = fit_SLDeepAssay_sd_imperfect(assay_QVOA = temp$any_DVL,
                                       assay_UDSA = temp$DVL_specific,
                                       sens_QVOA = 1,

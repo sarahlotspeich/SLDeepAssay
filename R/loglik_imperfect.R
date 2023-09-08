@@ -121,6 +121,11 @@ get_pZ = function(complete_data, l, exclude_DVL = NA) {
 }
 
 loglik_sd_imperfect = function(l, complete_data) {
+  # Check for invalid lambda values (< 0)
+  if (any(l < 0)) {
+    return(9999)
+  }
+  
   # Log-likelihood contributions
   ## Sequenced wells 
   if (!any(is.na(complete_data$complete_seq$j)) & nrow(complete_data$complete_seq) > 0) {

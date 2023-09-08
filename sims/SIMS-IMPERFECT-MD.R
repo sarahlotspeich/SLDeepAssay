@@ -73,27 +73,21 @@ one_sim = function(setting_row) {
                                       sens_QVOA = sensQVOA, 
                                       spec_QVOA = specQVOA, 
                                       sens_UDSA = sensUDSA, 
-                                      spec_UDSA = specUDSA)
-  setting_row[c("Lambda", "conv", "msg")] = with(fit1, c(mle, convergence, message))
+                                      spec_UDSA = specUDSA,
+                                      lb = 1E-6)
+  setting_row["Lambda"] = fit1$mle
+  setting_row[c("conv", "msg")] = with(fit1, c(convergence, message))
   
   # Original likelihood (naive IUPM estimator)
-  assay_summary = vapply(X = 1:length(u),
-                         FUN.VALUE = numeric(7 + n),
-                         FUN = function(d) {
-                           M = ncol(temp[[d]]$DVL_specific) # number of wells
-                           n = nrow(temp[[d]]$DVL_specific) # number of DVLs detected
-                           MP = sum(temp[[d]]$any_DVL) # number of p24-positive wells
-                           MN = M - MP # number of p24-negative wells
-                           m = sum(!is.na(colSums(temp[[d]]$DVL_specific))) # number of deep-sequenced wells
-                           q = ifelse(MP == 0, 0, m / MP) # proportion of p24-positive wells deep sequenced
-                           Y = rowSums(temp[[d]]$DVL_specific, na.rm = TRUE) # number of infected wells per DVL
-                           return((c("u" = u[d], "M"=M, "n"=n,
-                                     "MN"=MN, "MP"=MP, "m"=m, "q"=q, "Y"=Y)))
-                         })
-  assay_summary = as.data.frame(t(assay_summary))
-  fit2 = fit_SLDeepAssay_md(assay_summary = assay_summary, 
-                            corrected = FALSE)
-  setting_row["Lambda_naive"] = sum(fit2$mle)
+  fit2 = fit_SLDeepAssay_md_imperfect(assay_md = temp,
+                                      u = u, 
+                                      sens_QVOA = 1, 
+                                      spec_QVOA = 1, 
+                                      sens_UDSA = 1, 
+                                      spec_UDSA = 1,
+                                      lb = 1E-6)
+  setting_row["Lambda_naive"] = fit2$mle
+  setting_row[c("conv_naive", "msg_naive")] = with(fit2, c(convergence, message))
   return(setting_row)
 }
 

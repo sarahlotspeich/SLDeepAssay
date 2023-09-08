@@ -18,9 +18,9 @@ Results |>
     min_corrected_reps = min(corrected_reps), 
     min_uncorrected_reps = min(uncorrected_reps) 
   )
-## MLE (Imperfect Assays) converged in >= 997 / 1000 reps per setting
+## MLE (Imperfect Assays) converged in >= 1000 / 1000 reps per setting
 ## MLE (Perfect Assays) converged in 1000 / 1000 reps per setting
-table(Results$msg) ### only 12 / 9000 replicates total 
+table(Results$msg) ### 9000 / 9000 replicates total 
 
 plot_data = Results |>
   dplyr::mutate(q = factor(x = q, 
@@ -33,7 +33,7 @@ plot_data = Results |>
                                    levels = c("Lambda", "Lambda_naive"),
                                    labels = c("MLE (Imperfect Assays)", "MLE (Perfect Assays)"))) 
 
-# Exclude 2 replicates where MLE (Imperfect Assays) was > 10
+# Exclude 0 replicates where MLE (Imperfect Assays) was > 10
 table(plot_data$value > 10, plot_data$estimator)
 
 plot_data |> 
@@ -48,8 +48,7 @@ plot_data |>
   theme_minimal() + 
   theme(legend.position = "top") + 
   ylab("IUPM Estimate") + 
-  xlab("Number of Replicate Wells (M)") + 
-  ylim(c(-1, 6))
-ggsave(filename = "~/Documents/SLDeepAssay/figures/figS4-boxplot-vary-q.png", 
+  xlab("Number of Replicate Wells (M)") 
+ggsave(filename = "figS4-boxplot-vary-q.png", 
        device = "png", units = "in", width = 8, height = 4)
 

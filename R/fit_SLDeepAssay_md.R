@@ -24,13 +24,13 @@ fit_SLDeepAssay_md = function(assay = NULL, u = NULL, assay_summary, corrected =
     assay_summary = vapply(X = 1:length(assay), 
                            FUN.VALUE = numeric(7 + n),
                            FUN = function(d) {
-                             M = ncol(assay[[d]])
-                             n = nrow(assay[[d]])
-                             MN = sum(colSums(assay[[d]]) == 0, na.rm = TRUE)
-                             MP = M - MN
-                             m = MP - sum(is.na(colSums(assay[[d]])))
+                             M = ncol(assay[[d]][[2]])
+                             n = nrow(assay[[d]][[2]])
+                             MP = sum(assay[[d]][[1]])
+                             MN = M - MP
+                             m = sum(!is.na(colSums(assay[[d]][[2]]))) - MN
                              q = ifelse(MP == 0, 0, m / MP)
-                             Y = rowSums(assay[[d]], na.rm = TRUE)
+                             Y = rowSums(assay[[d]][[2]], na.rm = TRUE)
                              return((c("u" = u[d], "M" = M, "n" = n,
                                        "MN" = MN, "MP" = MP, "m" = m, "q" = q, "Y" = Y)))
                            })

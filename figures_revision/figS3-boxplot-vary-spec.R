@@ -18,11 +18,15 @@ Results |>
     min_corrected_reps = min(corrected_reps), 
     min_uncorrected_reps = min(uncorrected_reps) 
   )
-## MLE (Imperfect Assays) converged in >= 992 / 1000 reps per setting
+## MLE (Imperfect Assays) converged in 1000 / 1000 reps per setting
 ## MLE (Perfect Assays) converged in 1000 / 1000 reps per setting
-table(Results$msg) ### only 45 / 270000 replicates total 
+table(Results$msg) ### 27000 / 270000 replicates total 
 
-Results |>
+# Exclude 159 replicates where MLE (Imperfect Assays) was > 10, 
+## 36 replicates where MLE (Perfect Assays) was > 10.
+table(Results$value > 10, Results$estimator)
+
+plot_data = Results |>
   dplyr::mutate(specQVOA = factor(x = specQVOA, 
                                   levels = seq(1, 0.8, by = -0.1), 
                                   labels = paste0("QVOA Specificity = ", seq(100, 80, by = -10), "%")),
@@ -34,7 +38,22 @@ Results |>
   tidyr::gather("estimator", "value", -c(1:4)) |>
   dplyr::mutate(estimator = factor(x = estimator, 
                                    levels = c("Lambda", "Lambda_naive"),
-                                   labels = c("MLE (Imperfect Assays)", "MLE (Perfect Assays)"))) |> 
+                                   labels = c("MLE (Imperfect Assays)", "MLE (Perfect Assays)")))
+
+# Exclude 1 replicate where MLE (Imperfect Assays) was > 10, 
+## 0 replicates where MLE (Perfect Assays) was > 10.
+table(plot_data$value > 10, plot_data$estimator)
+
+# Count number of extreme replicates per estimator + setting
+plot_data |> 
+  dplyr::group_by(estimator, specQVOA, specUDSA, M) |> 
+  dplyr::summarize(num_extreme_vals = sum(value > 10)) |> 
+  dplyr::filter(num_extreme_vals > 0) |> 
+  dplyr::arrange(desc(num_extreme_vals))
+## No more than 1 / 1000 = 0.1% per estimator + setting
+
+plot_data |> 
+  dplyr::filter(value <= 10) |> 
   ggplot(aes(x = factor(M), y = value, fill = estimator)) +
   geom_boxplot() +
   geom_hline(yintercept = 1, 

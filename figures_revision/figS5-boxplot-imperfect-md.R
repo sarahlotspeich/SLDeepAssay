@@ -18,9 +18,9 @@ Results |>
     min_corrected_reps = min(corrected_reps), 
     min_uncorrected_reps = min(uncorrected_reps) 
   )
-## MLE (Imperfect Assays) converged in >= 999 / 1000 reps per setting
+## MLE (Imperfect Assays) converged in >= 997 / 1000 reps per setting
 ## MLE (Perfect Assays) converged in 1000 / 1000 reps per setting
-table(Results$msg) ### only 2 / 9000 replicates total 
+table(Results$msg) ### only 5 / 9000 replicates total 
 
 plot_data = Results |>
   dplyr::mutate(sensQVOA = factor(x = sensQVOA, 

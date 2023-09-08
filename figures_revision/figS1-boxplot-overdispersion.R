@@ -13,7 +13,8 @@ dat_long <- overdispersion_sim_data |>
                                ifelse(name == "mle_pois", "Poisson",
                                       "Poisson (BC)")),
          gamma = factor(gamma),
-         M.label = as.factor(M.label))
+         M.label = factor(M.label,
+                          levels = c("(6, 12, 18)", "(30, 60, 90)")))
 
 # label number of points beyond range of plot
 y.max <- 5

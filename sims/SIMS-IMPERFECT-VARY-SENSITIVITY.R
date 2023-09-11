@@ -109,14 +109,17 @@ one_sim = function(setting_row) {
   setting_row[c("conv", "msg")] = with(fit1, c(convergence, message))
 
   # Original likelihood (naive IUPM estimator, assuming perfect assays)
-  fit2 = fit_SLDeepAssay_sd_imperfect(assay_QVOA = temp$any_DVL,
-                                      assay_UDSA = temp$DVL_specific,
-                                      sens_QVOA = 1,
-                                      spec_QVOA = 1,
-                                      sens_UDSA = 1,
-                                      spec_UDSA = 1)
+  # fit2 = fit_SLDeepAssay_sd_imperfect(assay_QVOA = temp$any_DVL,
+  #                                     assay_UDSA = temp$DVL_specific,
+  #                                     sens_QVOA = 1,
+  #                                     spec_QVOA = 1,
+  #                                     sens_UDSA = 1,
+  #                                     spec_UDSA = 1)
+  fit2 = fit_SLDeepAssay_sd(assay = temp$DVL_specific,
+                            u = u,
+                            corrected = FALSE)
   setting_row["Lambda_naive"] = fit2$mle
-  setting_row[c("conv_naive", "msg_naive")] = with(fit2, c(convergence, message))
+  # setting_row[c("conv_naive", "msg_naive")] = with(fit2, c(convergence, message))
 
   return(list(assay = temp$DVL_specific, 
               result = setting_row))

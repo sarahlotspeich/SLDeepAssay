@@ -69,7 +69,7 @@ plot_data = figureS6B_data |>
                 sensQVOA_UDSA = "UDSA Sensitivity = QVOA Sensitivity = 90%"
   ) 
 plot_vary_spec = plot_data |> 
-  dplyr::filter(sens_qvoa < 1, ci_ub < 5) |> 
+  dplyr::filter(sens_qvoa < 1) |> 
   ggplot(aes(x = 1, y = mle, col = specQVOA, ymin = ci_lb, ymax = ci_ub)) +
   geom_hline(yintercept = naive_iupm, linetype = 2, color = "grey") + 
   geom_point(size = 2,

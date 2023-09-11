@@ -121,7 +121,7 @@ for (t in 1:nrow(try_sens_spec)) {
                                       spec_QVOA = try_sens_spec$spec_qvoa[t], 
                                       sens_UDSA = try_sens_spec$sens_udsa[t], 
                                       spec_UDSA = try_sens_spec$spec_udsa[t],
-                                      lb = 1E-5)
+                                      lb = 1E-6)
   
   try_sens_spec$mle[t] = fit1$mle
   try_sens_spec$ci_lb[t] = fit1$ci[1]

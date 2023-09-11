@@ -117,6 +117,6 @@ devtools::install_github(repo = "sarahlotspeich/SLDeepAssay",
 
 **Figure S6.** Estimated infectious units per million (IUPM) with 95\% confidence intervals for Subject C13, assuming imperfect assays. QVOA and UDSA sensitivities varied, but both assays were assumed to have 90\% specificity. The dashed line denotes the estimated IUPM assuming perfect assays.
 
-  - [Script (Simulate Detailed Assay Data)](real_data_application_revision/SIMS-IMPERFECT-C13.R)
+  - [Script (Simulate Detailed Assay Data)](real_data_application_revision/SIM-IMPERFECT-C13.R)
   - [Script (Make Figure)](figures_revision/figS5-boxplot-imperfect-md.R)
   - [Data (Simulation Results)](sim_data/subject_c13_imperfect_vary_sens.csv)

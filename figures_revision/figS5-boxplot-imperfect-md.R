@@ -58,6 +58,6 @@ plot_data |>
   ylab("IUPM Estimate") + 
   xlab("Number of Replicate Wells (M)") 
 
-ggsave(filename = "~/Documents/SLDeepAssay/figures/figS5-boxplot-imperfect-md.png", 
+ggsave(filename = "~/Documents/SLDeepAssay/figures_revision/figS5-boxplot-imperfect-md.png", 
        device = "png", units = "in", width = 8, height = 8)
 

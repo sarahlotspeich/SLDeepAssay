@@ -1,9 +1,14 @@
 library(ggplot2)
 
-Results = read.csv(file = "https://raw.githubusercontent.com/sarahlotspeich/SLDeepAssay/main/sim_data/md_imperfect.csv") |> 
+Results = do.call(what = dplyr::bind_rows, 
+                  args = lapply(X = paste0("https://raw.githubusercontent.com/sarahlotspeich/SLDeepAssay/main/sim_data/md-imperfect/md-imperfect-seed", 11422:11431, ".csv"), 
+                                FUN = read.csv)) |> 
   dplyr::mutate(
     Lambda = ifelse(conv == 0, ## Make any reps that didn't converge NA 
                     yes = as.numeric(Lambda), 
+                    no = NA),
+    Lambda_naive = ifelse(conv_naive == 0, ## Make any reps that didn't converge NA 
+                    yes = as.numeric(Lambda_naive), 
                     no = NA)
   )
 
@@ -18,9 +23,10 @@ Results |>
     min_corrected_reps = min(corrected_reps), 
     min_uncorrected_reps = min(uncorrected_reps) 
   )
-## MLE (Imperfect Assays) converged in >= 997 / 1000 reps per setting
-## MLE (Perfect Assays) converged in 1000 / 1000 reps per setting
-table(Results$msg) ### only 5 / 9000 replicates total 
+## MLE (Imperfect Assays) converged in >= 999 / 1000 reps per setting
+table(Results$msg) ### only 1 / 9000 replicates total 
+## MLE (Perfect Assays) converged in >=992 / 1000 reps per setting
+table(Results$msg_naive) ### only 14 / 9000 replicates total 
 
 plot_data = Results |>
   dplyr::mutate(sensQVOA = factor(x = sensQVOA, 

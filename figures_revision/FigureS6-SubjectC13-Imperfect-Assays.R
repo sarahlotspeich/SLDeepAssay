@@ -29,7 +29,8 @@ plot_data = figureS6A_data |>
                 specQVOA_UDSA = "UDSA Specificity = QVOA Specificity = 90%"
     ) 
 naive_iupm = plot_data |> 
-  dplyr::filter(spec_qvoa == 1) |> dplyr::pull(mle)
+  dplyr::filter(spec_qvoa == 1) |> 
+  dplyr::pull(mle)
 plot_vary_sens = plot_data |> 
   dplyr::filter(spec_qvoa < 1) |> 
   ggplot(aes(x = 1, y = mle, col = sensQVOA, ymin = ci_lb, ymax = ci_ub)) +

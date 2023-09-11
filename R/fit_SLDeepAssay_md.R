@@ -87,7 +87,8 @@ fit_SLDeepAssay_md = function(assay = NULL, u = NULL, assay_summary, corrected =
                  u = assay_summary$u)
 
   # inverse of fisher information
-  cov = solve(I)
+  cov = tryCatch(expr = solve(I), 
+                 error = function(e) rep(NA, nrow(I)))
 
   ### variance estimate 4
   se = sqrt(sum(cov))

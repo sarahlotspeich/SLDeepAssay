@@ -4,18 +4,20 @@ library(SLDeepAssay)
 num_reps = 250
 
 # Define parameters that vary over simulation settings (same as Section 3.1)
-M = 12 # Total number of wells
+M = c(12, 24, 32) # Total number of wells
 n = 6 # Number of existing DVLs
 Tau = 1 # Overall IUPM (split among n DLVs)
 u = 1 # Dilutions in millions of cells per well
-q = 0.5 # Proportion of p24-positive wells to undergo UDSA
+q = c(0.5, 0.75, 1) # Proportion of p24-positive wells to undergo UDSA
 
 # Number of simulation settings
-num_sett = length(M) * length(n) 
+num_sett = length(M) * length(q)
 
 # Create dataframe of different simulation settings
-Settings = apply(X = expand.grid("n" = n,
-                                 "Tau" = Tau),
+Settings = apply(X = expand.grid("M" = M,
+                                 "n" = n,
+                                 "Tau" = Tau,
+                                 "q" = q),
                  MARGIN = 2,
                  FUN = function(x) {
                    rep(x, each = num_reps)
@@ -34,9 +36,9 @@ Settings = apply(X = expand.grid("n" = n,
 one_sim = function(setting_row) {
   tau = rep(x = as.numeric(setting_row["Tau"]) / as.numeric(setting_row["n"]), 
             times = as.numeric(setting_row["n"]))
-  temp = simulate_assay_sd(M = M, 
+  temp = simulate_assay_sd(M = as.numeric(setting_row["M"]), 
                            tau = tau, 
-                           q = q, 
+                           q = as.numeric(setting_row["q"]), 
                            u = u, 
                            sens_QVOA = 1, 
                            spec_QVOA = 1, 
@@ -77,8 +79,8 @@ for (i in 1:nrow(Settings)) {
 }
 
 # Check average difference between perfect/imperfect MLE code
-with(Results, mean(as.numeric(Lambda) - Lambda_naive)) ## 1.366463e-05
+with(Results, mean(as.numeric(Lambda) - Lambda_naive)) ## -6.729658e-07
 
 # Check whether each replicate has a unique estimate
-length(unique(Results$Lambda)) ## 93 (out of 250)
-length(unique(Results$Lambda_naive)) ## 126 (out of 250) 
+length(unique(Results$Lambda)) ## 1642 (out of 2250)
+length(unique(Results$Lambda_naive)) ## 1803 (out of 2250) 

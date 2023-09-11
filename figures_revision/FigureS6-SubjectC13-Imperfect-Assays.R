@@ -1,4 +1,4 @@
-## Title: Subject C2 with Imperfect Assays (Figure S6)
+## Title: Subject C13 with Imperfect Assays (Figure S6)
 
 ## Author:  Sarah Lotspeich
 
@@ -40,9 +40,9 @@ plot_vary_sens = plot_data |>
                 position = position_dodge(width = 0.5)) +
   facet_grid(cols = vars(sensUDSA), 
              rows = vars(specQVOA_UDSA)) + 
-  #theme_bw(base_size = 24) +
   theme_light(base_size = 24) +
-  theme(axis.ticks.x = element_blank(),
+  theme(legend.position = "top", 
+        axis.ticks.x = element_blank(),
         axis.text.x = element_blank(),
         axis.title.x = element_blank(),
         panel.grid.major = element_blank(),
@@ -53,7 +53,7 @@ plot_vary_sens = plot_data |>
   ggthemes::scale_colour_colorblind(name = "")
 
 ggsave(plot_vary_sens, 
-       filename = "figures_revision/real_data_plot_imperfect_subjectC13.png", 
+       filename = "figures_revision/real_data_plot_imperfect_subjectC13_vary_sens.png", 
        width = 8, height = 4)
 
 # Load data
@@ -92,3 +92,7 @@ plot_vary_spec = plot_data |>
 ggsave(plot_vary_spec, 
        filename = "figures_revision/real_data_plot_imperfect_subjectC13_vary_spec.png", 
        width = 8, height = 4)
+
+ggsave(ggpubr::ggarrange(plot_vary_sens, plot_vary_spec, labels = "AUTO", nrow = 2), 
+       filename = "figures_revision/real_data_plot_imperfect_subjectC13.png", 
+       width = 6, height = 8)

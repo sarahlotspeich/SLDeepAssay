@@ -1,18 +1,26 @@
-library(SLDeepAssay)
+# Load package 
+library(magrittr) ## for pipes 
+library(SLDeepAssay, ## for IUPM estimators
+        lib.loc = "/home/lotspes/R/x86_64-pc-linux-gnu-library/4.0") 
+
+# Be reproducible
+args = commandArgs(TRUE)
+sim_seed = 11422 + as.integer(args)
+set.seed(sim_seed)
 
 # Number of replicates per simulation setting
-num_reps = 1000
+num_reps = 100
 ## Note: You may want to run this code was run in parallel a cluster instead of locally, as it can be slow.
 
 # Define parameters that vary over simulation settings (same as Section 3.1)
-spec = 0.9 # Sensitivity of assays
-sens = seq(0.8, 1, by = 0.1) # Specificity of assays
-M = c(12, 24, 32) # Total number of wells
-n = 12 # Number of existing DVLs
+spec = 0.9 ## Sensitivity of assays
+sens = seq(0.8, 1, by = 0.1) ## Specificity of assays
+M = c(12, 24, 32) ## Total number of wells
+n = 12 ## Number of existing DVLs
 Tau = 1 ## Overall IUPM (split among n DLVs)
-u = 1 # Dilution in millions of cells per well
-q = 1 # Proportion of p24-positive wells to undergo UDSA
-constant_Tau = TRUE # Indicator of constant IUPM across n DVLs
+u = 1 ## Dilution in millions of cells per well
+q = 1 ## Proportion of p24-positive wells to undergo UDSA
+constant_Tau = TRUE ## Indicator of constant IUPM across n DVLs
 
 # Number of simulation settings
 num_sett = length(sens) ^ 2 * length(spec) ^ 2 * length(M) * length(n) * length(Tau) * length(constant_Tau) * length(q)
@@ -31,8 +39,8 @@ Settings = apply(X = expand.grid("M" = M,
                  MARGIN = 2,
                  FUN = function(x) {
                    rep(x, each = num_reps)
-                 }
-) |>  as.data.frame() |>
+                 }) %>%  
+  as.data.frame() %>%
   dplyr::mutate(sim_id = rep(x = seq(1, num_reps), times = num_sett),
                 Lambda = NA,
                 conv = NA,
@@ -54,7 +62,7 @@ one_sim = function(setting_row) {
                 as.numeric(setting_row["n"]) / 2))
   }
   temp = simulate_assay_sd(M = as.numeric(setting_row["M"]),
-                           tau = as.numeric(setting_row["Tau"]),
+                           tau = tau,
                            q = as.numeric(setting_row["q"]),
                            u = as.numeric(setting_row["u"]),
                            sens_QVOA = as.numeric(setting_row["sensQVOA"]),
@@ -72,7 +80,7 @@ one_sim = function(setting_row) {
   while(sum(temp$any_DVL) == 0 | is.null(dim(temp$DVL_specific)) | any(prevDVL == 1)) {
     assay_count = assay_count + 1
     temp = simulate_assay_sd(M = as.numeric(setting_row["M"]),
-                             tau = as.numeric(setting_row["Tau"]),
+                             tau = tau,
                              q = as.numeric(setting_row["q"]),
                              u = as.numeric(setting_row["u"]),
                              sens_QVOA = as.numeric(setting_row["sensQVOA"]),
@@ -86,7 +94,6 @@ one_sim = function(setting_row) {
     }
   }
   setting_row["assay_resampled"] = assay_count > 1
-  saveRDS(temp, "~/Downloads/temp-assay")
 
   ########################################################################################
   # Find MLEs ############################################################################
@@ -115,31 +122,13 @@ one_sim = function(setting_row) {
               result = setting_row))
 }
 
-# Be reproducible
-sim_seed = 11422
-set.seed(sim_seed)
-
 Results = data.frame()
 Assays = list()
 for (i in 1:nrow(Settings)) {
   new_sim = one_sim(setting_row = Settings[i, ])
   Assays[[length(Assays) + 1]] = new_sim$assay
   Results = rbind(Results, new_sim$result)
-  write.csv(Results, "sd_imperfect_vary_sensitivity.csv", row.names = F)
-  if (i %% 10 == 0) print(paste0("Sim ", i, " complete (", round(100 * i/nrow(Settings)), "%)"))
+  saveRDS(Assays, paste0("vary-sens/Assays-vary-sens-seed", sim_seed))
+  write.csv(Results, paste0("vary-sens/vary-sens-seed", sim_seed, ".csv"), row.names = F)
+  if (i %% 100 == 0) print(paste0("Sim ", i, " complete (", round(100 * i/nrow(Settings)), "%)"))
 }
-
-# Count the number of unique assays 
-length(unique(lapply(X = Assays, FUN = colSums))) ## 1812 / 27000
-
-# Count the number of unique MLEs
-length(unique(Results$Lambda)) ## 857 / 27000
-length(unique(Results$Lambda_naive)) ## 226 / 27000
-
-# Frequency of convergence messages
-table(Results$msg)
-table(Results$msg_naive)
-
-# Check for extreme values (MLE > 10)
-table(as.numeric(Results$Lambda) > 10, Results$M)
-table(as.numeric(Results$Lambda_naive) > 10, Results$M)

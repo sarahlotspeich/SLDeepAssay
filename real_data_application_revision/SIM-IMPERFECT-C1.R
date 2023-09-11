@@ -68,7 +68,7 @@ for (t in 1:nrow(try_sens_spec)) {
                                       spec_QVOA = try_sens_spec$spec_qvoa[t], 
                                       sens_UDSA = try_sens_spec$sens_udsa[t], 
                                       spec_UDSA = try_sens_spec$spec_udsa[t],
-                                      lb = 1E-6)
+                                      lb = 1E-5)
   
   try_sens_spec$mle[t] = fit1$mle
   try_sens_spec$ci_lb[t] = fit1$ci[1]
@@ -85,7 +85,7 @@ fit2 = fit_SLDeepAssay_md_imperfect(assay_md = temp,
                                     spec_QVOA = 1, 
                                     sens_UDSA = 1, 
                                     spec_UDSA = 1,
-                                    lb = 1E-6)
+                                    lb = 1E-5)
 
 try_sens_spec = try_sens_spec |> 
   dplyr::bind_rows(
@@ -121,7 +121,7 @@ for (t in 1:nrow(try_sens_spec)) {
                                       spec_QVOA = try_sens_spec$spec_qvoa[t], 
                                       sens_UDSA = try_sens_spec$sens_udsa[t], 
                                       spec_UDSA = try_sens_spec$spec_udsa[t],
-                                      lb = 1E-6)
+                                      lb = 1E-5)
   
   try_sens_spec$mle[t] = fit1$mle
   try_sens_spec$ci_lb[t] = fit1$ci[1]

@@ -46,37 +46,6 @@ for (d in 1:length(u)) {
                  DVL_specific = Z)
 }
 
-# Estimate IUPM 
-## New likelihood (corrected IUPM estimator for imperfect assays)
-fit1 = fit_SLDeepAssay_md_imperfect(assay_md = temp,
-                                    u = u, 
-                                    sens_QVOA = 1, 
-                                    spec_QVOA = 1, 
-                                    sens_UDSA = 1, 
-                                    spec_UDSA = 1)
-#with(fit1, c(mle, convergence, message))
-
-# Original likelihood (naive IUPM estimator)
-assay_summary = vapply(X = 1:length(u),
-                       FUN.VALUE = numeric(7 + n),
-                       FUN = function(d) {
-                         M = ncol(temp[[d]]$DVL_specific) # number of wells
-                         n = nrow(temp[[d]]$DVL_specific) # number of DVLs detected
-                         MP = sum(temp[[d]]$any_DVL) # number of p24-positive wells
-                         MN = M - MP # number of p24-negative wells
-                         m = sum(!is.na(colSums(temp[[d]]$DVL_specific))) # number of deep-sequenced wells
-                         q = ifelse(MP == 0, 0, m / MP) # proportion of p24-positive wells deep sequenced
-                         Y = rowSums(temp[[d]]$DVL_specific, na.rm = TRUE) # number of infected wells per DVL
-                         return((c("u" = u[d], "M"=M, "n"=n,
-                                   "MN"=MN, "MP"=MP, "m"=m, "q"=q, "Y"=Y)))
-                       })
-assay_summary = as.data.frame(t(assay_summary))
-fit2 = fit_SLDeepAssay_md(assay_summary = assay_summary, 
-                          corrected = FALSE)
-
-# Check: fit1 with perfect sens/spec should be approximately equal to fit2
-fit1$mle; fit2$mle
-
 # Try a variety of sensitivity/specificity combinations
 ## (same sensitivity/specificity combinations as in Figure S5)
 try_sens_spec = expand.grid(sens_qvoa = seq(0.8, 1, by = 0.1), 
@@ -107,7 +76,75 @@ for (t in 1:nrow(try_sens_spec)) {
   try_sens_spec$msg[t] = fit1$message
 }
 
+# For comparison - 
+## Estimate IUPM using original likelihood ("perfect assays" MLE)
+assay_summary = vapply(X = 1:length(u),
+                       FUN.VALUE = numeric(7 + n),
+                       FUN = function(d) {
+                         M = ncol(temp[[d]]$DVL_specific) # number of wells
+                         n = nrow(temp[[d]]$DVL_specific) # number of DVLs detected
+                         MP = sum(temp[[d]]$any_DVL) # number of p24-positive wells
+                         MN = M - MP # number of p24-negative wells
+                         m = sum(!is.na(colSums(temp[[d]]$DVL_specific))) # number of deep-sequenced wells
+                         q = ifelse(MP == 0, 0, m / MP) # proportion of p24-positive wells deep sequenced
+                         Y = rowSums(temp[[d]]$DVL_specific, na.rm = TRUE) # number of infected wells per DVL
+                         return((c("u" = u[d], "M"=M, "n"=n,
+                                   "MN"=MN, "MP"=MP, "m"=m, "q"=q, "Y"=Y)))
+                       })
+assay_summary = as.data.frame(t(assay_summary))
+fit2 = fit_SLDeepAssay_md(assay_summary = assay_summary, 
+                          corrected = FALSE)
+fit2
+
+try_sens_spec = try_sens_spec |> 
+  dplyr::bind_rows(
+    data.frame(sens_qvoa = 1, spec_qvoa = 1, sens_udsa = 1, spec_udsa = 1, 
+               mle = fit2$mle, ci_lb = fit2$ci[1], ci_ub = fit2$ci[2])
+  )
+
 # Save results 
 try_sens_spec |> 
-  write.csv("~/Documents/SLDeepAssay/sim_data/subject_c1_imperfect.csv", 
+  write.csv("~/Documents/SLDeepAssay/sim_data/subject_c1_imperfect_vary_sens.csv", 
+            row.names = F)
+
+# Try a variety of sensitivity/specificity combinations
+## (same sensitivity/specificity combinations as in Figure S5)
+try_sens_spec = expand.grid(sens_qvoa = 0.9, 
+                            spec_qvoa = seq(0.8, 1, by = 0.1), 
+                            sens_udsa = 0.9, 
+                            spec_udsa = seq(0.8, 1, by = 0.1),
+                            mle = NA, 
+                            ci_lb = NA, 
+                            ci_ub = NA,
+                            code = NA,
+                            msg = NA
+)
+
+for (t in 1:nrow(try_sens_spec)) {
+  # Estimate IUPM 
+  ## New likelihood (corrected IUPM estimator for imperfect assays)
+  fit1 = fit_SLDeepAssay_md_imperfect(assay_md = temp,
+                                      u = u, 
+                                      sens_QVOA = try_sens_spec$sens_qvoa[t], 
+                                      spec_QVOA = try_sens_spec$spec_qvoa[t], 
+                                      sens_UDSA = try_sens_spec$sens_udsa[t], 
+                                      spec_UDSA = try_sens_spec$spec_udsa[t])
+  
+  try_sens_spec$mle[t] = fit1$mle
+  try_sens_spec$ci_lb[t] = fit1$ci[1]
+  try_sens_spec$ci_ub[t] = fit1$ci[2]
+  try_sens_spec$code[t] = fit1$convergence
+  try_sens_spec$msg[t] = fit1$message
+}
+
+# For comparison - Estimate IUPM using original likelihood ("perfect assays" MLE)
+try_sens_spec = try_sens_spec |> 
+  dplyr::bind_rows(
+    data.frame(sens_qvoa = 1, spec_qvoa = 1, sens_udsa = 1, spec_udsa = 1, 
+               mle = fit2$mle, ci_lb = fit2$ci[1], ci_ub = fit2$ci[2])
+  )
+
+# Save results 
+try_sens_spec |> 
+  write.csv("~/Documents/SLDeepAssay/sim_data/subject_c1_imperfect_vary_spec.csv", 
             row.names = F)

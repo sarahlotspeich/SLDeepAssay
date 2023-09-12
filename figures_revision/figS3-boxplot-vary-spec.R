@@ -1,11 +1,14 @@
 library(ggplot2)
 
-Results = read.csv(file = "https://raw.githubusercontent.com/sarahlotspeich/SLDeepAssay/main/sim_data/sd_imperfect_vary_specificity.csv") |> 
+Results = do.call(what = dplyr::bind_rows, 
+                  args = lapply(X = paste0("https://raw.githubusercontent.com/sarahlotspeich/SLDeepAssay/main/sim_data/vary-spec/vary-spec-seed", 11422:11431, ".csv"), 
+                                FUN = read.csv)) |> 
   dplyr::mutate(
     Lambda = ifelse(conv == 0, ## Make any reps that didn't converge NA 
                     yes = as.numeric(Lambda), 
                     no = NA)
   )
+
 
 Results |> 
   dplyr::group_by(M, specQVOA, specUDSA) |> 

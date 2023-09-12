@@ -6,9 +6,6 @@ Results = do.call(what = dplyr::bind_rows,
   dplyr::mutate(
     Lambda = ifelse(conv == 0, ## Make any reps that didn't converge NA 
                     yes = as.numeric(Lambda), 
-                    no = NA),
-    Lambda_naive = ifelse(conv_naive == 0, ## Make any reps that didn't converge NA 
-                    yes = as.numeric(Lambda_naive), 
                     no = NA)
   )
 
@@ -25,8 +22,6 @@ Results |>
   )
 ## MLE (Imperfect Assays) converged in >= 999 / 1000 reps per setting
 table(Results$msg) ### only 1 / 9000 replicates total 
-## MLE (Perfect Assays) converged in >=992 / 1000 reps per setting
-table(Results$msg_naive) ### only 14 / 9000 replicates total 
 
 plot_data = Results |>
   dplyr::mutate(sensQVOA = factor(x = sensQVOA, 

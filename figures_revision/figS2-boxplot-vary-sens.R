@@ -38,8 +38,8 @@ plot_data = Results |>
                                    levels = c("Lambda", "Lambda_naive"),
                                    labels = c("MLE (Imperfect Assays)", "MLE (Perfect Assays)"))) 
 
-# Exclude 159 replicates where MLE (Imperfect Assays) was > 10, 
-## 36 replicates where MLE (Perfect Assays) was > 10.
+# Exclude 2 replicates where MLE (Imperfect Assays) was > 10, 
+## 0 replicates where MLE (Perfect Assays) was > 10.
 table(plot_data$value > 10, plot_data$estimator)
 
 # Count number of extreme replicates per estimator + setting
@@ -48,7 +48,7 @@ plot_data |>
   dplyr::summarize(num_extreme_vals = sum(value > 10)) |> 
   dplyr::filter(num_extreme_vals > 0) |> 
   dplyr::arrange(desc(num_extreme_vals))
-## No more than 45 / 1000 = 4.5% per estimator + setting
+## No more than 2 / 1000 = 0.2% per estimator + setting
 
 plot_data |> 
   dplyr::filter(value <= 10) |> 
@@ -65,5 +65,5 @@ plot_data |>
   theme(legend.position = "top") + 
   ylab("IUPM Estimate") + 
   xlab("Number of Replicate Wells (M)") 
-ggsave(filename = "figS2-boxplot-vary-sens.png", 
+ggsave(filename = "~/Documents/SLDeepAssay/figures_revision/figS2-boxplot-vary-sens.png", 
        device = "png", units = "in", width = 8, height = 8)

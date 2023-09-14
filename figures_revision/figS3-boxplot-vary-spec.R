@@ -25,10 +25,6 @@ Results |>
 ## MLE (Perfect Assays) converged in 1000 / 1000 reps per setting
 table(Results$msg) ### 27000 / 270000 replicates total 
 
-# Exclude 159 replicates where MLE (Imperfect Assays) was > 10, 
-## 36 replicates where MLE (Perfect Assays) was > 10.
-table(Results$value > 10, Results$estimator)
-
 plot_data = Results |>
   dplyr::mutate(specQVOA = factor(x = specQVOA, 
                                   levels = seq(1, 0.8, by = -0.1), 
@@ -70,5 +66,5 @@ plot_data |>
   theme(legend.position = "top") + 
   ylab("Estimated IUPM") + 
   xlab("Number of Replicate Wells (M)")  
-ggsave(filename = "figS3-boxplot-vary-spec.png", 
+ggsave(filename = "~/Documents/SLDeepAssay/figures_revision/figS3-boxplot-vary-spec.png", 
        device = "png", units = "in", width = 8, height = 8)

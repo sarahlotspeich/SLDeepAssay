@@ -17,17 +17,8 @@ library(tidyr)
 
 # load data
 setwd(here::here())
-sd_sim_data = read.csv("https://raw.githubusercontent.com/sarahlotspeich/SLDeepAssay/main/sim_data/sd_sim_data.csv")
-
-# Function format_nums() rounds and formats numbers for LaTex table
-format_nums = function(x, digits = 2) {
-  paste0("$", format(round(x, digits = digits), nsmall = digits) , "$")
-}
-
-# check number of sims removed
-sd_sim_data |>
-  select(Message) |>
-  sum()
+sd_sim_data = read.csv("https://raw.githubusercontent.com/sarahlotspeich/SLDeepAssay/main/sim_data/sd_sim_data.csv") |> 
+  filter(constant_Tau, Tau == 0.5)
 
 # check for replicates MLE and BC-MLE without UDSA were infinite (these are excluded)
 ## these counts are noted in the Table footnote
@@ -51,14 +42,16 @@ sd_sim_summ = sd_sim_data |>
               names_from = "Method",
               values_from = c("n_removed", "rel_bias", "ase", "ese", "cp"))
 
+# produce table with simulation summary
+# Function format_nums() rounds and formats numbers for LaTex table
+format_nums = function(x, digits = 2) {
+  paste0("$", format(round(x, digits = digits), nsmall = digits) , "$")
+}
 analysis_cols = as.vector(outer(c("rel_bias", "ase", "ese", "cp"),
                                 as.vector(outer(c("_MLE", "_BCMLE"), c("_woUDSA", "_wUDSA"), paste0)), paste0))
 
 col_order = c("n", "M", "q", analysis_cols)
-
-# produce table with simulation summary
 sd_sim_summ |> 
-  filter(constant_Tau == 1, Tau == 0.5) |> # Subset to columns with constant Tau
   dplyr::ungroup() |>
   dplyr::select(all_of(col_order)) |>
   dplyr::mutate_at(analysis_cols, format_nums) |>

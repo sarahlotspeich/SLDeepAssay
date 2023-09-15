@@ -58,24 +58,12 @@ one_sim = function(setting_row) {
                                 tau = tau,
                                 q = q,
                                 u = u)
-  
-  # Resimulate if extreme scenario
-  resim_all_neg = resim_all_pos = 0 ## initialize counter for which extreme scenario was encountered
-  if (mean(colSums(res$Assay), na.rm = TRUE) == 0 | any(rowMeans(res$Assay, na.rm = TRUE) == 1)) {
-    res = simulate_SLDeepAssay_sd(M = M,
-                                  tau = tau,
-                                  q = q,
-                                  u = u)
-    resim_all_neg = resim_all_neg + as.numeric(mean(colSums(res$Assay), na.rm = TRUE))
-    resim_all_pos = resim_all_pos + as.numeric(any(rowMeans(res$Assay, na.rm = TRUE) == 1))
-  }
-  
+ 
   res_rshp = cbind(constant_Tau, Tau, n, M, q,
                    Method = c("MLE_woUDSA", "BCMLE_woUDSA", "MLE_wUDSA", "BCMLE_wUDSA"),
                    do.call(what = rbind, args = res[grep(pattern = "MLE", x = names(res), value = FALSE)]),
                    Message = res$Message,
                    Message_Detailed = ifelse(is.null(res$Message_Detailed), "", res$Message_Detailed),
-                   resim_all_neg, resim_all_pos,
                    row.names = NULL)
   return(res_rshp)
 }

@@ -52,7 +52,6 @@ analysis_cols = as.vector(outer(c("rel_bias", "ase", "ese", "cp"),
 
 col_order = c("n", "M", "q", analysis_cols)
 sd_sim_summ |> 
-  filter(constant_Tau == 0, Tau == 1) |> # Subset to columns with constant Tau
   dplyr::ungroup() |>
   dplyr::select(all_of(col_order)) |>
   dplyr::mutate_at(analysis_cols, format_nums) |>

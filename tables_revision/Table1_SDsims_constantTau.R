@@ -17,23 +17,14 @@ library(tidyr)
 
 # load data
 setwd(here::here())
-sd_sim_data = read.csv("https://raw.githubusercontent.com/sarahlotspeich/SLDeepAssay/main/sim_data/sd_sim_data.csv")
-
-# Function format_nums() rounds and formats numbers for LaTex table
-format_nums = function(x, digits = 2) {
-  paste0("$", format(round(x, digits = digits), nsmall = digits) , "$")
-}
-
-# check number of sims removed
-sd_sim_data |>
-  select(Message) |>
-  sum()
+sd_sim_data = read.csv("https://raw.githubusercontent.com/sarahlotspeich/SLDeepAssay/main/sim_data/sd_sim_data.csv") |> 
+  dplyr::filter(constant_Tau, Tau == 1)
 
 # check for replicates MLE and BC-MLE without UDSA were infinite (these are excluded)
 ## these counts are noted in the Table footnote
 sd_sim_data |> 
   filter(abs(Est) == Inf) |> 
-  group_by(Method, Tau, constant_Tau) |> 
+  group_by(Method) |> 
   summarize(reps = n())
 
 # summarize sim results
@@ -51,14 +42,15 @@ sd_sim_summ = sd_sim_data |>
               names_from = "Method",
               values_from = c("n_removed", "rel_bias", "ase", "ese", "cp"))
   
-analysis_cols = as.vector(outer(c("rel_bias", "ase", "ese", "cp"),
-                as.vector(outer(c("_MLE", "_BCMLE"), c("_woUDSA", "_wUDSA"), paste0)), paste0))
-
-col_order = c("n", "M", "q", analysis_cols)
-
 # produce table with simulation summary
+# Function format_nums() rounds and formats numbers for LaTex table
+format_nums = function(x, digits = 2) {
+  paste0("$", format(round(x, digits = digits), nsmall = digits) , "$")
+}
+analysis_cols = as.vector(outer(c("rel_bias", "ase", "ese", "cp"),
+                                as.vector(outer(c("_MLE", "_BCMLE"), c("_woUDSA", "_wUDSA"), paste0)), paste0))
+col_order = c("n", "M", "q", analysis_cols)
 sd_sim_summ |> 
-  filter(constant_Tau == 1, Tau == 1) |> # Subset to columns with constant Tau
   dplyr::ungroup() |>
   dplyr::select(all_of(col_order)) |>
   dplyr::mutate_at(analysis_cols, format_nums) |>
@@ -68,3 +60,18 @@ sd_sim_summ |>
   add_header_above(header = c(" " = 3, "MLE" = 4, "Bias-Corrected MLE" = 4, "MLE" = 4, "Bias-Corrected MLE" = 4), bold = TRUE) |>
   add_header_above(header = c(" " = 3, "Without UDSA" = 8, "With UDSA" = 8), bold = TRUE) |>
   row_spec(row = 0, bold = TRUE)
+
+# Mentioned in the text: Relative efficiency with UDSA to without 
+re = sd_sim_summ |> 
+  dplyr::mutate(re_MLE = ese_MLE_woUDSA ^ 2 / ese_MLE_wUDSA ^ 2, 
+                re_BCMLE = ese_BCMLE_woUDSA ^ 2 / ese_BCMLE_wUDSA ^ 2
+                ) |> 
+  dplyr::select(dplyr::starts_with(c("re_", "ese_")))
+## Best for MLE
+re |> 
+  dplyr::ungroup() |> 
+  dplyr::filter(re_MLE == max(re_MLE))
+## Best for BC-MLE
+re |> 
+  dplyr::ungroup() |> 
+  dplyr::filter(re_BCMLE == max(re_BCMLE))

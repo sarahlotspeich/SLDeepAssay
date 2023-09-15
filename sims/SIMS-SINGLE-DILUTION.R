@@ -93,4 +93,4 @@ Results = do.call(what = rbind,
 
 # Save
 Results |>
-  write.csv(file = "raw.csv", row.names = FALSE)
+  write.csv(file = "sim_data/sd_sim_data.csv", row.names = FALSE)

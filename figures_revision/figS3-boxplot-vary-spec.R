@@ -43,14 +43,6 @@ plot_data = Results |>
 ## 0 replicates where MLE (Perfect Assays) was > 10.
 table(plot_data$value > 10, plot_data$estimator)
 
-# Count number of extreme replicates per estimator + setting
-plot_data |> 
-  dplyr::group_by(estimator, specQVOA, specUDSA, M) |> 
-  dplyr::summarize(num_extreme_vals = sum(value > 10)) |> 
-  dplyr::filter(num_extreme_vals > 0) |> 
-  dplyr::arrange(desc(num_extreme_vals))
-## No more than 1 / 1000 = 0.1% per estimator + setting
-
 plot_data |> 
   dplyr::filter(value <= 10) |> 
   ggplot(aes(x = factor(M), y = value, fill = estimator)) +

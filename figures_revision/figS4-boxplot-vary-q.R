@@ -47,7 +47,7 @@ plot_data |>
   facet_grid(cols = vars(q), 
              scales = "free") + 
   ggthemes::scale_fill_colorblind(name = "Method") +
-  theme_minimal() + 
+  theme_minimal(base_size = 24) + 
   theme(legend.position = "top") + 
   ylab("IUPM Estimate") + 
   xlab("Number of Replicate Wells (M)") 

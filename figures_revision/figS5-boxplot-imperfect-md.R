@@ -48,11 +48,11 @@ plot_data |>
              cols = vars(sensUDSA), 
              scales = "free") + 
   ggthemes::scale_fill_colorblind(name = "Method") +
-  theme_minimal(base_size = 24) + 
+  theme_minimal(base_size = 16) + 
   theme(legend.position = "top") + 
   ylab("IUPM Estimate") + 
-  xlab("Number of Replicate Wells (M)") 
+  xlab(latex2exp::TeX("Numbers of Replicate Wells ($\\bf{M}$)")) 
 
 ggsave(filename = "~/Documents/SLDeepAssay/figures_revision/figS5-boxplot-imperfect-md.png", 
-       device = "png", units = "in", width = 6, height = 6)
+       device = "png", units = "in", width = 8, height = 8)
 

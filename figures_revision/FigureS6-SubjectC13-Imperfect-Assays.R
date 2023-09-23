@@ -22,7 +22,8 @@ figureS6_data = read.csv(file = "https://raw.githubusercontent.com/sarahlotspeic
 plot_data = figureS6_data |> 
   dplyr::mutate(sensQVOA = factor(x = sens_qvoa, 
                                   levels = seq(0.8, 1, by = 0.1), 
-                                  labels = paste0("QVOA Sensitivity = ", seq(80, 100, by = 10), "%")),
+                                  labels = paste0(seq(80, 100, by = 10), "%")),
+                                  #labels = paste0("QVOA Sensitivity = ", seq(80, 100, by = 10), "%")),
                 sensUDSA = factor(x = sens_udsa, 
                                   levels = seq(0.8, 1, by = 0.1), 
                                   labels = paste0("UDSA Sensitivity = ", seq(80, 100, by = 10), "%")),
@@ -33,19 +34,16 @@ naive_iupm = plot_data |>
   dplyr::pull(mle)
 plot_vary_sens = plot_data |> 
   dplyr::filter(spec_qvoa < 1) |> 
-  ggplot(aes(x = 1, y = mle, col = sensQVOA, ymin = ci_lb, ymax = ci_ub)) +
+  ggplot(aes(x = sensQVOA, y = mle, col = sensQVOA, ymin = ci_lb, ymax = ci_ub)) +
   geom_hline(yintercept = naive_iupm, linetype = 2, color = "grey") + 
   geom_point(size = 2,
              position = position_dodge(width = 0.5)) +
   geom_errorbar(width = 0.3,
                 position = position_dodge(width = 0.5)) +
-  facet_grid(cols = vars(sensUDSA), 
-             rows = vars(specQVOA_UDSA)) + 
-  theme_minimal(base_size = 16) + #theme_light(base_size = 16) +
-  theme(legend.position = "top", 
-        axis.ticks.x = element_blank(),
-        axis.text.x = element_blank(),
-        axis.title.x = element_blank()) +
+  facet_grid(cols = vars(sensUDSA)) + 
+  theme_minimal(base_size = 16) + 
+  theme(legend.position = "none") +
+  xlab("QVOA Sensitivity") +
   ylab("IUPM Estimate") + 
   ggthemes::scale_colour_colorblind(name = "")
 

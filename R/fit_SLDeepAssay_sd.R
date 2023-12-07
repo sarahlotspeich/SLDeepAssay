@@ -8,8 +8,6 @@
 #' @param Y (Optional) Instead of supplying \code{assay}, supply the numbers of wells (without missing data) that were infected with each DVL (a vector of length \code{n}). Default is \code{Y = NULL}.
 #' @param corrected Logical, if \code{corrected = TRUE} the bias-corrected MLE will be returned. If \code{corrected = FALSE} the bias-corrected MLE will be not be returned. If \code{corrected = NULL}, the bias correction will be computed if here are <= 40 DVLs in \code{assay}. Default is \code{corrected = NULL}.
 #' @param maxit The maximum number of iterations (passed to \code{optim}). Default is \code{maxit = 1E4}.
-#' @param lb Parameter lower bound (passed to \code{optim}). Default is \code{lb = 1E-6}.
-#' @param ub Parameter upper bound (passed to \code{optim}). Default is \code{ub = Inf}.
 #' @return A named list with the following slots:
 #' \item{mle}{MLE}
 #' \item{se}{Standard error for the MLE}
@@ -19,7 +17,7 @@
 #' @export
 #'
 #'
-fit_SLDeepAssay_sd = function(assay, u = 1, M = NULL, n = NULL, MP = NULL, m = NULL, Y = NULL, corrected = NULL, maxit = 1E4, lb = 1E-6, ub = Inf) {
+fit_SLDeepAssay_sd = function(assay, u = 1, M = NULL, MP = NULL, m = NULL, Y = NULL, corrected = NULL, maxit = 1E4) {
   # If the raw assay data are provided then compute the following values
   if (!is.null(assay)) {
     M = ncol(assay) # number of wells (total)
@@ -38,19 +36,6 @@ fit_SLDeepAssay_sd = function(assay, u = 1, M = NULL, n = NULL, MP = NULL, m = N
   corrected = ifelse(is.null(corrected),
                      n <= 40,
                      corrected)
-  # Fit MLE (L-BFGS-B)
-  #optimization = optim(par = - log(1 - Y / M),
-  #                     fn = loglik_sd,
-  #                     gr = gloglik_sd,
-  #                     M = M,
-  #                     MP = MP,
-  #                     m = m,
-  #                     Y = Y,
-  #                     method = "L-BFGS-B",
-  #                     control = list(maxit = maxit),
-  #                     lower = rep(lb, n),
-  #                     upper = rep(ub, n),
-  #                     hessian = F)
   # Fit MLE (BFGS)
   optimization = optim(par = log(-log(1 - Y / M)),
                        fn = function(theta, M, MP, m, Y) {

@@ -5,9 +5,6 @@
 #' @param assay_summary (Optional) Instead of supplying \code{assay} and \code{u}, supply a summary of assay results in the form of a data frame. This summary should contain one row per dilution level and the following columns: M (total number of wells), n (number of distinct viral lineages \[DVL\]), MN (number of p24-negative wells), m (number of deep sequenced wells), Y1,..., Yn (counts of wells positive for DVL i, (i = 1,...,n), and u (dilution levels, in millions of cells per well).
 #' @param corrected Logical, if \code{corrected = TRUE} the bias-corrected MLE will be returned. If \code{corrected = FALSE} the bias-corrected MLE will be not be returned. If \code{corrected = NULL}, the bias correction will be computed if here are <= 40 DVLs in \code{assay}. Default is \code{corrected = NULL}.
 #' @param maxit The maximum number of iterations (passed to \code{optim}). Default is \code{maxit = 1E4}.
-#' @param lb Lower-bound on the IUPM (passed to \code{optim}). Default is \code{lb = 1E-6}.
-#' @param ub Upper-bound on the IUPM (passed to \code{optim}). Default is \code{ub = Inf}.
-#' @param optim_method optimization method ("BFGS" or "L-BFGS-B")
 #' @return Named list with the following slots:
 #' \item{mle}{MLE}
 #' \item{se}{Standard error for the MLE}
@@ -43,42 +40,23 @@ fit_SLDeepAssay_md = function(assay = NULL, u = NULL, assay_summary, corrected =
                      yes = assay_summary$n[1] <= 40,
                      no = corrected)
 
-  # Fit MLE (L-BFGS-B)
-  if (optim_method == "L-BFGS-B") {
-    optimization = optim(par = rep(0.1, assay_summary$n[1]),
-                         fn = loglik_md, 
-                         gr = gloglik_md, 
-                         assay_summary = assay_summary,
-                         method = "L-BFGS-B",
-                         control = list(maxit = maxit),
-                         lower = rep(lb, assay_summary$n[1]),
-                         upper = rep(ub, assay_summary$n[1]),
-                         hessian = F)
-    
-    ### parameter estimate
-    tau_hat = optimization$par
-    Tau_hat = sum(tau_hat)
-    
   # Fit MLE (BFGS)
-  } else if (optim_method == "BFGS") {
-    optimization = optim(par = log(rep(0.1, assay_summary$n[1])),
-                         fn = function(theta, assay_summary) {
-                           loglik_md(tau = exp(theta),
-                                     assay_summary = assay_summary) },
+  optimization = optim(par = log(rep(0.1, assay_summary$n[1])),
+                       fn = function(theta, assay_summary) {
+                         loglik_md(tau = exp(theta),
+                                   assay_summary = assay_summary) },
                          gr = function(theta, assay_summary) {
                            gloglik_md(tau = exp(theta),
                                       assay_summary = assay_summary) *
                              exp(theta) },   # chain rule 
-                         assay_summary = assay_summary,
-                         method = "BFGS",
-                         control = list(maxit = maxit),
-                         hessian = F)
+                       assay_summary = assay_summary,
+                       method = "BFGS",
+                       control = list(maxit = maxit),
+                       hessian = F)
     
-    ### parameter estimate
-    tau_hat = exp(optimization$par)
-    Tau_hat = sum(tau_hat)
-    
-  }
+  ### parameter estimate
+  tau_hat = exp(optimization$par)
+  Tau_hat = sum(tau_hat)
   
   # Fisher information matrix
   I = fisher_md(tau = tau_hat,

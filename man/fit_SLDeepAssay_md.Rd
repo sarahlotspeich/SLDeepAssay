@@ -25,12 +25,6 @@ fit_SLDeepAssay_md(
 \item{corrected}{Logical, if \code{corrected = TRUE} the bias-corrected MLE will be returned. If \code{corrected = FALSE} the bias-corrected MLE will be not be returned. If \code{corrected = NULL}, the bias correction will be computed if here are <= 40 DVLs in \code{assay}. Default is \code{corrected = NULL}.}
 
 \item{maxit}{The maximum number of iterations (passed to \code{optim}). Default is \code{maxit = 1E4}.}
-
-\item{lb}{Lower-bound on the IUPM (passed to \code{optim}). Default is \code{lb = 1E-6}.}
-
-\item{ub}{Upper-bound on the IUPM (passed to \code{optim}). Default is \code{ub = Inf}.}
-
-\item{optim_method}{optimization method ("BFGS" or "L-BFGS-B")}
 }
 \value{
 Named list with the following slots:

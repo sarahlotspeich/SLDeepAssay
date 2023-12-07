@@ -8,14 +8,11 @@ fit_SLDeepAssay_sd(
   assay,
   u = 1,
   M = NULL,
-  n = NULL,
   MP = NULL,
   m = NULL,
   Y = NULL,
   corrected = NULL,
-  maxit = 10000,
-  lb = 1e-06,
-  ub = Inf
+  maxit = 10000
 )
 }
 \arguments{
@@ -34,10 +31,6 @@ fit_SLDeepAssay_sd(
 \item{corrected}{Logical, if \code{corrected = TRUE} the bias-corrected MLE will be returned. If \code{corrected = FALSE} the bias-corrected MLE will be not be returned. If \code{corrected = NULL}, the bias correction will be computed if here are <= 40 DVLs in \code{assay}. Default is \code{corrected = NULL}.}
 
 \item{maxit}{The maximum number of iterations (passed to \code{optim}). Default is \code{maxit = 1E4}.}
-
-\item{lb}{Parameter lower bound (passed to \code{optim}). Default is \code{lb = 1E-6}.}
-
-\item{ub}{Parameter upper bound (passed to \code{optim}). Default is \code{ub = Inf}.}
 }
 \value{
 A named list with the following slots:

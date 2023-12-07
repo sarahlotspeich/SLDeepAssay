@@ -182,10 +182,65 @@ res_md
 
 ## Testing for Overdisperion
 
-As described in the accompanying paper, we may be concerned with infectious cell counts being overdispersed, i.e., following a negative binomial distribution as opposed to a Poisson. When data are available from multiple dilution levels, we can test the null hypothesis of no overdispersion using a likelihood ratio test.
+As described in the accompanying paper, we may be concerned with infectious cell counts being overdispersed, i.e., following a negative binomial distribution as opposed to a Poisson. When data are available from multiple dilution levels, we can test the null hypothesis of no overdispersion via a likelihood ratio test with the function `lrt_SLDeepAssay_md()`.
+
+The arguments for `lrt_SLDeepAssay_md()` are the same as those for `fit_SLDeepAssay_md()`, along with three additional optional arguments needed to maximize the negative binomial likelihood. The defaults for these arguments tend to work well in most cases.
+
+  -   `lb` Lower-bound on the IUPM (passed to \code{optim}). Default is `lb = 1E-6`.
+  -   `ub` Upper-bound on the IUPM (passed to \code{optim}). Default is `ub = Inf`.
+  -   `k0` initial value for the dispersion parameter k in optimization procedure. A value of k = `Inf` corresponds to no overdispersion. Default is `k = 1`.
 
 ```{r}
 
+lrt_res <- lrt_SLDeepAssay_md(assay_summary = assay_md)
+
+lrt_res
+
+```
+
+## Imperfect Assays
+
+Here we simulate data assuming imperfect assay, by providing sensitivities and specificities of the assays of 90\%.
+
+```{r}
+
+assay_imp <- simulate_assay_sd(M = 24,
+                               tau = rep(0.5 / 6, 6),
+                               q = 1,
+                               sens_QVOA = 0.9,
+                               spec_QVOA = 0.9,
+                               sens_UDSA = 0.9,
+                               spec_UDSA = 0.9)
+
+```
+
+Then we can analyze these data (i) naively assuming that the assays have perfect sensitivity and (ii) assuming they have 90\% sensitivity and specificity.
+
+The naive fit uses the original `fit_SLDeepAssay_sd()` function. Note that the estimated IUPM and corresponding confidence interval are far from the true IUPM of 0.5.
+
+```{r}
+
+# naive fit (assuming perfect assays)
+res_imp1 <- fit_SLDeepAssay_sd(assay = assay_imp$DVL_specific)
+
+res_imp1
+
+```
+
+The `fit_SLDeepAssay_sd_imperfect()` function estimates the IUPM under given values for the sensitivities and specificities of the assays. Note that this function, unlike `fit_SLDeepAssay_sd()` requires QVOA and UDSA data, which are stored in `assay_imp$any_DVL` and `assay_imp$DVL_specific`, respectively.
+
+With the sensitivites and specificities correctly adjusted for, the estimated IUPM is much closer to 0.5, and the 95\% confidence interval contains the true value.
+
+```{r}
+# fit accounting for imperfect assays
+res_imp2 <- fit_SLDeepAssay_sd_imperfect(assay_QVOA = assay_imp$any_DVL,
+                                         assay_UDSA = assay_imp$DVL_specific,
+                                         sens_QVOA = 0.9,
+                                         spec_QVOA = 0.9,
+                                         sens_UDSA = 0.9,
+                                         spec_UDSA = 0.9)
+
+res_imp2
 
 ```
 

@@ -187,7 +187,7 @@ negbin_gloglik_md = function(tau, gamma, assay_summary) {
 #' @param maxit The maximum number of iterations (passed to \code{optim}). Default is \code{maxit = 1E4}.
 #' @param lb Lower-bound on the IUPM (passed to \code{optim}). Default is \code{lb = 1E-6}.
 #' @param ub Upper-bound on the IUPM (passed to \code{optim}). Default is \code{ub = Inf}.
-#' @param k0 initial value for k in optimization procedure (default is \code{k = 1}.
+#' @param k0 initial value for k in optimization procedure. Default is \code{k = 1}.
 #' @return Named list with the following slots:
 #' \item{mle}{MLE}
 #' \item{se}{Standard error for the MLE}
@@ -195,7 +195,6 @@ negbin_gloglik_md = function(tau, gamma, assay_summary) {
 #' \item{mle_bc}{Bias-corrected MLE}
 #' \item{ci_bc}{95\% confidence interval for the bias-corrected MLE}
 #' @export
-#'
 #'
 lrt_SLDeepAssay_md = function(assay = NULL,
                               u = NULL,

@@ -14,7 +14,7 @@
 #' @export
 #'
 #'
-fit_SLDeepAssay_md = function(assay = NULL, u = NULL, assay_summary, corrected = NULL, maxit = 1E6, optim_method = "BFGS") {
+fit_SLDeepAssay_md = function(assay = NULL, u = NULL, assay_summary, corrected = NULL, maxit = 1E6) {
 
   # For each dilution level, compute summary data
   if (!is.null(assay)) {

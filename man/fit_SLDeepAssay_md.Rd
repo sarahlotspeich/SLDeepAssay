@@ -10,8 +10,6 @@ fit_SLDeepAssay_md(
   assay_summary,
   corrected = NULL,
   maxit = 1e+06,
-  lb = 1e-06,
-  ub = Inf,
   optim_method = "BFGS"
 )
 }

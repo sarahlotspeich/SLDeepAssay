@@ -29,7 +29,7 @@ lrt_SLDeepAssay_md(
 
 \item{ub}{Upper-bound on the IUPM (passed to \code{optim}). Default is \code{ub = Inf}.}
 
-\item{k0}{initial value for k in optimization procedure (default is \code{k = 1}.}
+\item{k0}{initial value for k in optimization procedure. Default is \code{k = 1}.}
 }
 \value{
 Named list with the following slots:

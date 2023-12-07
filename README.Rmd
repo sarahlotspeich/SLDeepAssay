@@ -161,3 +161,31 @@ res_sd
 ```
 
 ### Multiple Dilutions
+
+We can similarly estimate the IUPM using the simulated multiple dilution level data set `assay_md` using the function `fit_SLDeepAssay_md()`.
+
+As in the single dilution case, there are two options to pass assay data to `fit_SLDeepAssay_md()`. The first is to use summary data of the form output by `simulate_assay_md()`, making this option easy to use with simulated data.
+
+The second is to supply the following two parameters:
+
+  -   `assay`: a list of data frames with assay data from each dilution level.
+  -   `u`: vector of dilution levels, in millions of cells per well.
+  
+This second option may be easier to use in practice, when raw data are collected from real assays at multiple dilution levels. Below is an example of using the summary data method. Note that the output `simulate_assay_md()` is of the same format as that from `simulate_assay_sd()`.
+
+```{r}
+
+res_md <- fit_SLDeepAssay_md(assay_summary = assay_md)
+res_md
+
+```
+
+## Testing for Overdisperion
+
+As described in the accompanying paper, we may be concerned with infectious cell counts being overdispersed, i.e., following a negative binomial distribution as opposed to a Poisson. When data are available from multiple dilution levels, we can test the null hypothesis of no overdispersion using a likelihood ratio test.
+
+```{r}
+
+
+```
+

@@ -5,7 +5,7 @@ Sarah C. Lotspeich and Brian D. Richardson
 
 ## Installation
 
-Installation of the `SLDeepAssay` from GitHub requires the
+Installation of `SLDeepAssay` from GitHub requires the
 [`devtools`](https://www.r-project.org/nosvn/pandoc/devtools.html)
 package and can be done in the following way.
 
@@ -25,7 +25,8 @@ analyze (or generate) assay data the quantitative viral outgrowth assay
 (QVOA) and the ultra deep sequencing assay of the outgrowth virus
 (UDSA). The methods implemented here are described in the described in
 the paper, “Quantifying the HIV reservoir with dilution assays and deep
-viral sequencing,” which is currently in pre-press with .
+viral sequencing,” which is currently in press with and available on
+Arxiv at <https://arxiv.org/abs/2302.00516>.
 
 A common naming convention used throughout is to use the suffixes `_sd`
 and `_md` to denote functions for single- and multiple-dilution assay

@@ -25,8 +25,7 @@ analyze (or generate) assay data the quantitative viral outgrowth assay
 (QVOA) and the ultra deep sequencing assay of the outgrowth virus
 (UDSA). The methods implemented here are described in the described in
 the paper, “Quantifying the HIV reservoir with dilution assays and deep
-viral sequencing,” which is currently in press with and available on
-Arxiv at <https://arxiv.org/abs/2302.00516>.
+viral sequencing,” published in Biometrics (2024) at <https://academic.oup.com/biometrics/article/80/1/ujad018/7609164?login=false>.
 
 A common naming convention used throughout is to use the suffixes `_sd`
 and `_md` to denote functions for single- and multiple-dilution assay

@@ -21,7 +21,7 @@ library(SLDeepAssay)
 ```
 
 The `SLDeepAssay` package contains parallel functions designed to
-analyze (or generate) assay data the quantitative viral outgrowth assay
+analyze (or generate) assay data from the quantitative viral outgrowth assay
 (QVOA) and the ultra deep sequencing assay of the outgrowth virus
 (UDSA). The methods implemented here are described in the described in
 the paper, “Quantifying the HIV reservoir with dilution assays and deep
